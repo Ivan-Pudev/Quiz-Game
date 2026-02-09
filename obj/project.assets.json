@@ -1111,6 +1111,81 @@
         "build": {
           "buildTransitive/net8.0/_._": {}
         }
+      },
+      "QuizGame.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "QuizGame.Data": "1.0.0",
+          "QuizGame.Data.Models": "1.0.0",
+          "QuizGame.GCommon": "1.0.0",
+          "QuizGame.ViewModels": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/QuizGame.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/QuizGame.Core.dll": {}
+        }
+      },
+      "QuizGame.Data/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.2",
+          "Microsoft.EntityFrameworkCore": "10.0.2",
+          "Microsoft.EntityFrameworkCore.Abstractions": "10.0.2",
+          "Microsoft.EntityFrameworkCore.SqlServer": "10.0.2",
+          "QuizGame.Data.Models": "1.0.0",
+          "QuizGame.GCommon": "1.0.0",
+          "QuizGame.ViewModels": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/QuizGame.Data.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/QuizGame.Data.dll": {}
+        }
+      },
+      "QuizGame.Data.Models/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.2",
+          "Microsoft.EntityFrameworkCore": "10.0.2",
+          "Microsoft.EntityFrameworkCore.Abstractions": "10.0.2",
+          "Microsoft.EntityFrameworkCore.SqlServer": "10.0.2",
+          "QuizGame.GCommon": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/QuizGame.Data.Models.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/QuizGame.Data.Models.dll": {}
+        }
+      },
+      "QuizGame.GCommon/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/QuizGame.GCommon.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/QuizGame.GCommon.dll": {}
+        }
+      },
+      "QuizGame.ViewModels/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "QuizGame.GCommon": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/QuizGame.ViewModels.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/QuizGame.ViewModels.dll": {}
+        }
       }
     }
   },
@@ -3333,6 +3408,31 @@
         "system.security.cryptography.protecteddata.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "QuizGame.Core/1.0.0": {
+      "type": "project",
+      "path": "../QuizGame.Core/QuizGame.Core.csproj",
+      "msbuildProject": "../QuizGame.Core/QuizGame.Core.csproj"
+    },
+    "QuizGame.Data/1.0.0": {
+      "type": "project",
+      "path": "../QuizGame.Data/QuizGame.Data.csproj",
+      "msbuildProject": "../QuizGame.Data/QuizGame.Data.csproj"
+    },
+    "QuizGame.Data.Models/1.0.0": {
+      "type": "project",
+      "path": "../QuizGame.Data.Models/QuizGame.Data.Models.csproj",
+      "msbuildProject": "../QuizGame.Data.Models/QuizGame.Data.Models.csproj"
+    },
+    "QuizGame.GCommon/1.0.0": {
+      "type": "project",
+      "path": "../QuizGame.Common/QuizGame.GCommon.csproj",
+      "msbuildProject": "../QuizGame.Common/QuizGame.GCommon.csproj"
+    },
+    "QuizGame.ViewModels/1.0.0": {
+      "type": "project",
+      "path": "../QuizGame.ViewModels/QuizGame.ViewModels.csproj",
+      "msbuildProject": "../QuizGame.ViewModels/QuizGame.ViewModels.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3341,7 +3441,12 @@
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 10.0.2",
       "Microsoft.AspNetCore.Identity.UI >= 10.0.2",
       "Microsoft.EntityFrameworkCore.SqlServer >= 10.0.2",
-      "Microsoft.EntityFrameworkCore.Tools >= 10.0.2"
+      "Microsoft.EntityFrameworkCore.Tools >= 10.0.2",
+      "QuizGame.Core >= 1.0.0",
+      "QuizGame.Data >= 1.0.0",
+      "QuizGame.Data.Models >= 1.0.0",
+      "QuizGame.GCommon >= 1.0.0",
+      "QuizGame.ViewModels >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -3375,7 +3480,23 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.Common\\QuizGame.GCommon.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.Common\\QuizGame.GCommon.csproj"
+            },
+            "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.Core\\QuizGame.Core.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.Core\\QuizGame.Core.csproj"
+            },
+            "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.Data.Models\\QuizGame.Data.Models.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.Data.Models\\QuizGame.Data.Models.csproj"
+            },
+            "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.Data\\QuizGame.Data.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.Data\\QuizGame.Data.csproj"
+            },
+            "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.ViewModels\\QuizGame.ViewModels.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\Quiz Game\\QuizGame\\QuizGame.ViewModels\\QuizGame.ViewModels.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

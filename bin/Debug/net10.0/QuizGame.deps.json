@@ -12,7 +12,12 @@
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.2",
           "Microsoft.AspNetCore.Identity.UI": "10.0.2",
           "Microsoft.EntityFrameworkCore.SqlServer": "10.0.2",
-          "Microsoft.EntityFrameworkCore.Tools": "10.0.2"
+          "Microsoft.EntityFrameworkCore.Tools": "10.0.2",
+          "QuizGame.Core": "1.0.0",
+          "QuizGame.Data": "1.0.0",
+          "QuizGame.Data.Models": "1.0.0",
+          "QuizGame.GCommon": "1.0.0",
+          "QuizGame.ViewModels": "1.0.0"
         },
         "runtime": {
           "QuizGame.dll": {}
@@ -783,6 +788,71 @@
             "fileVersion": "9.0.425.16305"
           }
         }
+      },
+      "QuizGame.Core/1.0.0": {
+        "dependencies": {
+          "QuizGame.Data": "1.0.0",
+          "QuizGame.Data.Models": "1.0.0",
+          "QuizGame.GCommon": "1.0.0",
+          "QuizGame.ViewModels": "1.0.0"
+        },
+        "runtime": {
+          "QuizGame.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "QuizGame.Data/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.2",
+          "Microsoft.EntityFrameworkCore": "10.0.2",
+          "Microsoft.EntityFrameworkCore.Abstractions": "10.0.2",
+          "Microsoft.EntityFrameworkCore.SqlServer": "10.0.2",
+          "QuizGame.Data.Models": "1.0.0",
+          "QuizGame.GCommon": "1.0.0",
+          "QuizGame.ViewModels": "1.0.0"
+        },
+        "runtime": {
+          "QuizGame.Data.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "QuizGame.Data.Models/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.2",
+          "Microsoft.EntityFrameworkCore": "10.0.2",
+          "Microsoft.EntityFrameworkCore.Abstractions": "10.0.2",
+          "Microsoft.EntityFrameworkCore.SqlServer": "10.0.2",
+          "QuizGame.GCommon": "1.0.0"
+        },
+        "runtime": {
+          "QuizGame.Data.Models.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "QuizGame.GCommon/1.0.0": {
+        "runtime": {
+          "QuizGame.GCommon.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "QuizGame.ViewModels/1.0.0": {
+        "dependencies": {
+          "QuizGame.GCommon": "1.0.0"
+        },
+        "runtime": {
+          "QuizGame.ViewModels.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -1120,6 +1190,31 @@
       "sha512": "sha512-o94k2RKuAce3GeDMlUvIXlhVa1kWpJw95E6C9LwW0KlG0nj5+SgCiIxJ2Eroqb9sLtG1mEMbFttZIBZ13EJPvQ==",
       "path": "system.security.cryptography.protecteddata/9.0.4",
       "hashPath": "system.security.cryptography.protecteddata.9.0.4.nupkg.sha512"
+    },
+    "QuizGame.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "QuizGame.Data/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "QuizGame.Data.Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "QuizGame.GCommon/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "QuizGame.ViewModels/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

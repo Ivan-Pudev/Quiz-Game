@@ -15,4 +15,16 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\QuizGame.Common\QuizGame.GCommon.csproj" />
+    <ProjectReference Include="..\QuizGame.Core\QuizGame.Core.csproj" />
+    <ProjectReference Include="..\QuizGame.Data.Models\QuizGame.Data.Models.csproj" />
+    <ProjectReference Include="..\QuizGame.Data\QuizGame.Data.csproj" />
+    <ProjectReference Include="..\QuizGame.ViewModels\QuizGame.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Quizzes\" />
+  </ItemGroup>
+
 </Project>
