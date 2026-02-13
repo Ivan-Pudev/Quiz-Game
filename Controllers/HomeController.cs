@@ -1,17 +1,12 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using QuizGame.Models;
+using QuizGame.ViewModels;
 
 namespace QuizGame.Controllers
 {
     public class HomeController : Controller
     {
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
