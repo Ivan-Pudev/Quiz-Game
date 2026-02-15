@@ -33,7 +33,7 @@
 
             <h3 class="mb-3">Questions in this Quiz</h3>
 
-            @foreach (var question in Model.Questions.OrderBy(q => q.Complexity))
+            @* @foreach (var question in Model.Questions.OrderBy(q => q.Complexity))
             {
                 <div class="card mb-3 shadow-sm">
                     <div class="card-header d-flex justify-content-between">
@@ -44,17 +44,78 @@
                         <p class="card-text fs-5">@question.Content</p>
 
                         <div class="list-group">
-                            @foreach (var answer in question.Answers)
+                            @if (question.Categories != null && question.Categories.Any())
                             {
-                                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                    @answer.Content
-                                    @if (answer.IsCorrect)
+                                <div class="mb-3">
+                                    @foreach (var category in question.Categories)
                                     {
-                                        <span class="badge bg-success rounded-pill">Correct Answer</span>
+                                        <span class="badge bg-info me-1">@category.Name</span>
                                     }
                                 </div>
                             }
+
+                            <div class="list-group">
+                                @foreach (var answer in question.Answers)
+                                {
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        @answer.Content
+
+                                        @if (answer.IsCorrect)
+                                        {
+                                            <span class="badge bg-success rounded-pill">
+                                                Correct Answer
+                                            </span>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         </div>
+                    </div>
+                </div>
+            }
+ *@
+            @{
+                var orderedQuestions = Model.Questions
+                .OrderBy(q => q.Complexity)
+                .ToList();
+            }
+
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                var question = orderedQuestions[i];
+
+                var categoryText = (question.Categories != null && question.Categories.Any())
+                ? string.Join(", ", question.Categories.Select(c => c.Name))
+                : "No categories";
+
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">
+                            Question @(i + 1)
+                            <span class="text-muted">(@categoryText)</span>
+                        </span>
+
+                        <span class="badge bg-secondary">@question.Points pts</span>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="card-text fs-5 mb-3">@question.Content</p>
+
+                        @if (question.Answers != null && question.Answers.Any())
+                        {
+                            <div class="list-group">
+                                @foreach (var answer in question.Answers)
+                                {
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        @answer.Content
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted mb-0">No answers added yet.</p>
+                        }
                     </div>
                 </div>
             }
@@ -62,6 +123,7 @@
             <div class="mt-4">
                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Quiz</a>
                 <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                <a asp-action="Leaderboard" asp-route-id="@Model.Id" class="btn btn-info">Leaderboard</a>
             </div>
         </div>
     </div>

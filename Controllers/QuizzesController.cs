@@ -43,6 +43,8 @@
 
             if (!ModelState.IsValid)
             {
+                quizViewModel.Questions = allQuestions.ToList();
+                
                 return View(quizViewModel);
             }
 
@@ -62,7 +64,7 @@
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
-            Quiz? currentQuiz = await _quizzesService.GetQuizWithQuestionsByIdAsync(id);
+            Quiz? currentQuiz = await _quizzesService.GetQuizByIdAsync(id);
 
             if (currentQuiz == null)
             {
@@ -83,7 +85,7 @@
                 return BadRequest();
             }
 
-            Quiz? currentQuiz = await _quizzesService.GetQuizWithQuestionsByIdAsync(id);
+            Quiz? currentQuiz = await _quizzesService.GetQuizByIdAsync(id);
 
             if (currentQuiz == null)
             {
@@ -97,7 +99,7 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(int id,EditQuizViewModel quizViewModel)
+        public async Task<IActionResult> Edit(int id, EditQuizViewModel quizViewModel)
         {
             if (id != quizViewModel.Id)
             {
@@ -109,7 +111,7 @@
                 return View(quizViewModel);
             }
 
-            Quiz? selectedQuiz = await _quizzesService.GetQuizWithQuestionsByIdAsync(quizViewModel.Id);
+            Quiz? selectedQuiz = await _quizzesService.GetQuizByIdAsync(quizViewModel.Id);
 
             if (selectedQuiz == null)
             {
@@ -118,32 +120,48 @@
 
             try
             {
-                await _quizzesService.UpdateQuizAsync(quizViewModel,selectedQuiz);
+                await _quizzesService.UpdateQuizAsync(quizViewModel, selectedQuiz);
 
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            
+
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            Quiz? quizToDelete = await _quizzesService.GetQuizWithQuestionsByIdAsync(id);
+            Quiz? quizToDelete = await _quizzesService.GetQuizByIdAsync(id);
 
             if (quizToDelete != null)
             {
-               await _quizzesService.DeleteQuizAsync(quizToDelete);
+                await _quizzesService.DeleteQuizAsync(quizToDelete);
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        //public async Task<IActionResult> Leaderboard()
-        //{
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Leaderboard(int id) 
+        {
+            List<LeaderboardEntry>? rows = await _quizzesService.GetLeaderboardEntriesById(id);
 
-        //}
+            if(rows == null)
+            {
+                return NotFound(); 
+            }
+            var leaderboardRowViewModel = rows.Select(r => new LeaderboardRowVm()
+            {
+                Rank = r.Id,
+                Score = r.Score,
+                UserName = r.User.UserName
+            }).ToList();
+
+            ViewBag.QuizId = id;
+            return View(leaderboardRowViewModel);
+        }
     }
 }
