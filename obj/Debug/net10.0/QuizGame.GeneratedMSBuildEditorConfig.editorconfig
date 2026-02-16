@@ -19,49 +19,85 @@ build_property.TargetFrameworkIdentifier = .NETCoreApp
 build_property.TargetFrameworkVersion = v10.0
 build_property.RootNamespace = QuizGame
 build_property.RootNamespace = QuizGame
-build_property.ProjectDir = C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame\
+build_property.ProjectDir = C:\Users\User\Source\Repos\Quiz-Game\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame
+build_property.MSBuildProjectDirectory = C:\Users\User\Source\Repos\Quiz-Game
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Areas/Identity/Pages/_ViewStart.cshtml]
+[C:/Users/User/source/repos/Quiz-Game/Areas/Identity/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Views/Home/Index.cshtml]
+[C:/Users/User/source/repos/Quiz-Game/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+[C:/Users/User/source/repos/Quiz-Game/Views/Leaderboards/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhZGVyYm9hcmRzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Views/Shared/Error.cshtml]
+[C:/Users/User/source/repos/Quiz-Game/Views/Leaderboards/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhZGVyYm9hcmRzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Play/Finish.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxheVxGaW5pc2guY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Play/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxheVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Play/Question.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxheVxRdWVzdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Quizzes/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVpenplc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Quizzes/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVpenplc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Quizzes/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVpenplc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Quizzes/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUXVpenplc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Views/Shared/_LoginPartial.cshtml]
+[C:/Users/User/source/repos/Quiz-Game/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/User/source/repos/Quiz-Game/Views/Shared/_QuizQuestionsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9RdWl6UXVlc3Rpb25zUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/User/source/repos/Quiz-Game/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Views/_ViewImports.cshtml]
+[C:/Users/User/source/repos/Quiz-Game/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Views/_ViewStart.cshtml]
+[C:/Users/User/source/repos/Quiz-Game/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/User/source/repos/Quiz Game/QuizGame/QuizGame/Views/Shared/_Layout.cshtml]
+[C:/Users/User/source/repos/Quiz-Game/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-6fdtcowu5v
