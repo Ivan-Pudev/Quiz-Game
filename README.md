@@ -367,17 +367,6 @@ No database access in views
 
 EF Core tracking used only where needed
 
-## 📸 Screenshots
-
-### Play Quiz
-![Play Quiz](screenshots/play-quiz.png)
-
-### Game Summary
-![Game Summary](screenshots/game-summary.png)
-
-### Leaderboard
-![Leaderboard](screenshots/leaderboard.png)
-
 ## Project Info
 
 This project is for educational purposes.
