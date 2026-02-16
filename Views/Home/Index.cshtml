@@ -4,17 +4,26 @@
 
 <div class="welcome-container d-flex align-items-center justify-content-center">
     <div class="text-center text-white p-5 shadow-lg rounded-4 glass-morphism">
-        <h1 class="display-3 fw-bold mb-3">QuizMaster</h1>
+        <h1 class="display-3 fw-bold mb-3">QuizGame</h1>
         <p class="lead mb-4">Challenge your brain, climb the leaderboard, and win!</p>
 
         <div class="d-grid gap-3 col-10 mx-auto">
-            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-light btn-lg fw-bold shadow-sm">
-                Join Now
-            </a>
-
-            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-light btn-lg">
-                Login to Play
-            </a>
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Play"
+                   asp-action="Index"
+                   class="btn btn-light btn-lg fw-bold shadow-sm">
+                    Join Now
+                </a>
+            }
+            else
+            {
+                <a asp-area="Identity"
+                   asp-page="/Account/Login"
+                   class="btn btn-light btn-lg fw-bold shadow-sm">
+                    Join Now
+                </a>
+            }
         </div>
     </div>
 </div>
