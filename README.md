@@ -24,6 +24,8 @@ Description
 
 Start time
 
+Leaderboard
+
 Multiple questions with answers
 
 🎮 Play Game
@@ -71,13 +73,17 @@ Direct link to leaderboard
 The application follows SOLID principles and a clean separation of concerns.
 
 Layers
-QuizGame
-│
-├── QuizGame.Data        // EF Core entities & DbContext
-├── QuizGame.Core        // Business logic (Services)
-├── QuizGame.ViewModels  // UI models
-├── QuizGame.Controllers
-└── QuizGame.Views
+
+├── QuizGame.Web - Web logic
+
+├── QuizGame.Data
+├── QuizGame.Data.Models - Database and Domain Models
+
+├── QuizGame.Core        - Business logic (Services)
+
+├── QuizGame.ViewModels  - UI models
+
+├── QuizGame.GCommon
 
 Key Services
 
@@ -91,22 +97,206 @@ LeaderboardsService – leaderboard queries & ranking
 
 Quiz
 
+Description:
+
+Represents a quiz with its metadata, scheduling details, and related entities.
+
+Properties:
+
+-Id: Unique identifier of the quiz.
+
+-Title: Required quiz title with a maximum length constraint.
+
+-Description: Required quiz description with a maximum length constraint.
+
+-StartTime: Required date and time when the quiz starts.
+
+Relationships:
+
+-Leaderboard: Optional association used for tracking quiz scores.
+
+-Questions: Collection of questions belonging to the quiz (one-to-many).
+
+Notes
+
+A quiz can exist without a leaderboard.
+
+A quiz can contain multiple questions.
+
 Question
+
+Description:
+
+Represents a question used in quizzes, including its content, type, scoring, and relationships.
+
+Properties:
+
+-Id: Unique identifier of the question.
+
+-Content: Required question text with a maximum length constraint.
+
+-QuestionType: Required value defining the type of the question (e.g. multiple choice, true/false).
+
+-Complexity: Numeric value representing the difficulty level of the question.
+
+-Points: Required number of points awarded for a correct answer.
+
+Relationships
+
+-Quizzes: Collection of quizzes that include this question (many-to-many).
+
+-Categories: Collection of categories associated with the question (many-to-many).
+
+-Answers: Collection of possible answers for the question (one-to-many).
+
+Notes
+
+A question can be reused across multiple quizzes.
+
+A question can belong to multiple categories.
+
+A question should typically have at least one answer.
 
 Answer
 
+Description:
+
+Represents a possible answer to a question, including its content and correctness.
+
+Properties:
+
+-Id: Unique identifier of the answer.
+
+-Content: Required answer text with a maximum length constraint.
+
+-IsCorrect: Indicates whether the answer is correct.
+
+-QuestionId: Required foreign key referencing the related question.
+
+Relationships:
+
+-Question: Required association to the question this answer belongs to (many-to-one).
+
+Notes
+
+Each answer must be linked to a question.
+
+A question can have multiple answers.
+
+Typically, at least one answer per question should be marked as correct.
+
 QuizAttempt
 
-Leaderboard
+Description:
 
-LeaderboardEntry
+Represents a user’s attempt at taking a quiz, tracking progress, answers, and scoring.
+
+Properties:
+
+-Id: Unique identifier of the quiz attempt.
+
+-QuizId: Foreign key referencing the associated quiz.
+
+-UserId: Identifier of the user taking the quiz.
+
+-CurrentQuestionIndex: Index of the current question the user is on.
+
+-Score: Current score achieved by the user.
+
+-MaxScore: Maximum possible score for the quiz.
+
+-IsFinished: Indicates whether the quiz attempt has been completed.
+
+Relationships
+
+-Quiz: Required association to the quiz being attempted (many-to-one).
+
+-Answers: Collection of answers submitted during the attempt (one-to-many).
+
+Notes
+
+A user can have multiple attempts for the same quiz (depending on business rules).
+
+IsFinished should be set when all questions are answered.
+
+Score should not exceed MaxScore.
+
+Leaderboard 
+
+Description:
+
+Represents a leaderboard associated with a quiz, used to track and display participant rankings and scores.
+
+Properties:
+
+-Id: Unique identifier of the leaderboard.
+
+-Title: Required leaderboard title with a maximum length constraint.
+
+-Description: Required leaderboard description with a maximum length constraint.
+
+-LastUpdated: Required date indicating when the leaderboard was last updated.
+
+-QuizId: Required foreign key referencing the related quiz.
+
+Relationships
+
+-Quiz: Required association to the quiz this leaderboard belongs to (one-to-one or many-to-one, depending on configuration).
+
+-Entries: Collection of leaderboard entries representing individual user results (one-to-many).
+
+Notes
+
+Each leaderboard must be linked to a quiz.
+
+LastUpdated should be refreshed whenever leaderboard entries change.
+
+Leaderboard entries are used to calculate and display rankings.
+
+LeaderboardEntry 
+
+Description:
+
+Represents a single user’s result within a leaderboard, including score and ranking.
+
+Properties:
+
+-Id: Unique identifier of the leaderboard entry.
+
+-UserId: Required identifier of the user associated with this entry.
+
+-Score: Score achieved by the user in the quiz.
+
+-Rank: Ranking position of the user on the leaderboard.
+
+-LeaderboardId: Required foreign key referencing the related leaderboard.
+
+Relationships:
+
+-User: Required association to the application user.
+
+-Leaderboard: Required association to the leaderboard this entry belongs to (many-to-one).
+
+Notes
+
+Each entry corresponds to one user on a leaderboard.
+
+Rankings are typically recalculated when scores change.
+
+A leaderboard can contain multiple entries.
 
 🖥️ Controllers
+
 Controller	Responsibility
+
 QuizzesController	Manage quizzes (CRUD, details)
+
 PlayController	Play quiz, submit answers, finish game
+
 LeaderboardsController	View leaderboards
+
 Account / Identity	Authentication
+
 🧪 ViewModels
 
 CreateQuizViewModel
@@ -139,7 +329,7 @@ LINQ
 
 ⚙️ Setup Instructions
 1️⃣ Clone the repository
-git clone https://github.com/<Ivan-Pudev>/QuizGame.git
+git clone https://github.com/<Ivan-Pudev>/QuizGame
 cd QuizGame
 
 2️⃣ Configure database
@@ -176,19 +366,16 @@ No database access in views
 
 EF Core tracking used only where needed
 
-📸 Screenshots (optional)
+## 📸 Screenshots
 
-Add screenshots of:
+### Play Quiz
+![Play Quiz](screenshots/play-quiz.png)
 
-Quiz list
+### Game Summary
+![Game Summary](screenshots/game-summary.png)
 
-Play quiz
-
-Game summary
-
-Leaderboard
-
-📄 License
+### Leaderboard
+![Leaderboard](screenshots/leaderboard.png)
 
 This project is for educational purposes.
 
