@@ -330,7 +330,7 @@ LINQ
 
 ## ⚙️ Setup Instructions
 1️⃣ Clone the repository
-git clone https://github.com/<Ivan-Pudev>/QuizGame
+git clone https://github.com/Ivan-Pudev/Quiz-Game.git
 cd QuizGame
 
 2️⃣ Configure database
