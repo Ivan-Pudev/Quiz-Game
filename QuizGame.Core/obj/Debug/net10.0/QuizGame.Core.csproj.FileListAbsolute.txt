@@ -1,0 +1,44 @@
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.Core.deps.json
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.Core.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.Core.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.Data.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.Data.Models.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.GCommon.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.GCommon.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.Data.Models.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.Data.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\bin\Debug\net10.0\QuizGame.ViewModels.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.AssemblyInfo.cs
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.sourcelink.json
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.C7CEFB3D.Up2Date
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\refint\QuizGame.Core.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.Core\obj\Debug\net10.0\ref\QuizGame.Core.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.Core.deps.json
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.Core.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.Core.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.Data.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.Data.Models.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.GCommon.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.GCommon.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.Data.Models.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.Data.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\bin\Debug\net10.0\QuizGame.ViewModels.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.AssemblyInfo.cs
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.sourcelink.json
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.C7CEFB3D.Up2Date
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\refint\QuizGame.Core.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\ref\QuizGame.Core.dll

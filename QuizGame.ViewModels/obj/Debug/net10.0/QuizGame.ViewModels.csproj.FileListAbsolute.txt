@@ -1,0 +1,36 @@
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.ViewModels.deps.json
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.ViewModels.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.GCommon.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.GCommon.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.AssemblyInfo.cs
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.sourcelink.json
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.199CA102.Up2Date
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\refint\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.pdb
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\obj\Debug\net10.0\ref\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.Data.Models.dll
+C:\Users\User\source\repos\Quiz Game\QuizGame\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.Data.Models.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.ViewModels.deps.json
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.ViewModels.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.Data.Models.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.GCommon.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.GCommon.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\bin\Debug\net10.0\QuizGame.Data.Models.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.AssemblyInfo.cs
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.sourcelink.json
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.199CA102.Up2Date
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\refint\QuizGame.ViewModels.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\QuizGame.ViewModels.pdb
+C:\Users\User\source\repos\Quiz-Game\QuizGame.ViewModels\obj\Debug\net10.0\ref\QuizGame.ViewModels.dll
