@@ -1,4 +1,4 @@
-## 🧠 QuizGame
+﻿## 🧠 QuizGame
 
 QuizGame is an ASP.NET Core MVC web application where users can play quizzes, track their scores, and compete on leaderboards.
 Admins can create and manage quizzes, questions, and answers, while players can attempt quizzes multiple times and view rankings.
@@ -330,7 +330,7 @@ LINQ
 
 ## ⚙️ Setup Instructions
 1️⃣ Clone the repository
-git clone https://github.com/Ivan-Pudev/Quiz-Game.git
+git clone https://github.com/<Ivan-Pudev>/QuizGame
 cd QuizGame
 
 2️⃣ Configure database
@@ -366,6 +366,17 @@ No business logic in controllers
 No database access in views
 
 EF Core tracking used only where needed
+
+## 📸 Screenshots
+
+### Play Quiz
+![Play Quiz](screenshots/play-quiz.png)
+
+### Game Summary
+![Game Summary](screenshots/game-summary.png)
+
+### Leaderboard
+![Leaderboard](screenshots/leaderboard.png)
 
 ## Project Info
 
