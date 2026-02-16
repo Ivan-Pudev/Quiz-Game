@@ -1,16 +1,17 @@
-🧠 QuizGame
+## 🧠 QuizGame
 
 QuizGame is an ASP.NET Core MVC web application where users can play quizzes, track their scores, and compete on leaderboards.
 Admins can create and manage quizzes, questions, and answers, while players can attempt quizzes multiple times and view rankings.
 
-🚀 Features
+## 🚀 Features
+
 👤 Authentication & Roles
 
 ASP.NET Core Identity
 
 User registration & login
 
-📝 Quizzes
+## 📝 Quizzes
 
 Create, edit, delete quizzes
 
@@ -28,7 +29,7 @@ Leaderboard
 
 Multiple questions with answers
 
-🎮 Play Game
+## 🎮 Play Game
 
 Start a quiz attempt
 
@@ -40,7 +41,7 @@ Multiple attempts per user allowed
 
 Game summary after finishing
 
-🏆 Leaderboards
+## 🏆 Leaderboards
 
 One leaderboard per quiz
 
@@ -56,7 +57,7 @@ Game summary
 
 Leaderboards index
 
-📊 Game Summary
+## 📊 Game Summary
 
 Final score
 
@@ -68,7 +69,7 @@ Total questions
 
 Direct link to leaderboard
 
-🏗️ Architecture
+## 🏗️ Architecture
 
 The application follows SOLID principles and a clean separation of concerns.
 
@@ -93,9 +94,9 @@ GameService – gameplay, attempts, scoring
 
 LeaderboardsService – leaderboard queries & ranking
 
-🧩 Domain Models (simplified)
+## 🧩 Domain Models 
 
-Quiz
+## Quiz
 
 Description:
 
@@ -123,7 +124,7 @@ A quiz can exist without a leaderboard.
 
 A quiz can contain multiple questions.
 
-Question
+## Question
 
 Description:
 
@@ -157,7 +158,7 @@ A question can belong to multiple categories.
 
 A question should typically have at least one answer.
 
-Answer
+## Answer
 
 Description:
 
@@ -185,7 +186,7 @@ A question can have multiple answers.
 
 Typically, at least one answer per question should be marked as correct.
 
-QuizAttempt
+## QuizAttempt
 
 Description:
 
@@ -221,7 +222,7 @@ IsFinished should be set when all questions are answered.
 
 Score should not exceed MaxScore.
 
-Leaderboard 
+## Leaderboard 
 
 Description:
 
@@ -253,7 +254,7 @@ LastUpdated should be refreshed whenever leaderboard entries change.
 
 Leaderboard entries are used to calculate and display rankings.
 
-LeaderboardEntry 
+## LeaderboardEntry 
 
 Description:
 
@@ -285,7 +286,7 @@ Rankings are typically recalculated when scores change.
 
 A leaderboard can contain multiple entries.
 
-🖥️ Controllers
+## 🖥️ Controllers
 
 Controller	Responsibility
 
@@ -297,7 +298,7 @@ LeaderboardsController	View leaderboards
 
 Account / Identity	Authentication
 
-🧪 ViewModels
+## 🧪 ViewModels
 
 CreateQuizViewModel
 
@@ -311,7 +312,7 @@ LeaderboardRowVm
 
 ViewModels are never used for database access.
 
-🛠️ Technologies Used
+## 🛠️ Technologies Used
 
 ASP.NET Core MVC
 
@@ -327,7 +328,7 @@ Razor Views
 
 LINQ
 
-⚙️ Setup Instructions
+## ⚙️ Setup Instructions
 1️⃣ Clone the repository
 git clone https://github.com/<Ivan-Pudev>/QuizGame
 cd QuizGame
@@ -377,6 +378,8 @@ EF Core tracking used only where needed
 ### Leaderboard
 ![Leaderboard](screenshots/leaderboard.png)
 
+## Project Info
+
 This project is for educational purposes.
 
 ✨ Future Improvements
@@ -391,7 +394,7 @@ Answer review after game
 
 Admin dashboard
 
-👨‍💻 Author
+## 👨‍💻 Author
 
 Ivan Pudev
 ASP.NET Core MVC Quiz Game Project
