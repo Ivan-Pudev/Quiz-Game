@@ -1,9 +1,9 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using QuizGame.ViewModels;
-
 namespace QuizGame.Controllers
 {
+    using System.Diagnostics;
+    using Microsoft.AspNetCore.Mvc;
+    using QuizGame.ViewModels;
+
     public class HomeController : Controller
     {
         public IActionResult Index()

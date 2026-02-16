@@ -24,6 +24,8 @@ namespace QuizGame
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<IQuizzesService, QuizzesService>();
+            builder.Services.AddScoped<ILeaderboardsService, LeaderboardsService>();
+            builder.Services.AddScoped<IGameService, GameService>();
 
             var app = builder.Build();
 
