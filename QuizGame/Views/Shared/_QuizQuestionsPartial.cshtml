@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Question>
+
+@if (Model != null && Model.Any())
+{
+    var orderedQuestions = Model
+        .OrderBy(q => q.Complexity)
+        .ToList();
+
+    for (int i = 0; i < orderedQuestions.Count; i++)
+    {
+        var question = orderedQuestions[i];
+
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header d-flex justify-content-between">
+                <span class="fw-bold">Question @(i + 1)</span>
+                <span class="badge bg-secondary">@question.Points pts</span>
+            </div>
+
+            <div class="card-body">
+                <p class="card-text fs-5">@question.Content</p>
+
+                <div class="list-group">
+                    @foreach (var answer in question.Answers)
+                    {
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            @answer.Content
+                            @if (answer.IsCorrect)
+                            {
+                                <span class="badge bg-success rounded-pill">Correct Answer</span>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p class="text-muted">No questions added to this quiz yet.</p>
+}
