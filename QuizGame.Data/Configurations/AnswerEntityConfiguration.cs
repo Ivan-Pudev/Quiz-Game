@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using QuizGame.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QuizGame.Data.Configurations
+﻿namespace QuizGame.Data.Configurations
 {
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using QuizGame.Data.Models;
+    using System.Collections.Generic;
+
     public class AnswerEntityConfiguration : IEntityTypeConfiguration<Answer>
     {
         private readonly ICollection<Answer> _answers = new List<Answer>()

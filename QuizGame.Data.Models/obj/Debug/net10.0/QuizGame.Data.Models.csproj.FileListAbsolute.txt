@@ -27,7 +27,6 @@ C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\Quiz
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.Data.Models.AssemblyInfoInputs.cache
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.Data.Models.AssemblyInfo.cs
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.Data.Models.csproj.CoreCompileInputs.cache
-C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.Data.Models.sourcelink.json
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.5A6EE2B2.Up2Date
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.Data.Models.dll
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\refint\QuizGame.Data.Models.dll

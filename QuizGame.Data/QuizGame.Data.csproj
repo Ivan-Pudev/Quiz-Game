@@ -23,4 +23,8 @@
     <ProjectReference Include="..\QuizGame.ViewModels\QuizGame.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repository\Contracts\" />
+  </ItemGroup>
+
 </Project>
