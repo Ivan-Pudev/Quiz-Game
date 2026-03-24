@@ -21,3 +21,4 @@ C:\Users\User\source\repos\Quiz-Game\QuizGame.Common\obj\Debug\net10.0\QuizGame.
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Common\obj\Debug\net10.0\refint\QuizGame.GCommon.dll
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Common\obj\Debug\net10.0\QuizGame.GCommon.pdb
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Common\obj\Debug\net10.0\ref\QuizGame.GCommon.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Common\obj\Debug\net10.0\QuizGame.GCommon.sourcelink.json

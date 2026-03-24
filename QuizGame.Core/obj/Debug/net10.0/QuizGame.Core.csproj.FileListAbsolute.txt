@@ -41,3 +41,4 @@ C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Co
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\refint\QuizGame.Core.dll
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.pdb
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\ref\QuizGame.Core.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Core\obj\Debug\net10.0\QuizGame.Core.sourcelink.json

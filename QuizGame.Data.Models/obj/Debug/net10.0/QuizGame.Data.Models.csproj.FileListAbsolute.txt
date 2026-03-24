@@ -33,3 +33,4 @@ C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\refi
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.Data.Models.pdb
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.Data.Models.genruntimeconfig.cache
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\ref\QuizGame.Data.Models.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Data.Models\obj\Debug\net10.0\QuizGame.Data.Models.sourcelink.json

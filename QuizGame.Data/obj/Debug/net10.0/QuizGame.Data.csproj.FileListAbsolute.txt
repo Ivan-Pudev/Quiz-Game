@@ -41,3 +41,4 @@ C:\Users\User\source\repos\Quiz-Game\QuizGame.Data\obj\Debug\net10.0\refint\Quiz
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data\obj\Debug\net10.0\QuizGame.Data.pdb
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data\obj\Debug\net10.0\QuizGame.Data.genruntimeconfig.cache
 C:\Users\User\source\repos\Quiz-Game\QuizGame.Data\obj\Debug\net10.0\ref\QuizGame.Data.dll
+C:\Users\User\source\repos\Quiz-Game\QuizGame.Data\obj\Debug\net10.0\QuizGame.Data.sourcelink.json
