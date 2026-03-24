@@ -6,11 +6,11 @@
     using QuizGame.Data.Models;
     using QuizGame.ViewModels.Leaderboards;
 
-    public class LeaderboardsController : Controller
+    public class LeaderboardController : Controller
     {
-        private readonly ILeaderboardsService _leaderboardsService;
+        private readonly ILeaderboardService _leaderboardsService;
 
-        public LeaderboardsController(ILeaderboardsService leaderboardsService)
+        public LeaderboardController(ILeaderboardService leaderboardsService)
         {
             _leaderboardsService = leaderboardsService;
         }
@@ -21,7 +21,7 @@
         {
             try
             {
-                List<Leaderboard> leaderboards = await _leaderboardsService.GetLeaderboardsAsync();
+                IEnumerable<Leaderboard> leaderboards = await _leaderboardsService.GetLeaderboardsAsync();
 
                 return View(leaderboards);
             }
@@ -39,8 +39,8 @@
         {
             try
             {
-                List<LeaderboardRowVm>? leaderboard = await _leaderboardsService
-                    .GetLeaderboardsEntriesByIdAsync(id);
+                IEnumerable<LeaderboardRowVm>? leaderboard = await _leaderboardsService
+                    .GetLeaderboardEntriesByQuizIdAsync(id);
 
                 return View(leaderboard);
             }

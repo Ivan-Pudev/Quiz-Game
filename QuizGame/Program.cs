@@ -5,6 +5,9 @@ namespace QuizGame
     using QuizGame.Core;
     using QuizGame.Core.Contracts;
     using QuizGame.Data;
+    using QuizGame.Data.Repository;
+    using QuizGame.Data.Repository.Contracts;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -23,8 +26,12 @@ namespace QuizGame
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddScoped<IQuizzesService, QuizzesService>();
-            builder.Services.AddScoped<ILeaderboardsService, LeaderboardsService>();
+            builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+            builder.Services.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
+            builder.Services.AddScoped<IGameRepository, GameRepository>();
+
+            builder.Services.AddScoped<IQuizService, QuizService>();
+            builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
             builder.Services.AddScoped<IGameService, GameService>();
 
             var app = builder.Build();

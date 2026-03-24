@@ -10,12 +10,14 @@
     public class PlayController : Controller
     {
         private readonly IGameService _gameService;
-        private readonly IQuizzesService _quizzesService;
+        private readonly IQuizService _quizzesService;
+        private readonly ILeaderboardService _leaderboardsService;
 
-        public PlayController(IGameService gameService, IQuizzesService quizzesService)
+        public PlayController(IGameService gameService, IQuizService quizzesService, ILeaderboardService leaderboardsService)
         {
             _gameService = gameService;
             _quizzesService = quizzesService;
+            _leaderboardsService = leaderboardsService;
         }
 
         [HttpGet]

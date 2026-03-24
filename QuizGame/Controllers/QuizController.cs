@@ -2,20 +2,21 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using QuizGame.Core.Contracts;
     using QuizGame.Data.Models;
     using QuizGame.ViewModels.Leaderboards;
     using QuizGame.ViewModels.Quizzes;
     using System.Collections.Generic;
 
-    public class QuizzesController : Controller
+    public class QuizController : Controller
     {
-        private readonly IQuizzesService _quizzesService;
+        private readonly IQuizService _quizzesService;
+        private readonly ILeaderboardService _leaderboardsService;
 
-        public QuizzesController(IQuizzesService quizzesService)
+        public QuizController(IQuizService quizzesService, ILeaderboardService leaderboardsService)
         {
             _quizzesService = quizzesService;
+            _leaderboardsService = leaderboardsService;
         }
 
         [Authorize]
@@ -64,7 +65,7 @@
                 TempData["Success"] = "Created quiz successfully.";
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["Error"] = "Failed to create quiz.";
 
@@ -75,7 +76,7 @@
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             try
             {
@@ -101,7 +102,7 @@
                 Quiz? currentQuiz = await _quizzesService.GetQuizByIdAsync(id);
                 if (currentQuiz == null) return NotFound();
 
-                Leaderboard leaderboard = await _quizzesService.GetLeaderboardByQuizIdAsync(currentQuiz.Id);
+                Leaderboard? leaderboard = await _leaderboardsService.GetLeaderboardByQuizIdAsync(currentQuiz.Id);
                 if (leaderboard == null)
                     leaderboard = await _quizzesService.CreateLeaderboardAsync(currentQuiz.Id);
 
@@ -158,7 +159,7 @@
 
                 if (!ModelState.IsValid)
                 {
-                    var quiz = await _quizzesService.GetQuizByIdAsync(id);
+                    Quiz? quiz = await _quizzesService.GetQuizByIdAsync(id);
                     if (quiz == null) return NotFound();
 
                     quizViewModel = await _quizzesService.EditQuizGetDataFromForm(quiz);
@@ -170,7 +171,7 @@
                     .Select(q => q.QuestionId)
                     .ToList();
 
-                await _quizzesService.UpdateQuizAsync(quizViewModel, selectedIds);
+                await _quizzesService.EditQuizAsync(quizViewModel, selectedIds);
 
                 TempData["Success"] = "Updated quiz successfully.";
                 return RedirectToAction(nameof(Index));
@@ -221,7 +222,7 @@
         {
             try
             {
-                List<LeaderboardRowVm>? rows = await _quizzesService.GetLeaderboardEntriesByIdAsync(id);
+                IEnumerable<LeaderboardRowVm>? rows = await _leaderboardsService.GetLeaderboardEntriesByQuizIdAsync(id);
 
                 ViewBag.QuizId = id;
                 return View(rows);

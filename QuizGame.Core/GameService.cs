@@ -4,23 +4,25 @@
     using QuizGame.Core.Contracts;
     using QuizGame.Data;
     using QuizGame.Data.Models;
+    using QuizGame.Data.Repository.Contracts;
     using QuizGame.ViewModels.Game;
-    using QuizGame.ViewModels.Leaderboards;
     using System;
-    using System.Collections.Generic;
     using System.Security.Claims;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class GameService : IGameService
     {
-        private readonly QuizGameDbContext _dbContext;
-
-        private readonly IQuizzesService _quizzesService;
-        public GameService(QuizGameDbContext dbContext, IQuizzesService quizzesService)
+        private readonly IGameRepository _gameRepository;
+        private readonly IQuizRepository _quizRepository;
+        private readonly IQuizService _quizService;
+        private readonly ILeaderboardRepository _leaderboardRepository;
+        public GameService(IQuizRepository quizRepository, ILeaderboardRepository leaderboardRepository,
+           IQuizService quizService,IGameRepository gameRepository)
         {
-            _dbContext = dbContext;
-            _quizzesService = quizzesService;
+           _quizRepository = quizRepository;
+            _leaderboardRepository = leaderboardRepository;
+            _quizService = quizService;
+            _gameRepository = gameRepository;
         }
 
         public async Task<int> StartAttemptAsync(int quizId, ClaimsPrincipal user)
@@ -28,7 +30,7 @@
             string userId = user.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new Exception("User not logged in");
 
-            Quiz? quiz = await _quizzesService.GetQuizByIdAsync(quizId);
+            Quiz? quiz = await _quizRepository.GetQuizByIdAsync(quizId);
 
             if (quiz == null)
                 throw new Exception("Quiz not found");
@@ -45,19 +47,20 @@
                 IsFinished = false
             };
 
-            _dbContext.QuizAttempts.Add(attempt);
-            await _dbContext.SaveChangesAsync();
+            bool isAddSuccessful = await _gameRepository.AddQuizAttemptAsync(attempt);
+
+            if (!isAddSuccessful)
+            {
+                throw new InvalidOperationException();
+            }
 
             return attempt.Id;
         }
 
         public async Task<PlayQuestionViewModel?> GetCurrentQuestionAsync(int attemptId)
         {
-            var attempt = await _dbContext.QuizAttempts
-                .Include(a => a.Quiz)
-                    .ThenInclude(q => q.Questions)
-                        .ThenInclude(qn => qn.Answers)
-                .FirstOrDefaultAsync(a => a.Id == attemptId);
+            QuizAttempt? attempt = await _gameRepository
+                .GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId);
 
             if (attempt == null) throw new Exception("Attempt not found");
             if (attempt.IsFinished) return null;
@@ -69,15 +72,15 @@
             if (attempt.CurrentQuestionIndex >= questions.Count)
                 return null;
 
-            var qn = questions[attempt.CurrentQuestionIndex];
+            Question question = questions[attempt.CurrentQuestionIndex];
 
             return new PlayQuestionViewModel
             {
                 AttemptId = attempt.Id,
                 QuizId = attempt.QuizId,
-                QuestionId = qn.Id,
-                QuestionContent = qn.Content,
-                Answers = qn.Answers.Select(a => new AnswerVm
+                QuestionId = question.Id,
+                QuestionContent = question.Content,
+                Answers = question.Answers.Select(a => new AnswerVm
                 {
                     Id = a.Id,
                     Content = a.Content
@@ -87,48 +90,54 @@
 
         public async Task SubmitAnswerAsync(int attemptId, int questionId, int selectedAnswerId)
         {
-            var attempt = await _dbContext.QuizAttempts
-                .Include(a => a.Quiz)
-                    .ThenInclude(q => q.Questions)
-                        .ThenInclude(qn => qn.Answers)
-                .FirstOrDefaultAsync(a => a.Id == attemptId);
+            var attempt = await _gameRepository.GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId);
 
             if (attempt == null) throw new Exception("Attempt not found");
             if (attempt.IsFinished) return;
 
-            var question = attempt.Quiz.Questions.FirstOrDefault(q => q.Id == questionId);
+            Question? question = attempt.Quiz.Questions.FirstOrDefault(q => q.Id == questionId);
             if (question == null) throw new Exception("Question not found in this quiz");
 
-            var selected = question.Answers.FirstOrDefault(a => a.Id == selectedAnswerId);
+            Answer? selected = question.Answers.FirstOrDefault(a => a.Id == selectedAnswerId);
             if (selected == null)
                 throw new Exception($"Selected answer not found. questionId={questionId}, selectedAnswerId={selectedAnswerId}");
 
-            var isCorrect = selected.IsCorrect;
+            bool isCorrect = selected.IsCorrect;
 
-            var earned = isCorrect ? question.Points : 0;
+            int earned = isCorrect ? question.Points : 0;
 
             attempt.Score += earned;
 
-            _dbContext.AttemptAnswers.Add(new AttemptAnswer
+            AttemptAnswer newAttemptAnswer = new AttemptAnswer
             {
                 QuizAttemptId = attempt.Id,
                 QuestionId = questionId,
                 SelectedAnswerId = selectedAnswerId,
                 IsCorrect = isCorrect,
                 EarnedPoints = earned
-            });
+            };
+
+            bool isAddSuccessful = await _gameRepository.AddAttemptAnswerAsync(newAttemptAnswer);
+
+            if (!isAddSuccessful)
+            {
+                throw new InvalidOperationException();
+            }
 
             attempt.CurrentQuestionIndex += 1;
 
-            await _dbContext.SaveChangesAsync();
+            bool isNextQuestion = await _gameRepository.UpdateAttempAnswersAsync(newAttemptAnswer);
+
+            if (!isNextQuestion)
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         public async Task<GameSummaryViewModel> FinishAttemptAsync(int attemptId)
         {
-            var attempt = await _dbContext.QuizAttempts
-                .Include(a => a.Quiz)
-                .Include(a => a.Answers)
-                .FirstOrDefaultAsync(a => a.Id == attemptId)
+            QuizAttempt attempt = await _gameRepository
+                .GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId)
                 ?? throw new Exception("Attempt not found");
 
             if (!attempt.IsFinished)
@@ -136,10 +145,9 @@
                 attempt.IsFinished = true;
             }
 
-            await _quizzesService.SubmitScoreAsync(attempt.QuizId, attempt.UserId, attempt.Score);
-            await _dbContext.SaveChangesAsync();
+            await _quizService.SubmitScoreAsync(attempt.QuizId, attempt.UserId, attempt.Score);
 
-            Leaderboard? leaderboard = await _quizzesService.GetLeaderboardByQuizIdAsync(attempt.QuizId);
+            Leaderboard? leaderboard = await _leaderboardRepository.GetLeaderboardWithEntriesAndUserByQuizIdAsync(attempt.QuizId);
             int leaderboardId = leaderboard.Id;
 
             return new GameSummaryViewModel
