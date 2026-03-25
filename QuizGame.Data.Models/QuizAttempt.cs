@@ -4,22 +4,25 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Text;
 
     public class QuizAttempt
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [ForeignKey(nameof(Quiz))]
-        public int QuizId { get; set; }
+        public Guid QuizId { get; set; }
         public Quiz Quiz { get; set; } = null!;
 
-        public string UserId { get; set; } = null!;
+        [ForeignKey(nameof(User))]
+        public Guid UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; } = null!;
 
         public int CurrentQuestionIndex { get; set; }
 
         public int Score { get; set; }
+
         public int MaxScore { get; set; }
 
         public bool IsFinished { get; set; }

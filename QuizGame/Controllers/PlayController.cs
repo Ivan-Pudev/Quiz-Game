@@ -36,11 +36,11 @@
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Start(int id) 
+        public async Task<IActionResult> Start(Guid id) 
         {
             try
             {
-                int attemptId = await _gameService.StartAttemptAsync(id, User);
+                Guid attemptId = await _gameService.StartAttemptAsync(id, User);
 
                 return RedirectToAction(nameof(Question), new { attemptId });
             }
@@ -54,7 +54,7 @@
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Question(int attemptId)
+        public async Task<IActionResult> Question(Guid attemptId)
         {
             try
             {
@@ -75,11 +75,11 @@
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> SubmitAnswer(int attemptId,int questionId,int selectedAnswerId)
+        public async Task<IActionResult> SubmitAnswer(Guid attemptId,Guid questionId,Guid selectedAnswerId)
         {
             try
             {
-                if (selectedAnswerId <= 0)
+                if (selectedAnswerId == null)
                     return RedirectToAction(nameof(Question), new { attemptId });
 
                 await _gameService.SubmitAnswerAsync(attemptId, questionId, selectedAnswerId);
@@ -94,7 +94,7 @@
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Finish(int attemptId,int quizId,string userId)
+        public async Task<IActionResult> Finish(Guid attemptId,Guid quizId,Guid userId)
         {
             try
             {

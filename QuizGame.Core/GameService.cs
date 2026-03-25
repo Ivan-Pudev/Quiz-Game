@@ -25,7 +25,7 @@
             _gameRepository = gameRepository;
         }
 
-        public async Task<int> StartAttemptAsync(int quizId, ClaimsPrincipal user)
+        public async Task<Guid> StartAttemptAsync(Guid quizId, ClaimsPrincipal user)
         {
             string userId = user.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new Exception("User not logged in");
@@ -40,7 +40,7 @@
             var attempt = new QuizAttempt
             {
                 QuizId = quizId,
-                UserId = userId,
+                UserId = Guid.Parse(userId),
                 CurrentQuestionIndex = 0,
                 Score = 0,
                 MaxScore = maxScore,
@@ -57,7 +57,7 @@
             return attempt.Id;
         }
 
-        public async Task<PlayQuestionViewModel?> GetCurrentQuestionAsync(int attemptId)
+        public async Task<PlayQuestionViewModel?> GetCurrentQuestionAsync(Guid attemptId)
         {
             QuizAttempt? attempt = await _gameRepository
                 .GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId);
@@ -88,7 +88,7 @@
             };
         }
 
-        public async Task SubmitAnswerAsync(int attemptId, int questionId, int selectedAnswerId)
+        public async Task SubmitAnswerAsync(Guid attemptId, Guid questionId, Guid selectedAnswerId)
         {
             var attempt = await _gameRepository.GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId);
 
@@ -134,7 +134,7 @@
             }
         }
 
-        public async Task<GameSummaryViewModel> FinishAttemptAsync(int attemptId)
+        public async Task<GameSummaryViewModel> FinishAttemptAsync(Guid attemptId)
         {
             QuizAttempt attempt = await _gameRepository
                 .GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId)
@@ -148,7 +148,7 @@
             await _quizService.SubmitScoreAsync(attempt.QuizId, attempt.UserId, attempt.Score);
 
             Leaderboard? leaderboard = await _leaderboardRepository.GetLeaderboardWithEntriesAndUserByQuizIdAsync(attempt.QuizId);
-            int leaderboardId = leaderboard.Id;
+            Guid leaderboardId = leaderboard.Id;
 
             return new GameSummaryViewModel
             {

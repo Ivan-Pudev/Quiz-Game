@@ -1,17 +1,13 @@
 ﻿namespace QuizGame.Data.Models
 {
-    using Microsoft.AspNetCore.Identity;
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Text;
     using static GCommon.EntityValidationConstants;
 
     public class Answer
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(AnswerContentMaxLength)]
@@ -21,7 +17,7 @@
 
         [Required]
         [ForeignKey(nameof(Question))]
-        public int QuestionId { get; set; }
+        public Guid QuestionId { get; set; }
 
         [Required]
         public virtual Question Question { get; set; } = null!;

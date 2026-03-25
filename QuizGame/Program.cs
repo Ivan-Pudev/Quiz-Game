@@ -5,6 +5,7 @@ namespace QuizGame
     using QuizGame.Core;
     using QuizGame.Core.Contracts;
     using QuizGame.Data;
+    using QuizGame.Data.Models;
     using QuizGame.Data.Repository;
     using QuizGame.Data.Repository.Contracts;
 
@@ -21,7 +22,7 @@ namespace QuizGame
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<QuizGameDbContext>();
             builder.Services.AddRazorPages();
             builder.Services.AddControllersWithViews();

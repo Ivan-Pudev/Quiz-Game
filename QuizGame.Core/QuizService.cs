@@ -22,7 +22,7 @@ namespace QuizGame.Core
             _leaderboardRepository = leaderboardRepository;
         }
 
-        public async Task<Quiz?> GetQuizByIdAsync(int id)
+        public async Task<Quiz?> GetQuizByIdAsync(Guid? id)
         {
             return await _quizRepository.GetQuizByIdAsync(id);
         }
@@ -62,7 +62,7 @@ namespace QuizGame.Core
             await AddSelectedQuestions(newQuiz, viewModel.SelectedQuestionIds);
             await CreateLeaderboardAsync(newQuiz.Id);
         }
-        public async Task AddSelectedQuestions(Quiz selectedQuiz, List<int> selectedIds)
+        public async Task AddSelectedQuestions(Quiz selectedQuiz, List<Guid> selectedIds)
         {
             IEnumerable<Question> selectedQuestions = await _quizRepository
                 .GetQuestionsFromTheirIdsAsync(selectedIds);
@@ -98,7 +98,7 @@ namespace QuizGame.Core
             IEnumerable<Question> allQuestions = await _quizRepository
                 .GetAllQuestionsOrderByContentAsync();
 
-            List<int> selectedIds = quizModel.Questions.Select(q => q.Id).ToList();
+            List<Guid> selectedIds = quizModel.Questions.Select(q => q.Id).ToList();
 
             EditQuizViewModel viewModel = new EditQuizViewModel()
             {
@@ -119,7 +119,7 @@ namespace QuizGame.Core
             return viewModel;
         }
 
-        public async Task EditQuizAsync(EditQuizViewModel viewModel, List<int> selectedQuestionId)
+        public async Task EditQuizAsync(EditQuizViewModel viewModel, List<Guid> selectedQuestionId)
         {
 
             Quiz? quiz = await _quizRepository.GetQuizWithQuestionsByIdAsync(viewModel.Id);
@@ -162,7 +162,7 @@ namespace QuizGame.Core
             }
         }
 
-        public async Task DeleteQuizAsync(int id)
+        public async Task DeleteQuizAsync(Guid id)
         {
             Quiz? quiz = await _quizRepository
                 .GetQuizWithQuestionsByIdAsync(id);
@@ -180,7 +180,7 @@ namespace QuizGame.Core
             }
         }
 
-        public async Task<Leaderboard> CreateLeaderboardAsync(int quizId)
+        public async Task<Leaderboard> CreateLeaderboardAsync(Guid quizId)
         {
             Leaderboard? leaderboard = await _leaderboardRepository
                 .GetLeaderboardsWithEntriesByQuizIdAsync(quizId);
@@ -207,7 +207,7 @@ namespace QuizGame.Core
             return leaderboard;
         }
 
-        public async Task SubmitScoreAsync(int quizId, string userId, int score)
+        public async Task SubmitScoreAsync(Guid quizId, Guid userId, int score)
         {
             var leaderboard = await CreateLeaderboardAsync(quizId);
 
@@ -241,7 +241,7 @@ namespace QuizGame.Core
             await RecalculateRanksAsync(entry.LeaderboardId);
         }
 
-        private async Task RecalculateRanksAsync(int leaderboardId)
+        private async Task RecalculateRanksAsync(Guid leaderboardId)
         {
             List<LeaderboardEntry> entries = await _leaderboardRepository
                 .GetLeaderboardEntriesOrderedByScoreByLeaderboardIdAsync(leaderboardId);

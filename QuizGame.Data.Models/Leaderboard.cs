@@ -10,7 +10,7 @@ namespace QuizGame.Data.Models
     public class Leaderboard
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(QuizTitleMaxLength)]
@@ -26,7 +26,7 @@ namespace QuizGame.Data.Models
 
         [Required]
         [ForeignKey(nameof(Quiz))]
-        public int QuizId { get; set; }
+        public Guid QuizId { get; set; }
 
         public virtual Quiz Quiz { get; set; } = null!;
         public virtual ICollection<LeaderboardEntry> Entries { get; set; } =

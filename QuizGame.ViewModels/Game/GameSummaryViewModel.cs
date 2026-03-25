@@ -4,7 +4,7 @@
     using System;
     public class GameSummaryViewModel
     {
-        public int QuizId { get; set; }
+        public Guid QuizId { get; set; }
 
         public string QuizTitle { get; set; } = null!;
 
@@ -16,7 +16,7 @@
 
         public int TotalQuestions { get; set; }
 
-        public int LeaderboardId { get; set; }
+        public Guid LeaderboardId { get; set; }
 
         public virtual Leaderboard Leaderboard { get; set; } = null!;
     }

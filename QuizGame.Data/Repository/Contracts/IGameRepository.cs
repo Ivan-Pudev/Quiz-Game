@@ -3,7 +3,7 @@
     using QuizGame.Data.Models;
     public interface IGameRepository
     {
-        Task<QuizAttempt?> GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(int attemptId);
+        Task<QuizAttempt?> GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(Guid attemptId);
 
         Task<bool> AddQuizAttemptAsync(QuizAttempt attempt);
 

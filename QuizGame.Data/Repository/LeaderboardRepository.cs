@@ -12,7 +12,7 @@
         {
         }
 
-        public async Task<Leaderboard?> GetLeaderboardWithEntriesAndUserByQuizIdAsync(int quizId)
+        public async Task<Leaderboard?> GetLeaderboardWithEntriesAndUserByQuizIdAsync(Guid quizId)
         {
             return await DbContext.Leaderboards
                 .AsNoTracking()
@@ -30,14 +30,14 @@
                 .ToListAsync();
         }
 
-        public async Task<Leaderboard?> GetLeaderboardsWithEntriesByQuizIdAsync(int quizId)
+        public async Task<Leaderboard?> GetLeaderboardsWithEntriesByQuizIdAsync(Guid quizId)
         {
             return await DbContext.Leaderboards
                 .Include(l => l.Entries)
                 .FirstOrDefaultAsync(l => l.QuizId == quizId);
         }
 
-        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(int? id)
+        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(Guid? id)
         {
             return await DbContext.LeaderboardEntries
                 .AsNoTracking()
@@ -47,7 +47,8 @@
                 .ToListAsync();
         }
 
-        public async Task<List<LeaderboardEntry>> GetLeaderboardEntriesOrderedByScoreByLeaderboardIdAsync(int leaderboardId)
+        public async Task<List<LeaderboardEntry>> GetLeaderboardEntriesOrderedByScoreByLeaderboardIdAsync
+            (Guid leaderboardId)
         {
             return await DbContext.LeaderboardEntries
                 .Where(e => e.LeaderboardId == leaderboardId)
@@ -64,7 +65,7 @@
             return resultCount > 0;
         }
 
-        public async Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync(int leaderboardId, string userId)
+        public async Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync(Guid leaderboardId, Guid userId)
         {
             return await DbContext.LeaderboardEntries
                 .FirstOrDefaultAsync(e => e.Id == leaderboardId && e.UserId == userId);

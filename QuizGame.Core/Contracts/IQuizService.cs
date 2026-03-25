@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     public interface IQuizService
     {
-        Task<Quiz?> GetQuizByIdAsync(int id);
+        Task<Quiz?> GetQuizByIdAsync(Guid? id);
 
         Task<IEnumerable<Quiz>> GetAllQuizzesAsync();
 
@@ -16,18 +16,18 @@
 
         Task CreateQuizAsync(CreateQuizViewModel viewModel);
 
-        Task AddSelectedQuestions(Quiz selectedQuiz, List<int> selectedQuestionsIds);
+        Task AddSelectedQuestions(Quiz selectedQuiz, List<Guid> selectedQuestionsIds);
 
         DetailsQuizViewModel ShowQuizDetails(Quiz quizModel);
 
         Task<EditQuizViewModel> EditQuizGetDataFromForm(Quiz quizModel);
 
-        Task EditQuizAsync(EditQuizViewModel viewModel, List<int> selectedQuestionIds);
+        Task EditQuizAsync(EditQuizViewModel viewModel, List<Guid> selectedQuestionIds);
 
-        Task DeleteQuizAsync(int id);
+        Task DeleteQuizAsync(Guid id);
 
-        Task<Leaderboard> CreateLeaderboardAsync(int quizId);
+        Task<Leaderboard> CreateLeaderboardAsync(Guid quizId);
 
-        Task SubmitScoreAsync(int quizId, string userId, int score);
+        Task SubmitScoreAsync(Guid quizId, Guid userId, int score);
     }
 }

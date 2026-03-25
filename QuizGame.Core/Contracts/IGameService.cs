@@ -10,9 +10,9 @@
 
     public interface IGameService
     {
-        Task<int> StartAttemptAsync(int quizId, ClaimsPrincipal user);
-        Task<PlayQuestionViewModel?> GetCurrentQuestionAsync(int attemptId);
-        Task SubmitAnswerAsync(int quizId, int questionId, int score);
-        Task<GameSummaryViewModel> FinishAttemptAsync(int attemptId);
+        Task<Guid> StartAttemptAsync(Guid quizId, ClaimsPrincipal user);
+        Task<PlayQuestionViewModel?> GetCurrentQuestionAsync(Guid attemptId);
+        Task SubmitAnswerAsync(Guid quizId, Guid questionId, Guid selectedAnswerId);
+        Task<GameSummaryViewModel> FinishAttemptAsync(Guid attemptId);
     }
 }

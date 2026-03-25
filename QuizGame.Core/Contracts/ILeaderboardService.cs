@@ -8,7 +8,7 @@
     {
         Task<IEnumerable<Leaderboard>> GetLeaderboardsAsync();
 
-        Task<IEnumerable<LeaderboardRowVm>?> GetLeaderboardEntriesByQuizIdAsync(int? quizId);
-        Task<Leaderboard?> GetLeaderboardByQuizIdAsync(int id);
+        Task<IEnumerable<LeaderboardRowVm>?> GetLeaderboardEntriesByQuizIdAsync(Guid? quizId);
+        Task<Leaderboard?> GetLeaderboardByQuizIdAsync(Guid id);
     }
 }

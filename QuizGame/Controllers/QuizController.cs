@@ -74,7 +74,7 @@
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(Guid? id)
         {
             try
             {
@@ -100,9 +100,9 @@
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id <= 0)
+            if (id == null)
             {
                 return BadRequest();
             }
@@ -130,7 +130,7 @@
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditQuizViewModel quizViewModel)
+        public async Task<IActionResult> Edit(Guid id, EditQuizViewModel quizViewModel)
         {
             try
             {
@@ -145,7 +145,7 @@
                     return View(quizViewModel);
                 }
 
-                List<int> selectedIds = quizViewModel.SelectedQuestions
+                List<Guid> selectedIds = quizViewModel.SelectedQuestions
                     .Where(q => q.IsSelected)
                     .Select(q => q.QuestionId)
                     .ToList();
@@ -170,11 +170,11 @@
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                if (id <= 0)
+                if (id == null)
                 {
                     TempData["Error"] = "Invalid quiz id.";
                     return RedirectToAction(nameof(Index));
@@ -197,7 +197,7 @@
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Leaderboard(int id)
+        public async Task<IActionResult> Leaderboard(Guid id)
         {
             try
             {

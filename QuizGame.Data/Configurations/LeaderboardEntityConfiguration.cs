@@ -13,10 +13,10 @@ namespace QuizGame.Data.Configurations
         {
             new Leaderboard()
             {
-                Id = 1,
+                Id = Guid.Parse("a68f8eb4-76ef-41d8-beca-10bce9c61403"),
                 Title = "Friday Night Rankings",
                 Description = "Top scores for friday players",
-                QuizId = 1, 
+                QuizId = Guid.Parse("4301f783-5664-41fc-af53-c2de0e1e454a"), 
                 LastUpdated = DateOnly.FromDateTime(DateTime.UtcNow),
             },
         };

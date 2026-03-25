@@ -12,8 +12,8 @@ using QuizGame.Data;
 namespace QuizGame.Data.Migrations
 {
     [DbContext(typeof(QuizGameDbContext))]
-    [Migration("20260215185238_AddedRankPropertyToEntries")]
-    partial class AddedRankPropertyToEntries
+    [Migration("20260325211112_IntroduceApplicationUser")]
+    partial class IntroduceApplicationUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,11 @@ namespace QuizGame.Data.Migrations
 
             modelBuilder.Entity("CategoryQuestion", b =>
                 {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoriesId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("QuestionsId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("QuestionsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CategoriesId", "QuestionsId");
 
@@ -42,65 +42,61 @@ namespace QuizGame.Data.Migrations
                     b.HasData(
                         new
                         {
-                            CategoriesId = 2,
-                            QuestionsId = 1
+                            CategoriesId = new Guid("b0cc81f8-da63-4ce3-ad27-93298ccf26c1"),
+                            QuestionsId = new Guid("7043874b-ed1a-4ab0-8519-5dc8408abf68")
                         },
                         new
                         {
-                            CategoriesId = 3,
-                            QuestionsId = 1
+                            CategoriesId = new Guid("644fb15e-3f0a-4d29-aae9-7deb3f08ee5c"),
+                            QuestionsId = new Guid("7c6b2449-c14b-4da6-85e5-6e511a16e0ec")
                         },
                         new
                         {
-                            CategoriesId = 2,
-                            QuestionsId = 2
+                            CategoriesId = new Guid("31961ab3-d6c8-43f4-8744-d9b21a815ed0"),
+                            QuestionsId = new Guid("7c6b2449-c14b-4da6-85e5-6e511a16e0ec")
                         },
                         new
                         {
-                            CategoriesId = 4,
-                            QuestionsId = 2
+                            CategoriesId = new Guid("b0cc81f8-da63-4ce3-ad27-93298ccf26c1"),
+                            QuestionsId = new Guid("9b3b9e33-4e2a-4ea2-9ae0-7c0ab10cb09b")
                         },
                         new
                         {
-                            CategoriesId = 3,
-                            QuestionsId = 3
+                            CategoriesId = new Guid("b0cc81f8-da63-4ce3-ad27-93298ccf26c1"),
+                            QuestionsId = new Guid("49850a02-893a-45e9-8e5b-2a01a040d60e")
                         },
                         new
                         {
-                            CategoriesId = 3,
-                            QuestionsId = 5
+                            CategoriesId = new Guid("31961ab3-d6c8-43f4-8744-d9b21a815ed0"),
+                            QuestionsId = new Guid("6271f595-33f5-480e-978b-02f9febc50de")
                         },
                         new
                         {
-                            CategoriesId = 4,
-                            QuestionsId = 6
+                            CategoriesId = new Guid("644fb15e-3f0a-4d29-aae9-7deb3f08ee5c"),
+                            QuestionsId = new Guid("6271f595-33f5-480e-978b-02f9febc50de")
                         },
                         new
                         {
-                            CategoriesId = 2,
-                            QuestionsId = 6
+                            CategoriesId = new Guid("211a7b3d-1535-4fae-9015-9ce026df66f9"),
+                            QuestionsId = new Guid("5267700d-9487-4ab0-9e24-3962e71df82e")
                         },
                         new
                         {
-                            CategoriesId = 1,
-                            QuestionsId = 7
+                            CategoriesId = new Guid("31961ab3-d6c8-43f4-8744-d9b21a815ed0"),
+                            QuestionsId = new Guid("698f8ac5-a4ae-4031-a7fa-f4bf245f374e")
                         },
                         new
                         {
-                            CategoriesId = 4,
-                            QuestionsId = 8
-                        },
-                        new
-                        {
-                            CategoriesId = 3,
-                            QuestionsId = 10
+                            CategoriesId = new Guid("b0cc81f8-da63-4ce3-ad27-93298ccf26c1"),
+                            QuestionsId = new Guid("e861c8e7-8dbd-447b-9943-78c812a14768")
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -124,7 +120,7 @@ namespace QuizGame.Data.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -138,9 +134,8 @@ namespace QuizGame.Data.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -149,13 +144,347 @@ namespace QuizGame.Data.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("QuestionQuiz", b =>
+                {
+                    b.Property<Guid>("QuestionsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuizzesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("QuestionsId", "QuizzesId");
+
+                    b.HasIndex("QuizzesId");
+
+                    b.ToTable("QuestionQuiz");
+
+                    b.HasData(
+                        new
+                        {
+                            QuestionsId = new Guid("7043874b-ed1a-4ab0-8519-5dc8408abf68"),
+                            QuizzesId = new Guid("4301f783-5664-41fc-af53-c2de0e1e454a")
+                        },
+                        new
+                        {
+                            QuestionsId = new Guid("7c6b2449-c14b-4da6-85e5-6e511a16e0ec"),
+                            QuizzesId = new Guid("4301f783-5664-41fc-af53-c2de0e1e454a")
+                        },
+                        new
+                        {
+                            QuestionsId = new Guid("9b3b9e33-4e2a-4ea2-9ae0-7c0ab10cb09b"),
+                            QuizzesId = new Guid("4301f783-5664-41fc-af53-c2de0e1e454a")
+                        });
+                });
+
+            modelBuilder.Entity("QuizGame.Data.Models.Answer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Answers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("96e0ef87-3297-49ac-975e-77dc99fd09fe"),
+                            Content = "Mars",
+                            IsCorrect = true,
+                            QuestionId = new Guid("7043874b-ed1a-4ab0-8519-5dc8408abf68")
+                        },
+                        new
+                        {
+                            Id = new Guid("a367a8af-d6b8-4034-b64e-25b32bb9263e"),
+                            Content = "Venus",
+                            IsCorrect = false,
+                            QuestionId = new Guid("7043874b-ed1a-4ab0-8519-5dc8408abf68")
+                        },
+                        new
+                        {
+                            Id = new Guid("65ea829c-9836-411d-8c36-8592770bd3a8"),
+                            Content = "Jupiter",
+                            IsCorrect = false,
+                            QuestionId = new Guid("7043874b-ed1a-4ab0-8519-5dc8408abf68")
+                        },
+                        new
+                        {
+                            Id = new Guid("b0c63cdc-c8b0-480f-aee0-2fbf3c8ec052"),
+                            Content = "True",
+                            IsCorrect = false,
+                            QuestionId = new Guid("7c6b2449-c14b-4da6-85e5-6e511a16e0ec")
+                        },
+                        new
+                        {
+                            Id = new Guid("ec7da6e0-c8ad-40dd-88b3-7f1a6176f9de"),
+                            Content = "False",
+                            IsCorrect = true,
+                            QuestionId = new Guid("7c6b2449-c14b-4da6-85e5-6e511a16e0ec")
+                        },
+                        new
+                        {
+                            Id = new Guid("c6e4797b-245a-43a5-b1cb-e7786affc96c"),
+                            Content = "Au",
+                            IsCorrect = true,
+                            QuestionId = new Guid("9b3b9e33-4e2a-4ea2-9ae0-7c0ab10cb09b")
+                        },
+                        new
+                        {
+                            Id = new Guid("4df293fa-7c21-43b4-af7e-224c627adcf3"),
+                            Content = "Ag",
+                            IsCorrect = false,
+                            QuestionId = new Guid("9b3b9e33-4e2a-4ea2-9ae0-7c0ab10cb09b")
+                        },
+                        new
+                        {
+                            Id = new Guid("4643ff98-ea40-4f28-aa75-1a4628263c72"),
+                            Content = "Gd",
+                            IsCorrect = false,
+                            QuestionId = new Guid("9b3b9e33-4e2a-4ea2-9ae0-7c0ab10cb09b")
+                        },
+                        new
+                        {
+                            Id = new Guid("862cccfe-37fa-4219-bbe2-020497a550e9"),
+                            Content = "Vincent van Gogh",
+                            IsCorrect = true,
+                            QuestionId = new Guid("adc049bd-1ef8-423b-9c37-a0e0b2708595")
+                        },
+                        new
+                        {
+                            Id = new Guid("80ada585-44cf-44c8-8265-288dd2789c0d"),
+                            Content = "Pablo Picasso",
+                            IsCorrect = false,
+                            QuestionId = new Guid("adc049bd-1ef8-423b-9c37-a0e0b2708595")
+                        },
+                        new
+                        {
+                            Id = new Guid("78ea56a6-5157-491e-87b9-93c92e4cc54a"),
+                            Content = "Claude Monet",
+                            IsCorrect = false,
+                            QuestionId = new Guid("adc049bd-1ef8-423b-9c37-a0e0b2708595")
+                        },
+                        new
+                        {
+                            Id = new Guid("79a88322-5898-4b26-8cd7-35d41fac5dcd"),
+                            Content = "True",
+                            IsCorrect = true,
+                            QuestionId = new Guid("49850a02-893a-45e9-8e5b-2a01a040d60e")
+                        },
+                        new
+                        {
+                            Id = new Guid("3dfbcde1-75c8-495a-9c33-f8551c040928"),
+                            Content = "False",
+                            IsCorrect = false,
+                            QuestionId = new Guid("49850a02-893a-45e9-8e5b-2a01a040d60e")
+                        },
+                        new
+                        {
+                            Id = new Guid("6df6355c-2db9-4d95-8928-2ff9d084576a"),
+                            Content = "Australia",
+                            IsCorrect = true,
+                            QuestionId = new Guid("6271f595-33f5-480e-978b-02f9febc50de")
+                        },
+                        new
+                        {
+                            Id = new Guid("54b83914-8e31-4ce0-abd2-5eca6289248f"),
+                            Content = "South Africa",
+                            IsCorrect = false,
+                            QuestionId = new Guid("6271f595-33f5-480e-978b-02f9febc50de")
+                        },
+                        new
+                        {
+                            Id = new Guid("d1fc7d89-7ba0-4132-8890-877d30b1b12b"),
+                            Content = "Brazil",
+                            IsCorrect = false,
+                            QuestionId = new Guid("6271f595-33f5-480e-978b-02f9febc50de")
+                        },
+                        new
+                        {
+                            Id = new Guid("241b93eb-9da0-4c28-b71c-be72e60d81e5"),
+                            Content = "12",
+                            IsCorrect = true,
+                            QuestionId = new Guid("5267700d-9487-4ab0-9e24-3962e71df82e")
+                        },
+                        new
+                        {
+                            Id = new Guid("4d0eb419-e569-484a-aaa6-ee3cc330b47d"),
+                            Content = "14",
+                            IsCorrect = false,
+                            QuestionId = new Guid("5267700d-9487-4ab0-9e24-3962e71df82e")
+                        },
+                        new
+                        {
+                            Id = new Guid("6c05587a-61a7-4d0c-ba67-9a14c32f1c7a"),
+                            Content = "16",
+                            IsCorrect = false,
+                            QuestionId = new Guid("5267700d-9487-4ab0-9e24-3962e71df82e")
+                        },
+                        new
+                        {
+                            Id = new Guid("61a0689b-7621-4862-8c67-7dde69f2d2c3"),
+                            Content = "1912",
+                            IsCorrect = true,
+                            QuestionId = new Guid("698f8ac5-a4ae-4031-a7fa-f4bf245f374e")
+                        },
+                        new
+                        {
+                            Id = new Guid("2f1c439a-eb0e-40b3-8106-25f79c81b9d1"),
+                            Content = "1905",
+                            IsCorrect = false,
+                            QuestionId = new Guid("698f8ac5-a4ae-4031-a7fa-f4bf245f374e")
+                        },
+                        new
+                        {
+                            Id = new Guid("fd1cd964-91e3-496f-8c34-6311644fc383"),
+                            Content = "1920",
+                            IsCorrect = false,
+                            QuestionId = new Guid("698f8ac5-a4ae-4031-a7fa-f4bf245f374e")
+                        },
+                        new
+                        {
+                            Id = new Guid("616afaf1-57b7-45c5-aeb1-6268efbc2337"),
+                            Content = "True",
+                            IsCorrect = false,
+                            QuestionId = new Guid("04df888f-1067-4e40-821b-9892fc603f5b")
+                        },
+                        new
+                        {
+                            Id = new Guid("3922d6ba-c178-44d6-b080-109bccd7af25"),
+                            Content = "False",
+                            IsCorrect = true,
+                            QuestionId = new Guid("04df888f-1067-4e40-821b-9892fc603f5b")
+                        },
+                        new
+                        {
+                            Id = new Guid("653274d3-62e7-4fe3-9eb3-c5fc0f54e5fa"),
+                            Content = "Hydrogen",
+                            IsCorrect = true,
+                            QuestionId = new Guid("e861c8e7-8dbd-447b-9943-78c812a14768")
+                        },
+                        new
+                        {
+                            Id = new Guid("fcee2ffa-8b19-4650-9652-5e09aeb770ee"),
+                            Content = "Helium",
+                            IsCorrect = false,
+                            QuestionId = new Guid("e861c8e7-8dbd-447b-9943-78c812a14768")
+                        },
+                        new
+                        {
+                            Id = new Guid("5804614e-88a6-48a5-a9a6-faf1c76ddc77"),
+                            Content = "Oxygen",
+                            IsCorrect = false,
+                            QuestionId = new Guid("e861c8e7-8dbd-447b-9943-78c812a14768")
+                        });
+                });
+
+            modelBuilder.Entity("QuizGame.Data.Models.ApplicationUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -167,6 +496,10 @@ namespace QuizGame.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -214,347 +547,11 @@ namespace QuizGame.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("QuestionQuiz", b =>
-                {
-                    b.Property<int>("QuestionsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuizzesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("QuestionsId", "QuizzesId");
-
-                    b.HasIndex("QuizzesId");
-
-                    b.ToTable("QuestionQuiz");
-
-                    b.HasData(
-                        new
-                        {
-                            QuestionsId = 1,
-                            QuizzesId = 1
-                        },
-                        new
-                        {
-                            QuestionsId = 2,
-                            QuizzesId = 1
-                        },
-                        new
-                        {
-                            QuestionsId = 3,
-                            QuizzesId = 1
-                        });
-                });
-
-            modelBuilder.Entity("QuizGame.Data.Models.Answer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("Answers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Content = "Mars",
-                            IsCorrect = true,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Content = "Venus",
-                            IsCorrect = false,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Content = "Jupiter",
-                            IsCorrect = false,
-                            QuestionId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Content = "True",
-                            IsCorrect = false,
-                            QuestionId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Content = "False",
-                            IsCorrect = true,
-                            QuestionId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Content = "Au",
-                            IsCorrect = true,
-                            QuestionId = 3
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Content = "Ag",
-                            IsCorrect = false,
-                            QuestionId = 3
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Content = "Gd",
-                            IsCorrect = false,
-                            QuestionId = 3
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Content = "Vincent van Gogh",
-                            IsCorrect = true,
-                            QuestionId = 4
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Content = "Pablo Picasso",
-                            IsCorrect = false,
-                            QuestionId = 4
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Content = "Claude Monet",
-                            IsCorrect = false,
-                            QuestionId = 4
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Content = "True",
-                            IsCorrect = true,
-                            QuestionId = 5
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Content = "False",
-                            IsCorrect = false,
-                            QuestionId = 5
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Content = "Australia",
-                            IsCorrect = true,
-                            QuestionId = 6
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Content = "South Africa",
-                            IsCorrect = false,
-                            QuestionId = 6
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Content = "Brazil",
-                            IsCorrect = false,
-                            QuestionId = 6
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Content = "12",
-                            IsCorrect = true,
-                            QuestionId = 7
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Content = "14",
-                            IsCorrect = false,
-                            QuestionId = 7
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Content = "16",
-                            IsCorrect = false,
-                            QuestionId = 7
-                        },
-                        new
-                        {
-                            Id = 20,
-                            Content = "1912",
-                            IsCorrect = true,
-                            QuestionId = 8
-                        },
-                        new
-                        {
-                            Id = 21,
-                            Content = "1905",
-                            IsCorrect = false,
-                            QuestionId = 8
-                        },
-                        new
-                        {
-                            Id = 22,
-                            Content = "1920",
-                            IsCorrect = false,
-                            QuestionId = 8
-                        },
-                        new
-                        {
-                            Id = 23,
-                            Content = "True",
-                            IsCorrect = false,
-                            QuestionId = 9
-                        },
-                        new
-                        {
-                            Id = 24,
-                            Content = "False",
-                            IsCorrect = true,
-                            QuestionId = 9
-                        },
-                        new
-                        {
-                            Id = 25,
-                            Content = "Hydrogen",
-                            IsCorrect = true,
-                            QuestionId = 10
-                        },
-                        new
-                        {
-                            Id = 26,
-                            Content = "Helium",
-                            IsCorrect = false,
-                            QuestionId = 10
-                        },
-                        new
-                        {
-                            Id = 27,
-                            Content = "Oxygen",
-                            IsCorrect = false,
-                            QuestionId = 10
-                        });
-                });
-
             modelBuilder.Entity("QuizGame.Data.Models.AttemptAnswer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("EarnedPoints")
                         .HasColumnType("int");
@@ -562,29 +559,31 @@ namespace QuizGame.Data.Migrations
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("QuizAttemptId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("QuizAttemptId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SelectedAnswerId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SelectedAnswerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
                     b.HasIndex("QuizAttemptId");
+
+                    b.HasIndex("SelectedAnswerId");
 
                     b.ToTable("AttemptAnswers");
                 });
 
             modelBuilder.Entity("QuizGame.Data.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(2048)
@@ -602,41 +601,39 @@ namespace QuizGame.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("211a7b3d-1535-4fae-9015-9ce026df66f9"),
                             ImageUrl = "https://img.freepik.com/free-photo/blackboard-inscribed-with-scientific-formulas-calculations_1150-19413.jpg?semt=ais_hybrid&w=740&q=80",
                             Name = "Math"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("644fb15e-3f0a-4d29-aae9-7deb3f08ee5c"),
                             ImageUrl = "https://img.freepik.com/free-vector/geography-subject-with-worldmap-books_1308-30998.jpg?semt=ais_hybrid&w=740&q=80",
                             Name = "Geography"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("b0cc81f8-da63-4ce3-ad27-93298ccf26c1"),
                             Name = "Science"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("31961ab3-d6c8-43f4-8744-d9b21a815ed0"),
                             ImageUrl = "https://dualcreditathome.com/wp-content/uploads/2014/02/history.jpg",
                             Name = "History"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = new Guid("915f826d-fe20-4be5-a8f2-37a65c9a92c4"),
                             Name = "Hobbies"
                         });
                 });
 
             modelBuilder.Entity("QuizGame.Data.Models.Leaderboard", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -646,8 +643,8 @@ namespace QuizGame.Data.Migrations
                     b.Property<DateOnly>("LastUpdated")
                         .HasColumnType("date");
 
-                    b.Property<int>("QuizId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("QuizId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -664,24 +661,22 @@ namespace QuizGame.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("a68f8eb4-76ef-41d8-beca-10bce9c61403"),
                             Description = "Top scores for friday players",
-                            LastUpdated = new DateOnly(2026, 2, 15),
-                            QuizId = 1,
+                            LastUpdated = new DateOnly(2026, 3, 25),
+                            QuizId = new Guid("4301f783-5664-41fc-af53-c2de0e1e454a"),
                             Title = "Friday Night Rankings"
                         });
                 });
 
             modelBuilder.Entity("QuizGame.Data.Models.LeaderboardEntry", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LeaderboardId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LeaderboardId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Rank")
                         .HasColumnType("int");
@@ -689,27 +684,23 @@ namespace QuizGame.Data.Migrations
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("LeaderboardId", "UserId")
-                        .IsUnique();
+                    b.HasIndex("LeaderboardId", "UserId");
 
                     b.ToTable("LeaderboardEntries");
                 });
 
             modelBuilder.Entity("QuizGame.Data.Models.Question", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Complexity")
                         .HasColumnType("int");
@@ -732,7 +723,7 @@ namespace QuizGame.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("7043874b-ed1a-4ab0-8519-5dc8408abf68"),
                             Complexity = 1,
                             Content = "Which planet is known as the Red Planet?",
                             Points = 10,
@@ -740,7 +731,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("7c6b2449-c14b-4da6-85e5-6e511a16e0ec"),
                             Complexity = 2,
                             Content = "The Great Wall of China was built in a single century.",
                             Points = 15,
@@ -748,7 +739,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("9b3b9e33-4e2a-4ea2-9ae0-7c0ab10cb09b"),
                             Complexity = 3,
                             Content = "What is the chemical symbol for Gold?",
                             Points = 25,
@@ -756,7 +747,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("adc049bd-1ef8-423b-9c37-a0e0b2708595"),
                             Complexity = 2,
                             Content = "Who painted the 'Starry Night'?",
                             Points = 20,
@@ -764,7 +755,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 5,
+                            Id = new Guid("49850a02-893a-45e9-8e5b-2a01a040d60e"),
                             Complexity = 3,
                             Content = "Sound travels faster in water than in air.",
                             Points = 20,
@@ -772,7 +763,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 6,
+                            Id = new Guid("6271f595-33f5-480e-978b-02f9febc50de"),
                             Complexity = 1,
                             Content = "Which country is home to the Kangaroo?",
                             Points = 10,
@@ -780,7 +771,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 7,
+                            Id = new Guid("5267700d-9487-4ab0-9e24-3962e71df82e"),
                             Complexity = 2,
                             Content = "What is the square root of 144?",
                             Points = 15,
@@ -788,7 +779,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 8,
+                            Id = new Guid("698f8ac5-a4ae-4031-a7fa-f4bf245f374e"),
                             Complexity = 3,
                             Content = "In which year did the Titanic sink?",
                             Points = 30,
@@ -796,7 +787,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 9,
+                            Id = new Guid("04df888f-1067-4e40-821b-9892fc603f5b"),
                             Complexity = 1,
                             Content = "Humans have four lungs.",
                             Points = 10,
@@ -804,7 +795,7 @@ namespace QuizGame.Data.Migrations
                         },
                         new
                         {
-                            Id = 10,
+                            Id = new Guid("e861c8e7-8dbd-447b-9943-78c812a14768"),
                             Complexity = 4,
                             Content = "Which element has the atomic number 1?",
                             Points = 40,
@@ -814,19 +805,17 @@ namespace QuizGame.Data.Migrations
 
             modelBuilder.Entity("QuizGame.Data.Models.Quiz", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("LeaderboardId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LeaderboardId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -843,9 +832,9 @@ namespace QuizGame.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("4301f783-5664-41fc-af53-c2de0e1e454a"),
                             Description = "A mix of everything!",
-                            LeaderboardId = 0,
+                            LeaderboardId = new Guid("00000000-0000-0000-0000-000000000000"),
                             StartTime = new DateTime(2026, 2, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Friday Night Trivia"
                         });
@@ -853,11 +842,9 @@ namespace QuizGame.Data.Migrations
 
             modelBuilder.Entity("QuizGame.Data.Models.QuizAttempt", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CurrentQuestionIndex")
                         .HasColumnType("int");
@@ -868,19 +855,20 @@ namespace QuizGame.Data.Migrations
                     b.Property<int>("MaxScore")
                         .HasColumnType("int");
 
-                    b.Property<int>("QuizId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("QuizId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("QuizId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("QuizAttempts");
                 });
@@ -900,51 +888,51 @@ namespace QuizGame.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("QuizGame.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("QuizGame.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("QuizGame.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("QuizGame.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -979,11 +967,27 @@ namespace QuizGame.Data.Migrations
 
             modelBuilder.Entity("QuizGame.Data.Models.AttemptAnswer", b =>
                 {
+                    b.HasOne("QuizGame.Data.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("QuizGame.Data.Models.QuizAttempt", "QuizAttempt")
                         .WithMany("Answers")
                         .HasForeignKey("QuizAttemptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("QuizGame.Data.Models.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("SelectedAnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("Question");
 
                     b.Navigation("QuizAttempt");
                 });
@@ -1007,8 +1011,8 @@ namespace QuizGame.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
+                    b.HasOne("QuizGame.Data.Models.ApplicationUser", "User")
+                        .WithMany("LeaderboardEntries")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1026,7 +1030,22 @@ namespace QuizGame.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("QuizGame.Data.Models.ApplicationUser", "User")
+                        .WithMany("QuizAttempts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Quiz");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("QuizGame.Data.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("LeaderboardEntries");
+
+                    b.Navigation("QuizAttempts");
                 });
 
             modelBuilder.Entity("QuizGame.Data.Models.Leaderboard", b =>

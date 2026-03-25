@@ -2,7 +2,7 @@
 {
     public class QuestionSelectionViewModel
     {
-        public int QuestionId { get; set; }
+        public Guid QuestionId { get; set; }
         public string Content { get; set; } = null!;
         public bool IsSelected { get; set; }
 

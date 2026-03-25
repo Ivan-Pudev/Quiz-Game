@@ -6,7 +6,7 @@
     public class DetailsQuizViewModel
     {
         
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Title { get; set; } = null!;
 
@@ -17,7 +17,7 @@
         public int TotalPoints
             => Questions.Sum(q => q.Points);
 
-        public int LeaderboardId { get; set; }
+        public Guid LeaderboardId { get; set; }
 
         public virtual Leaderboard Leaderboard { get; set; } = null!;
 

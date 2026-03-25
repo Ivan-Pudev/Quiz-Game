@@ -21,7 +21,7 @@ namespace QuizGame.Core
             return _leaderboardRepository.GetLeaderboardsWithQuizzesAsync();
         }
 
-        public async Task<IEnumerable<LeaderboardRowVm>?> GetLeaderboardEntriesByQuizIdAsync(int? quizId)
+        public async Task<IEnumerable<LeaderboardRowVm>?> GetLeaderboardEntriesByQuizIdAsync(Guid? quizId)
         {
             IEnumerable<LeaderboardEntry> entries = await _leaderboardRepository.GetLeaderboardEntriesByIdAsync(quizId);
 
@@ -35,7 +35,7 @@ namespace QuizGame.Core
                 .ToList();
         }
 
-        public async Task<Leaderboard?> GetLeaderboardByQuizIdAsync(int id)
+        public async Task<Leaderboard?> GetLeaderboardByQuizIdAsync(Guid id)
         {
             return await _leaderboardRepository.GetLeaderboardsWithEntriesByQuizIdAsync(id);
         }

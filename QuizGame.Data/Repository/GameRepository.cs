@@ -9,7 +9,7 @@ namespace QuizGame.Data.Repository
         public GameRepository(QuizGameDbContext dbContext) 
             : base(dbContext) { }
 
-        public async Task<QuizAttempt?> GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(int attemptId)
+        public async Task<QuizAttempt?> GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(Guid attemptId)
         {
             return await DbContext.QuizAttempts
                 .Include(a => a.Quiz)

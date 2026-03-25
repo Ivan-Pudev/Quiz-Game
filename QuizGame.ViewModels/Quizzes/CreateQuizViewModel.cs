@@ -5,8 +5,6 @@
     using static GCommon.EntityValidationConstants;
     public class CreateQuizViewModel
     {
-        [Key]
-        public int Id { get; set; }
 
         [Required]
         [MinLength(QuizTitleMinLength)]
@@ -25,7 +23,7 @@
         public List<Question> Questions { get; set; } 
             = new List<Question>();
 
-        public List<int> SelectedQuestionIds { get; set; } 
-            = new List<int>();
+        public List<Guid> SelectedQuestionIds { get; set; } 
+            = new List<Guid>();
     }
 }

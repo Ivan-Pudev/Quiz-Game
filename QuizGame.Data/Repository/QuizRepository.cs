@@ -32,7 +32,7 @@
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Question>> GetQuestionsFromTheirIdsAsync(List<int> selectedQuestionsIds)
+        public async Task<IEnumerable<Question>> GetQuestionsFromTheirIdsAsync(List<Guid> selectedQuestionsIds)
         {
             return await DbContext
                 .Questions
@@ -54,7 +54,7 @@
                 .ToListAsync();
         }
 
-        public async Task<Quiz?> GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(int? id)
+        public async Task<Quiz?> GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(Guid? id)
         {
             return await DbContext
                 .Quizzes
@@ -67,14 +67,14 @@
                 .FirstOrDefaultAsync(q => q.Id == id);
         }
 
-        public async Task<Quiz?> GetQuizWithQuestionsByIdAsync(int id)
+        public async Task<Quiz?> GetQuizWithQuestionsByIdAsync(Guid id)
         {
             return await DbContext.Quizzes
                 .Include(q => q.Questions)
                 .FirstOrDefaultAsync(q => q.Id == id);
         }
 
-        public async Task<Quiz?> GetQuizByIdAsync(int id)
+        public async Task<Quiz?> GetQuizByIdAsync(Guid? id)
         {
             return await DbContext
                 .Quizzes

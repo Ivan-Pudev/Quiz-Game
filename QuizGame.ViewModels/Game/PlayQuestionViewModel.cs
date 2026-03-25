@@ -4,10 +4,10 @@
     using System.Collections.Generic;
     public class PlayQuestionViewModel
     {
-        public int AttemptId { get; set; }
-        public int QuizId { get; set; }
+        public Guid AttemptId { get; set; }
+        public Guid QuizId { get; set; }
 
-        public int QuestionId { get; set; }
+        public Guid QuestionId { get; set; }
         public string QuestionContent { get; set; } = null!;
 
         public List<AnswerVm> Answers { get; set; } = null!;

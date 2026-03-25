@@ -8,7 +8,7 @@
     public class Quiz
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [MaxLength(QuizTitleMaxLength)]
@@ -23,7 +23,7 @@
         public DateTime StartTime { get; set; }
 
         [ForeignKey(nameof(Leaderboard))]
-        public int LeaderboardId { get; set; }
+        public Guid LeaderboardId { get; set; }
         public virtual Leaderboard? Leaderboard { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }

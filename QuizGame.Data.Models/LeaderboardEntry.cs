@@ -10,13 +10,13 @@ namespace QuizGame.Data.Models
     public class LeaderboardEntry
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [ForeignKey(nameof(User))]
-        public string UserId { get; set; } = null!;
+        public Guid UserId { get; set; }
 
-        public virtual IdentityUser User { get; set; } = null!;
+        public virtual ApplicationUser User { get; set; } = null!;
 
         public int Score { get; set; }
 
@@ -24,7 +24,7 @@ namespace QuizGame.Data.Models
 
         [Required]
         [ForeignKey(nameof(Leaderboard))]
-        public int LeaderboardId { get; set; }
+        public Guid LeaderboardId { get; set; }
 
         public virtual Leaderboard Leaderboard { get; set; } = null!;
     }

@@ -1,11 +1,12 @@
 ﻿namespace QuizGame.Data
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using QuizGame.Data.Models;
 
     public class QuizGameDbContext(DbContextOptions<QuizGameDbContext> options) 
-        : IdentityDbContext(options)
+        : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
     {
         public virtual DbSet<Question> Questions { get; set; } = null!;
         public virtual DbSet<Quiz> Quizzes { get; set; } = null!;
@@ -15,6 +16,7 @@
         public virtual DbSet<Answer> Answers { get; set; } = null!;
         public virtual DbSet<QuizAttempt> QuizAttempts { get; set; } = null!;
         public virtual DbSet<AttemptAnswer> AttemptAnswers { get; set; } = null!;
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

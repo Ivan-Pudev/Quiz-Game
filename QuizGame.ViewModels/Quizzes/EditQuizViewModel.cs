@@ -5,8 +5,7 @@
 
     public class EditQuizViewModel
     {
-        [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MinLength(QuizTitleMinLength)]
@@ -28,7 +27,7 @@
         public virtual List<QuestionSelectionViewModel> SelectedQuestions { get; set; }
         = new List<QuestionSelectionViewModel>();
 
-        public virtual List<int> SelectedQuestionsIds 
+        public virtual List<Guid> SelectedQuestionsIds 
          => SelectedQuestions.Select(q=>q.QuestionId).ToList();
     }
 }

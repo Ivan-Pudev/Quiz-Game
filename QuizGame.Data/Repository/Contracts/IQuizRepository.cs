@@ -11,15 +11,15 @@
 
         Task<IEnumerable<Question>> GetAllQuestionsOrderByContentAsync();
 
-        Task<IEnumerable<Question>> GetQuestionsFromTheirIdsAsync(List<int> selectedQuestionsIds);
+        Task<IEnumerable<Question>> GetQuestionsFromTheirIdsAsync(List<Guid> selectedQuestionsIds);
 
         Task<IEnumerable<Quiz>> GetAllQuizzesWithQuestionAnswersCategoriesAndLeaderboardAsync();
 
-        Task<Quiz?> GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(int? id);
+        Task<Quiz?> GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(Guid? id);
 
-        Task<Quiz?> GetQuizWithQuestionsByIdAsync(int id);
+        Task<Quiz?> GetQuizWithQuestionsByIdAsync(Guid id);
 
-        Task<Quiz?> GetQuizByIdAsync(int id);
+        Task<Quiz?> GetQuizByIdAsync(Guid? id);
 
         Task<bool> AddQuizAsync(Quiz quiz);
 

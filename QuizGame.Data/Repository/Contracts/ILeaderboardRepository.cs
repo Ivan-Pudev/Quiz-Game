@@ -6,17 +6,19 @@
 
     public interface ILeaderboardRepository
     {
-        Task<Leaderboard?> GetLeaderboardWithEntriesAndUserByQuizIdAsync(int quizId);
+        Task<Leaderboard?> GetLeaderboardWithEntriesAndUserByQuizIdAsync(Guid quizId);
 
         Task<IEnumerable<Leaderboard>> GetLeaderboardsWithQuizzesAsync();
 
-        Task<Leaderboard?> GetLeaderboardsWithEntriesByQuizIdAsync(int quizId);
+        Task<Leaderboard?> GetLeaderboardsWithEntriesByQuizIdAsync(Guid quizId);
 
-        Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(int? id);
+        Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(Guid? id);
 
-        Task<List<LeaderboardEntry>> GetLeaderboardEntriesOrderedByScoreByLeaderboardIdAsync(int leaderboardId);
+        Task<List<LeaderboardEntry>> GetLeaderboardEntriesOrderedByScoreByLeaderboardIdAsync
+            (Guid leaderboardId);
 
-        Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync(int leaderboardId, string userId);
+        Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync
+            (Guid leaderboardId, Guid userId);
 
         Task<bool> AddLeaderboardAsync(Leaderboard leaderboard);
 
