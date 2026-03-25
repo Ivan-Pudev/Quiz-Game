@@ -6,7 +6,7 @@
     {
         public int QuizId { get; set; }
 
-        public string QuizTitle { get; set; } = "";
+        public string QuizTitle { get; set; } = null!;
 
         public int Score { get; set; }
 

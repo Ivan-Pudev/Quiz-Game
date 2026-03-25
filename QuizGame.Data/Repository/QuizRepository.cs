@@ -72,8 +72,6 @@
             return await DbContext.Quizzes
                 .Include(q => q.Questions)
                 .FirstOrDefaultAsync(q => q.Id == id);
-
-            
         }
 
         public async Task<Quiz?> GetQuizByIdAsync(int id)
@@ -88,7 +86,7 @@
             await DbContext.Quizzes.AddAsync(quiz);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
 
         public async Task<bool> UpdateQuizAsync(Quiz quiz)
@@ -96,7 +94,7 @@
             DbContext.Quizzes.Update(quiz);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
 
         public async Task<bool> HardDeleteQuizAsync(Quiz quiz)
@@ -104,7 +102,7 @@
             DbContext.Quizzes.Remove(quiz);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
     }
 }

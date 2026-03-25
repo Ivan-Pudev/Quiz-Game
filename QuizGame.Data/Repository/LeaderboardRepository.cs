@@ -37,7 +37,7 @@
                 .FirstOrDefaultAsync(l => l.QuizId == quizId);
         }
 
-        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(int id)
+        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(int? id)
         {
             return await DbContext.LeaderboardEntries
                 .AsNoTracking()
@@ -61,7 +61,7 @@
             await DbContext.Leaderboards.AddAsync(leaderboard);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
 
         public async Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync(int leaderboardId, string userId)
@@ -75,7 +75,7 @@
             await DbContext.LeaderboardEntries.AddAsync(leaderboardEntry);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
 
         public async Task<bool> UpdateLeaderboardEntriesAsync(LeaderboardEntry leaderboardEntry)
@@ -83,7 +83,7 @@
             DbContext.LeaderboardEntries.Update(leaderboardEntry);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
     }
 }

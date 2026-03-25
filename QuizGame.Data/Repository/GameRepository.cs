@@ -23,23 +23,23 @@ namespace QuizGame.Data.Repository
             await DbContext.QuizAttempts.AddAsync(attempt);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
 
         public async Task<bool> AddAttemptAnswerAsync(AttemptAnswer answer)
         {
-            await DbContext.AddAsync(answer);
+            await DbContext.AttemptAnswers.AddAsync(answer);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
 
         public async Task<bool> UpdateAttempAnswersAsync(AttemptAnswer answer)
         {
-            DbContext.Update(answer);
+            DbContext.AttemptAnswers.Update(answer);
             int resultCount = await SaveChangesAsync();
 
-            return resultCount == 1;
+            return resultCount > 0;
         }
     }
 }

@@ -6,7 +6,8 @@
     using QuizGame.Data.Models;
     using QuizGame.ViewModels.Leaderboards;
 
-    public class LeaderboardController : Controller
+    [Authorize]
+    public class LeaderboardController : BaseController
     {
         private readonly ILeaderboardService _leaderboardsService;
 
@@ -15,7 +16,6 @@
             _leaderboardsService = leaderboardsService;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -33,9 +33,8 @@
             
         }
 
-        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
             try
             {

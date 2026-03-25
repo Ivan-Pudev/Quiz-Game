@@ -12,7 +12,7 @@
 
         Task<Leaderboard?> GetLeaderboardsWithEntriesByQuizIdAsync(int quizId);
 
-        Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(int id);
+        Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(int? id);
 
         Task<List<LeaderboardEntry>> GetLeaderboardEntriesOrderedByScoreByLeaderboardIdAsync(int leaderboardId);
 

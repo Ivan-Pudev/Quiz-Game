@@ -7,19 +7,18 @@
     using QuizGame.ViewModels.Game;
     using System.Collections.Generic;
 
-    public class PlayController : Controller
+    public class PlayController : BaseController 
     {
         private readonly IGameService _gameService;
         private readonly IQuizService _quizzesService;
-        private readonly ILeaderboardService _leaderboardsService;
 
-        public PlayController(IGameService gameService, IQuizService quizzesService, ILeaderboardService leaderboardsService)
+        public PlayController(IGameService gameService, IQuizService quizzesService)
         {
             _gameService = gameService;
             _quizzesService = quizzesService;
-            _leaderboardsService = leaderboardsService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -74,6 +73,7 @@
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> SubmitAnswer(int attemptId,int questionId,int selectedAnswerId)
         {
@@ -92,6 +92,7 @@
             }
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Finish(int attemptId,int quizId,string userId)
         {

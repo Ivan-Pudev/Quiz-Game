@@ -8,7 +8,7 @@
     using QuizGame.ViewModels.Quizzes;
     using System.Collections.Generic;
 
-    public class QuizController : Controller
+    public class QuizController : BaseController
     {
         private readonly IQuizService _quizzesService;
         private readonly ILeaderboardService _leaderboardsService;
@@ -59,8 +59,6 @@
         {
             try
             {
-                IEnumerable<Question> allQuestions = await _quizzesService.GetAllQuestionsAsync();
-
                 await _quizzesService.CreateQuizAsync(quizViewModel);
                 TempData["Success"] = "Created quiz successfully.";
                 return RedirectToAction(nameof(Index));
@@ -80,25 +78,6 @@
         {
             try
             {
-                //Quiz? currentQuiz = await _quizzesService.GetQuizByIdAsync(id);
-
-                //if (currentQuiz == null)
-                //{
-                //    return NotFound();
-                //}
-
-                //currentQuiz.LeaderboardId = currentQuiz.LeaderboardId;
-
-                //Leaderboard? leaderboard = await _quizzesService.GetLeaderboardByIdAsync(currentQuiz.LeaderboardId);
-
-                //if(leaderboard == null)
-                //{
-                //    return NotFound();
-                //}
-
-                //DetailsQuizViewModel quizViewModel = _quizzesService.ShowQuizDetails(currentQuiz);
-
-                //return View(quizViewModel);
                 Quiz? currentQuiz = await _quizzesService.GetQuizByIdAsync(id);
                 if (currentQuiz == null) return NotFound();
 
@@ -123,13 +102,13 @@
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
             try
             {
-                if (id <= 0)
-                {
-                    return BadRequest();
-                }
-
                 Quiz? currentQuiz = await _quizzesService.GetQuizByIdAsync(id);
 
                 if (currentQuiz == null)

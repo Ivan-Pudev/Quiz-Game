@@ -24,7 +24,7 @@ namespace QuizGame.Core
 
         public async Task<Quiz?> GetQuizByIdAsync(int id)
         {
-           return await _quizRepository.GetQuizByIdAsync(id);
+            return await _quizRepository.GetQuizByIdAsync(id);
         }
 
         public async Task<IEnumerable<Quiz>> GetAllQuizzesAsync()
@@ -59,27 +59,24 @@ namespace QuizGame.Core
                 Questions = new List<Question>(),
             };
 
-            await AddSelectedQuestions(newQuiz,viewModel.SelectedQuestionIds);
+            await AddSelectedQuestions(newQuiz, viewModel.SelectedQuestionIds);
             await CreateLeaderboardAsync(newQuiz.Id);
         }
-        public async Task AddSelectedQuestions(Quiz selectedQuiz,List<int> selectedIds)
+        public async Task AddSelectedQuestions(Quiz selectedQuiz, List<int> selectedIds)
         {
             IEnumerable<Question> selectedQuestions = await _quizRepository
                 .GetQuestionsFromTheirIdsAsync(selectedIds);
 
-            foreach (Question q in selectedQuestions)
-            {
-                selectedQuiz.Questions.Add(q);
-            }
+            selectedQuiz.Questions = selectedQuestions.ToList();
 
-           bool isAddedSuccessful = await _quizRepository.AddQuizAsync(selectedQuiz);
+            bool isAddedSuccessful = await _quizRepository.AddQuizAsync(selectedQuiz);
 
-            if (!isAddedSuccessful)
+             if (!isAddedSuccessful)
             {
                 throw new InvalidOperationException();
             }
         }
-        
+
         public DetailsQuizViewModel ShowQuizDetails(Quiz quizModel)
         {
             DetailsQuizViewModel viewModel = new DetailsQuizViewModel()
@@ -90,7 +87,7 @@ namespace QuizGame.Core
                 StartTime = quizModel.StartTime,
                 Questions = quizModel.Questions,
                 Answers = quizModel.Questions.Select(q => q.Answers).ToList(),
-                Categories = quizModel.Questions.Select(q=>q.Categories).ToList(),  
+                Categories = quizModel.Questions.Select(q => q.Categories).ToList(),
             };
 
             return viewModel;
@@ -122,7 +119,7 @@ namespace QuizGame.Core
             return viewModel;
         }
 
-        public async Task EditQuizAsync(EditQuizViewModel viewModel,List<int> selectedQuestionId)
+        public async Task EditQuizAsync(EditQuizViewModel viewModel, List<int> selectedQuestionId)
         {
 
             Quiz? quiz = await _quizRepository.GetQuizWithQuestionsByIdAsync(viewModel.Id);
@@ -133,20 +130,38 @@ namespace QuizGame.Core
             quiz.Title = viewModel.Title;
             quiz.Description = viewModel.Description;
             quiz.StartTime = viewModel.StartTime;
-            quiz.Questions.Clear(); 
 
             if (selectedQuestionId.Count > 0)
             {
-                var questions = await _quizRepository
+                quiz.Questions.Clear();
+
+                IEnumerable<Question> questions = await _quizRepository
                     .GetQuestionsFromTheirIdsAsync(selectedQuestionId);
 
-                foreach (Question question in questions)
-                    quiz.Questions.Add(question);
-            }
+                quiz.Questions = questions.ToList();
 
-            await _quizRepository.UpdateQuizAsync(quiz);
+                bool isUpdateSuccessful = await _quizRepository.UpdateQuizAsync(quiz);
+
+                if (!isUpdateSuccessful)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                //bool isUpdateSuccessful;
+                //foreach (Question question in questions)
+                //{
+                //    quiz.Questions.Add(question);
+
+                //    isUpdateSuccessful = await _quizRepository.UpdateQuizAsync(quiz);
+
+                //    if (!isUpdateSuccessful)
+                //    {
+                //        throw new InvalidOperationException();
+                //    }
+                //}
+            }
         }
-        
+
         public async Task DeleteQuizAsync(int id)
         {
             Quiz? quiz = await _quizRepository
@@ -207,7 +222,7 @@ namespace QuizGame.Core
                     UserId = userId,
                     Score = score,
                 };
-                
+
                 bool isAddedSuccessful = await _leaderboardRepository.AddLeaderboardEntryAsync(entry);
 
                 if (!isAddedSuccessful)
