@@ -25,6 +25,11 @@ namespace QuizGame
             builder.Services.AddDbContext<QuizGameDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
+            //builder.Services.AddControllersWithViews(options =>
+            //{
+            //    options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
+            //});
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
@@ -63,17 +68,38 @@ namespace QuizGame
             app.UseRouting();
 
             app.UseAuthentication();
+
+            app.Use((context,next) =>
+            {
+                if (context.User.Identity?.IsAuthenticated == true && context.Request.Path == "/")
+                {
+                    if (context.User.IsInRole("Admin"))
+                    {
+                        context.Response.Redirect("/Admin/Home/Index");
+                    }
+                }
+                return next();
+            });
+
             app.UseAuthorization();
 
             app.UseRolesSeeder();
             app.UseAdminUserSeeder();
 
+            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+
             app.MapStaticAssets();
             app.MapRazorPages();
+
+            app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+
             app.MapRazorPages()
                .WithStaticAssets();
 
