@@ -11,8 +11,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,7 @@
     <ProjectReference Include="..\QuizGame.Data.Models\QuizGame.Data.Models.csproj" />
     <ProjectReference Include="..\QuizGame.Data\QuizGame.Data.csproj" />
     <ProjectReference Include="..\QuizGame.ViewModels\QuizGame.ViewModels.csproj" />
+    <ProjectReference Include="..\QuizGame.Web.Infrastructure\QuizGame.Web.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

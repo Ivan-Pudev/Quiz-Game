@@ -8,6 +8,7 @@
   </Folder>
   <Folder Name="/Web/">
     <Project Path="QuizGame.ViewModels/QuizGame.ViewModels.csproj" Id="68557bd0-c76a-4bc8-9169-88a65e840ebd" />
+    <Project Path="QuizGame.Web.Infrastructure/QuizGame.Web.Infrastructure.csproj" Id="f0e99f17-13f5-4015-a0db-e743792d0cb2" />
     <Project Path="QuizGame/QuizGame.csproj" />
   </Folder>
   <Project Path="QuizGame.Common/QuizGame.GCommon.csproj" Id="bcadc37c-db12-49e3-b174-d40d90a4e3d5" />
