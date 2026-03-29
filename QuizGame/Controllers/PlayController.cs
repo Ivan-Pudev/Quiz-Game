@@ -10,12 +10,12 @@
     public class PlayController : BaseController 
     {
         private readonly IGameService _gameService;
-        private readonly IQuizService _quizzesService;
+        private readonly IQuizService _quizService;
 
-        public PlayController(IGameService gameService, IQuizService quizzesService)
+        public PlayController(IGameService gameService, IQuizService quizService)
         {
             _gameService = gameService;
-            _quizzesService = quizzesService;
+            _quizService = quizService;
         }
 
         [AllowAnonymous]
@@ -24,7 +24,7 @@
         {
             try
             {
-                IEnumerable<Quiz> allQuizzes = await _quizzesService.GetAllQuizzesAsync();
+                IEnumerable<Quiz> allQuizzes = await _quizService.GetAllQuizzesAsync();
                 return View(allQuizzes);
             }
             catch (Exception)

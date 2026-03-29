@@ -1,14 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using QuizGame.Core.Contracts;
-using QuizGame.Data;
+﻿using QuizGame.Core.Contracts;
 using QuizGame.Data.Models;
 using QuizGame.Data.Repository.Contracts;
-using QuizGame.ViewModels;
-using QuizGame.ViewModels.Leaderboards;
 using QuizGame.ViewModels.Quizzes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QuizGame.Core
 {
@@ -24,7 +17,7 @@ namespace QuizGame.Core
 
         public async Task<Quiz?> GetQuizByIdAsync(Guid? id)
         {
-            return await _quizRepository.GetQuizByIdAsync(id);
+            return await _quizRepository.GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(id);
         }
 
         public async Task<IEnumerable<Quiz>> GetAllQuizzesAsync()
@@ -56,10 +49,21 @@ namespace QuizGame.Core
                 Title = viewModel.Title,
                 Description = viewModel.Description,
                 StartTime = viewModel.StartTime,
-                Questions = new List<Question>(),
+                Questions = new List<Question>()
             };
 
-            await AddSelectedQuestions(newQuiz, viewModel.SelectedQuestionIds);
+            if (viewModel.SelectedQuestionIds.Any())
+            {
+                await AddSelectedQuestions(newQuiz, viewModel.SelectedQuestionIds);
+
+                bool isAddedSuccessful = await _quizRepository.AddQuizAsync(newQuiz);
+
+                if (!isAddedSuccessful)
+                {
+                    throw new InvalidOperationException();
+                }
+
+            }
             await CreateLeaderboardAsync(newQuiz.Id);
         }
         public async Task AddSelectedQuestions(Quiz selectedQuiz, List<Guid> selectedIds)
@@ -68,13 +72,6 @@ namespace QuizGame.Core
                 .GetQuestionsFromTheirIdsAsync(selectedIds);
 
             selectedQuiz.Questions = selectedQuestions.ToList();
-
-            bool isAddedSuccessful = await _quizRepository.AddQuizAsync(selectedQuiz);
-
-             if (!isAddedSuccessful)
-            {
-                throw new InvalidOperationException();
-            }
         }
 
         public DetailsQuizViewModel ShowQuizDetails(Quiz quizModel)
@@ -135,10 +132,7 @@ namespace QuizGame.Core
             {
                 quiz.Questions.Clear();
 
-                IEnumerable<Question> questions = await _quizRepository
-                    .GetQuestionsFromTheirIdsAsync(selectedQuestionId);
-
-                quiz.Questions = questions.ToList();
+                await AddSelectedQuestions(quiz, selectedQuestionId);
 
                 bool isUpdateSuccessful = await _quizRepository.UpdateQuizAsync(quiz);
 
@@ -146,19 +140,6 @@ namespace QuizGame.Core
                 {
                     throw new InvalidOperationException();
                 }
-
-                //bool isUpdateSuccessful;
-                //foreach (Question question in questions)
-                //{
-                //    quiz.Questions.Add(question);
-
-                //    isUpdateSuccessful = await _quizRepository.UpdateQuizAsync(quiz);
-
-                //    if (!isUpdateSuccessful)
-                //    {
-                //        throw new InvalidOperationException();
-                //    }
-                //}
             }
         }
 
@@ -185,31 +166,31 @@ namespace QuizGame.Core
             Leaderboard? leaderboard = await _leaderboardRepository
                 .GetLeaderboardsWithEntriesByQuizIdAsync(quizId);
 
-            if (leaderboard != null) return leaderboard;
-
-            Quiz? quiz = await _quizRepository.GetQuizByIdAsync(quizId);
-
-            leaderboard = new Leaderboard
+            if (leaderboard == null)
             {
-                QuizId = quizId,
-                Title = quiz!.Title,
-                Description = quiz.Description,
-                LastUpdated = DateOnly.FromDateTime(DateTime.UtcNow)
-            };
+                Quiz? quiz = await _quizRepository.GetQuizWithQuestionsByIdAsync(quizId);
 
-            bool isAddSuccessful = await _leaderboardRepository.AddLeaderboardAsync(leaderboard);
+                leaderboard = new Leaderboard
+                {
+                    QuizId = quizId,
+                    Title = quiz!.Title,
+                    Description = quiz.Description,
+                    LastUpdated = DateOnly.FromDateTime(DateTime.UtcNow)
+                };
 
-            if (!isAddSuccessful)
-            {
-                throw new InvalidOperationException();
+                bool isAddSuccessful = await _leaderboardRepository.AddLeaderboardAsync(leaderboard);
+
+                if (!isAddSuccessful)
+                {
+                    throw new InvalidOperationException();
+                }
             }
-
             return leaderboard;
         }
 
         public async Task SubmitScoreAsync(Guid quizId, Guid userId, int score)
         {
-            var leaderboard = await CreateLeaderboardAsync(quizId);
+            Leaderboard leaderboard = await CreateLeaderboardAsync(quizId);
 
             LeaderboardEntry? entry = await _leaderboardRepository
                 .GetLeaderboardEntryForUserByIdAsync(leaderboard.Id, userId);

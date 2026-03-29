@@ -10,7 +10,7 @@
 
     public interface IGameService
     {
-        Task<Guid> StartAttemptAsync(Guid quizId, ClaimsPrincipal user);
+        Task<Guid> StartAttemptAsync(Guid quizId,ClaimsPrincipal user);
         Task<PlayQuestionViewModel?> GetCurrentQuestionAsync(Guid attemptId);
         Task SubmitAnswerAsync(Guid quizId, Guid questionId, Guid selectedAnswerId);
         Task<GameSummaryViewModel> FinishAttemptAsync(Guid attemptId);

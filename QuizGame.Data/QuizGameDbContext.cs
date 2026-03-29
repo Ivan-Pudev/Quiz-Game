@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using QuizGame.Data.Models;
+    using System.Reflection.Emit;
 
     public class QuizGameDbContext(DbContextOptions<QuizGameDbContext> options) 
         : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
@@ -25,11 +26,10 @@
             .HasMany(q => q.Questions)
             .WithMany(q => q.Quizzes);
 
-            builder.Entity<Leaderboard>()
-                .HasOne(l => l.Quiz)
-                .WithOne(q => q.Leaderboard)
-                .HasForeignKey<Leaderboard>(l => l.QuizId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Quiz>()
+            .HasOne(q => q.Leaderboard)
+            .WithOne(l => l.Quiz)
+            .HasForeignKey<Leaderboard>(l => l.QuizId);
 
             builder.Entity<LeaderboardEntry>()
                 .HasOne(e => e.Leaderboard)

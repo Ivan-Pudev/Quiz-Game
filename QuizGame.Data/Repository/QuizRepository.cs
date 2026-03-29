@@ -10,18 +10,7 @@
     public class QuizRepository : BaseRepository, IQuizRepository
     {
         public QuizRepository(QuizGameDbContext dbContext) 
-            : base(dbContext)
-        {
-
-        }
-
-        public async Task<IEnumerable<Answer>> GetAllAnswers()
-        {
-            return await DbContext
-               .Answers
-               .AsNoTracking()
-               .ToListAsync();
-        }
+            : base(dbContext) {}
 
         public async Task<IEnumerable<Question>> GetAllQuestionsOrderByContentAsync()
         {
@@ -51,6 +40,7 @@
                 .Include(q => q.Questions)
                     .ThenInclude(qq => qq.Categories)
                 .Include(q => q.Leaderboard)
+                .AsSplitQuery()
                 .ToListAsync();
         }
 
@@ -64,20 +54,14 @@
                 .Include(q => q.Questions)
                     .ThenInclude(qq => qq.Categories)
                 .Include(q => q.Leaderboard)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(q => q.Id == id);
         }
 
-        public async Task<Quiz?> GetQuizWithQuestionsByIdAsync(Guid id)
+        public async Task<Quiz?> GetQuizWithQuestionsByIdAsync(Guid? id)
         {
             return await DbContext.Quizzes
                 .Include(q => q.Questions)
-                .FirstOrDefaultAsync(q => q.Id == id);
-        }
-
-        public async Task<Quiz?> GetQuizByIdAsync(Guid? id)
-        {
-            return await DbContext
-                .Quizzes
                 .FirstOrDefaultAsync(q => q.Id == id);
         }
 
@@ -104,5 +88,7 @@
 
             return resultCount > 0;
         }
+
+        
     }
 }

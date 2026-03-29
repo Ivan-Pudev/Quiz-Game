@@ -1,7 +1,6 @@
 ﻿namespace QuizGame.Core.Contracts
 {
     using QuizGame.Data.Models;
-    using QuizGame.ViewModels.Leaderboards;
     using QuizGame.ViewModels.Quizzes;
     using System.Collections.Generic;
     public interface IQuizService

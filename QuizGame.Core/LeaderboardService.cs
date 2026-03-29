@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using QuizGame.Core.Contracts;
-using QuizGame.Data;
+﻿using QuizGame.Core.Contracts;
 using QuizGame.Data.Models;
 using QuizGame.Data.Repository.Contracts;
 using QuizGame.ViewModels.Leaderboards;

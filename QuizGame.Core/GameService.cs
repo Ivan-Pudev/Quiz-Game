@@ -1,8 +1,6 @@
 ﻿namespace QuizGame.Core
 {
-    using Microsoft.EntityFrameworkCore;
     using QuizGame.Core.Contracts;
-    using QuizGame.Data;
     using QuizGame.Data.Models;
     using QuizGame.Data.Repository.Contracts;
     using QuizGame.ViewModels.Game;
@@ -30,21 +28,21 @@
             string userId = user.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new Exception("User not logged in");
 
-            Quiz? quiz = await _quizRepository.GetQuizByIdAsync(quizId);
+            Quiz? quiz = await _quizRepository.GetQuizWithQuestionsByIdAsync(quizId);
 
             if (quiz == null)
                 throw new Exception("Quiz not found");
 
-            var maxScore = quiz.Questions.Sum(q => q.Points);
+            int maxScore = quiz.Questions.Sum(q => q.Points);
 
-            var attempt = new QuizAttempt
+            QuizAttempt attempt = new QuizAttempt
             {
                 QuizId = quizId,
                 UserId = Guid.Parse(userId),
                 CurrentQuestionIndex = 0,
                 Score = 0,
                 MaxScore = maxScore,
-                IsFinished = false
+                IsFinished = false,
             };
 
             bool isAddSuccessful = await _gameRepository.AddQuizAttemptAsync(attempt);
@@ -60,12 +58,12 @@
         public async Task<PlayQuestionViewModel?> GetCurrentQuestionAsync(Guid attemptId)
         {
             QuizAttempt? attempt = await _gameRepository
-                .GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId);
+                .GetQuizAttemptWithQuizQuestionsAndAnswersByIdAsync(attemptId);
 
             if (attempt == null) throw new Exception("Attempt not found");
             if (attempt.IsFinished) return null;
 
-            var questions = attempt.Quiz.Questions
+            List<Question> questions = attempt.Quiz.Questions
                 .OrderBy(q => q.Id)
                 .ToList();
 
@@ -90,7 +88,7 @@
 
         public async Task SubmitAnswerAsync(Guid attemptId, Guid questionId, Guid selectedAnswerId)
         {
-            var attempt = await _gameRepository.GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId);
+            QuizAttempt? attempt = await _gameRepository.GetQuizAttemptWithQuizQuestionsAndAnswersByIdAsync(attemptId);
 
             if (attempt == null) throw new Exception("Attempt not found");
             if (attempt.IsFinished) return;
@@ -137,7 +135,7 @@
         public async Task<GameSummaryViewModel> FinishAttemptAsync(Guid attemptId)
         {
             QuizAttempt attempt = await _gameRepository
-                .GetQuizAttemptWithQuizQuestionAndAnswersByIdAsync(attemptId)
+                .GetQuizAttemptWithQuizAndAnswersByIdAsync(attemptId)
                 ?? throw new Exception("Attempt not found");
 
             if (!attempt.IsFinished)
@@ -148,7 +146,7 @@
             await _quizService.SubmitScoreAsync(attempt.QuizId, attempt.UserId, attempt.Score);
 
             Leaderboard? leaderboard = await _leaderboardRepository.GetLeaderboardWithEntriesAndUserByQuizIdAsync(attempt.QuizId);
-            Guid leaderboardId = leaderboard.Id;
+            Guid leaderboardId = leaderboard!.Id;
 
             return new GameSummaryViewModel
             {
@@ -158,7 +156,7 @@
                 MaxScore = attempt.MaxScore,
                 CorrectAnswers = attempt.Answers.Count(a => a.IsCorrect),
                 TotalQuestions = attempt.Answers.Count,
-                LeaderboardId = leaderboardId
+                LeaderboardId = leaderboardId,
             };
         }
     }

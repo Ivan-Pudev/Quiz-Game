@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var leaderboard in Model)
+                @foreach (Leaderboard leaderboard in Model)
                 {
                     <tr>
                         <td class="fw-bold">
@@ -41,7 +41,7 @@
                         </td>
 
                         <td class="text-end">
-                            <a asp-controller="Leaderboards"
+                            <a asp-controller="Leaderboard"
                                asp-action="Details"
                                asp-route-id="@leaderboard.Id"
                                class="btn btn-sm btn-primary">

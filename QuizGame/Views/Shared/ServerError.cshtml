@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Internal Server Error";
+}
+
+<link rel="stylesheet" href="~/css/ServerError.css" asp-append-version="true" />
+
+<div class="server-error-wrapper">
+    <div class="server-error-code">500</div>
+    <div class="server-error-title">Internal Server Error</div>
+    <hr class="server-error-divider" />
+    <div class="server-error-alert">
+        Something went wrong on our end. We are working to fix it as soon as possible.
+    </div>
+    <p class="server-error-message">
+        Please try again in a few moments. If the problem persists, contact support.
+    </p>
+    <a href="/" class="server-error-btn">Go to Home</a>
+</div>

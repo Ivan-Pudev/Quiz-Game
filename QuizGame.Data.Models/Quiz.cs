@@ -21,9 +21,6 @@
         [DataType(DataType.DateTime)]
         [Required]
         public DateTime StartTime { get; set; }
-
-        [ForeignKey(nameof(Leaderboard))]
-        public Guid LeaderboardId { get; set; }
         public virtual Leaderboard? Leaderboard { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }

@@ -10,13 +10,13 @@
 
     public class QuizController : BaseController
     {
-        private readonly IQuizService _quizzesService;
-        private readonly ILeaderboardService _leaderboardsService;
+        private readonly IQuizService _quizService;
+        private readonly ILeaderboardService _leaderboardService;
 
-        public QuizController(IQuizService quizzesService, ILeaderboardService leaderboardsService)
+        public QuizController(IQuizService quizService, ILeaderboardService leaderboardService)
         {
-            _quizzesService = quizzesService;
-            _leaderboardsService = leaderboardsService;
+            _quizService = quizService;
+            _leaderboardService = leaderboardService;
         }
 
         [Authorize]
@@ -25,7 +25,7 @@
         {
             try
             {
-                IEnumerable<Quiz> quizzes = await _quizzesService.GetAllQuizzesAsync();
+                IEnumerable<Quiz> quizzes = await _quizService.GetAllQuizzesAsync();
                 return View(quizzes);
             }
             catch (Exception)
@@ -41,7 +41,7 @@
         {
             try
             {
-                CreateQuizViewModel quiz = await _quizzesService.CreateQuizFormAsync();
+                CreateQuizViewModel quiz = await _quizService.CreateQuizFormAsync();
 
                 return View(quiz);
             }
@@ -59,7 +59,7 @@
         {
             try
             {
-                await _quizzesService.CreateQuizAsync(quizViewModel);
+                await _quizService.CreateQuizAsync(quizViewModel);
                 TempData["Success"] = "Created quiz successfully.";
                 return RedirectToAction(nameof(Index));
             }
@@ -67,7 +67,7 @@
             {
                 TempData["Error"] = "Failed to create quiz.";
 
-                quizViewModel.Questions = (await _quizzesService.GetAllQuestionsAsync()).ToList();
+                quizViewModel.Questions = (await _quizService.GetAllQuestionsAsync()).ToList();
                 return View(quizViewModel);
             }
         }
@@ -78,14 +78,14 @@
         {
             try
             {
-                Quiz? currentQuiz = await _quizzesService.GetQuizByIdAsync(id);
+                Quiz? currentQuiz = await _quizService.GetQuizByIdAsync(id);
                 if (currentQuiz == null) return NotFound();
 
-                Leaderboard? leaderboard = await _leaderboardsService.GetLeaderboardByQuizIdAsync(currentQuiz.Id);
+                Leaderboard? leaderboard = await _leaderboardService.GetLeaderboardByQuizIdAsync(currentQuiz.Id);
                 if (leaderboard == null)
-                    leaderboard = await _quizzesService.CreateLeaderboardAsync(currentQuiz.Id);
+                    leaderboard = await _quizService.CreateLeaderboardAsync(currentQuiz.Id);
 
-                DetailsQuizViewModel viewModel = _quizzesService.ShowQuizDetails(currentQuiz);
+                DetailsQuizViewModel viewModel = _quizService.ShowQuizDetails(currentQuiz);
                 viewModel.LeaderboardId = leaderboard.Id;
 
                 return View(viewModel);
@@ -109,14 +109,14 @@
 
             try
             {
-                Quiz? currentQuiz = await _quizzesService.GetQuizByIdAsync(id);
+                Quiz? currentQuiz = await _quizService.GetQuizByIdAsync(id);
 
                 if (currentQuiz == null)
                 {
                     return NotFound();
                 }
 
-                EditQuizViewModel viewModel = await _quizzesService.EditQuizGetDataFromForm(currentQuiz);
+                EditQuizViewModel viewModel = await _quizService.EditQuizGetDataFromForm(currentQuiz);
 
                 return View(viewModel);
             }
@@ -138,10 +138,10 @@
 
                 if (!ModelState.IsValid)
                 {
-                    Quiz? quiz = await _quizzesService.GetQuizByIdAsync(id);
+                    Quiz? quiz = await _quizService.GetQuizByIdAsync(id);
                     if (quiz == null) return NotFound();
 
-                    quizViewModel = await _quizzesService.EditQuizGetDataFromForm(quiz);
+                    quizViewModel = await _quizService.EditQuizGetDataFromForm(quiz);
                     return View(quizViewModel);
                 }
 
@@ -150,7 +150,7 @@
                     .Select(q => q.QuestionId)
                     .ToList();
 
-                await _quizzesService.EditQuizAsync(quizViewModel, selectedIds);
+                await _quizService.EditQuizAsync(quizViewModel, selectedIds);
 
                 TempData["Success"] = "Updated quiz successfully.";
                 return RedirectToAction(nameof(Index));
@@ -159,9 +159,9 @@
             {
                 TempData["Error"] = "Failed to update quiz.";
 
-                var quiz = await _quizzesService.GetQuizByIdAsync(id);
+                var quiz = await _quizService.GetQuizByIdAsync(id);
                 if (quiz != null)
-                    quizViewModel = await _quizzesService.EditQuizGetDataFromForm(quiz);
+                    quizViewModel = await _quizService.EditQuizGetDataFromForm(quiz);
 
                 return View(quizViewModel);
             }
@@ -180,7 +180,7 @@
                     return RedirectToAction(nameof(Index));
                 }
 
-                await _quizzesService.DeleteQuizAsync(id);
+                await _quizService.DeleteQuizAsync(id);
                 TempData["Success"] = "Quiz deleted successfully.";
             }
             catch (InvalidOperationException)
@@ -201,7 +201,7 @@
         {
             try
             {
-                IEnumerable<LeaderboardRowVm>? rows = await _leaderboardsService.GetLeaderboardEntriesByQuizIdAsync(id);
+                IEnumerable<LeaderboardRowVm>? rows = await _leaderboardService.GetLeaderboardEntriesByQuizIdAsync(id);
 
                 ViewBag.QuizId = id;
                 return View(rows);

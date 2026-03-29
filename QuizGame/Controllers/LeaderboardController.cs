@@ -9,11 +9,11 @@
     [Authorize]
     public class LeaderboardController : BaseController
     {
-        private readonly ILeaderboardService _leaderboardsService;
+        private readonly ILeaderboardService _leaderboardService;
 
-        public LeaderboardController(ILeaderboardService leaderboardsService)
+        public LeaderboardController(ILeaderboardService leaderboardService)
         {
-            _leaderboardsService = leaderboardsService;
+            _leaderboardService = leaderboardService;
         }
 
         [HttpGet]
@@ -21,7 +21,7 @@
         {
             try
             {
-                IEnumerable<Leaderboard> leaderboards = await _leaderboardsService.GetLeaderboardsAsync();
+                IEnumerable<Leaderboard> leaderboards = await _leaderboardService.GetLeaderboardsAsync();
 
                 return View(leaderboards);
             }
@@ -38,7 +38,7 @@
         {
             try
             {
-                IEnumerable<LeaderboardRowVm>? leaderboard = await _leaderboardsService
+                IEnumerable<LeaderboardRowVm>? leaderboard = await _leaderboardService
                     .GetLeaderboardEntriesByQuizIdAsync(id);
 
                 return View(leaderboard);

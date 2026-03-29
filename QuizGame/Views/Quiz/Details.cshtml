@@ -23,7 +23,7 @@
                             <strong>Start Time:</strong> <br /> @Model.StartTime.ToString("f")
                         </div>
                         <div class="col-md-4">
-                            <strong>Question Count:</strong> <br /> @Model.Questions.Count
+                            <strong>Question Count:</strong> <br /> @Model.Questions.ToList().Count()
                         </div>
                         <div class="col-md-4">
                             <strong>Total Points:</strong> <br /> @Model.TotalPoints
@@ -35,16 +35,16 @@
             <h3 class="mb-3">Questions in this Quiz</h3>
 
             @{
-                var orderedQuestions = Model.Questions
+                List<Question> orderedQuestions = Model.Questions
                 .OrderBy(q => q.Complexity)
                 .ToList();
             }
 
-            @for (int i = 0; i < Model.Questions.Count; i++)
+            @for (int i = 0; i < Model.Questions.ToList().Count; i++)
             {
-                var question = orderedQuestions[i];
+                Question question = orderedQuestions[i];
 
-                var categoryText = (question.Categories != null && question.Categories.Any())
+                string categoryText = (question.Categories != null && question.Categories.Any())
                 ? string.Join(", ", question.Categories.Select(c => c.Name))
                 : "No categories";
 
@@ -64,7 +64,7 @@
                         @if (question.Answers != null && question.Answers.Any())
                         {
                             <div class="list-group">
-                                @foreach (var answer in question.Answers)
+                                @foreach (Answer answer in question.Answers)
                                 {
                                     <div class="list-group-item d-flex justify-content-between align-items-center">
                                         @answer.Content
@@ -82,7 +82,7 @@
 
             <div class="mt-4">
                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Quiz</a>
-                <a asp-controller="Leaderboards" asp-action="Details" asp-route-id="@Model.LeaderboardId" class="btn btn-info">Leaderboard</a>
+                <a asp-controller="Leaderboard" asp-action="Details" asp-route-id="@Model.LeaderboardId" class="btn btn-info">Leaderboard</a>
                 <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
             </div>
         </div>

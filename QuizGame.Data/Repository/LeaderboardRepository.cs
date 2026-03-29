@@ -18,6 +18,7 @@
                 .AsNoTracking()
                 .Include(l => l.Entries)
                     .ThenInclude(e => e.User)
+                    .AsSplitQuery()
                 .FirstOrDefaultAsync(l => l.QuizId == quizId);
         }
 

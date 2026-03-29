@@ -46,23 +46,13 @@
 
                     <hr />
                     <div class="row mb-3">
-                        <div class="col-sm-6 fw-bold">Quiz</div>
+                        <div class="col-sm-6 fw-bold">Quiz Title</div>
                         <div class="col-sm-6 text-end">@Model.QuizTitle</div>
                     </div>
 
                     <div class="row mb-4">
                         <div class="col-sm-6 fw-bold">Total Questions</div>
                         <div class="col-sm-6 text-end">@Model.TotalQuestions</div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-sm-6 fw-bold">Quiz ID</div>
-                        <div class="col-sm-6 text-end">@Model.QuizId</div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-sm-6 fw-bold">Quiz Title</div>
-                        <div class="col-sm-6 text-end">@Model.QuizTitle</div>
                     </div>
 
                     <div class="row mb-3">
@@ -86,7 +76,7 @@
                     </div>
 
                     <div class="d-flex justify-content-center gap-3 mt-4">
-                        <a asp-controller="Leaderboards"
+                        <a asp-controller="Leaderboard"
                            asp-action="Details"
                            asp-route-id="@Model.LeaderboardId"
                            class="btn btn-info btn-lg text-white">
