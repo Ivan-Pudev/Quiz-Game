@@ -26,4 +26,10 @@
     <ProjectReference Include="..\QuizGame.Web.Infrastructure\QuizGame.Web.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="Areas\Identity\Pages\Account\Manage\" />
+  </ItemGroup>
+
 </Project>
