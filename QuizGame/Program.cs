@@ -44,25 +44,18 @@ namespace QuizGame
             builder.Services.AddScoped<IQuizRepository, QuizRepository>();
             builder.Services.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
             builder.Services.AddScoped<IGameRepository, GameRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddScoped<IQuizService, QuizService>();
             builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
             builder.Services.AddScoped<IGameService, GameService>();
+            builder.Services.AddScoped<IUserService,  UserService>();
 
             builder.Services.AddScoped<IIdentitySeeder, IdentitySeeder>();
 
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseMigrationsEndPoint();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-               
-                app.UseHsts();
-            }
+           app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -86,7 +79,7 @@ namespace QuizGame
             app.UseRolesSeeder();
             app.UseAdminUserSeeder();
 
-            app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+            //app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
 
             app.MapStaticAssets();
             app.MapRazorPages();

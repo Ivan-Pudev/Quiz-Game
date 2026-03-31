@@ -1,0 +1,243 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    Layout = "_Layout";
+}
+<style>
+    /* ── Design tokens (shared across admin views) ── */
+    :root {
+        --blue:       #2563eb;
+        --blue-dark:  #1d4ed8;
+        --blue-light: #eff6ff;
+        --black:      #111111;
+        --gray:       #6b7280;
+        --gray-light: #9ca3af;
+        --border:     #d1d5db;
+        --bg:         #f9fafb;
+        --white:      #ffffff;
+    }
+
+    /* ── Page header ── */
+    .page-header { margin: 2rem 0 1.5rem; }
+    .page-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--black); }
+    .page-header .subtitle { font-size: .875rem; color: var(--gray); margin-top: .25rem; }
+
+    /* ── Cards grid ── */
+    .admin-sections {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.25rem;
+    }
+
+    /* ── Card ── */
+    .admin-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    /* Card header */
+    .admin-card-head {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+    }
+
+    .admin-card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .icon-blue  { background: var(--blue-light); }
+    .icon-teal  { background: #f0fdf9; }
+    .icon-amber { background: #fffbeb; }
+
+    .admin-card-title {
+        font-size: .95rem;
+        font-weight: 600;
+        color: var(--black);
+    }
+
+    .admin-card-desc {
+        font-size: .775rem;
+        color: var(--gray);
+        margin-top: .1rem;
+    }
+
+    /* Action button list */
+    .admin-btn-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .admin-action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .65rem 1.25rem;
+        font-size: .875rem;
+        color: var(--black);
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: background .12s, color .12s;
+    }
+
+    .admin-action-btn:last-child { border-bottom: none; }
+
+    .admin-action-btn:hover {
+        background: var(--blue-light);
+        color: var(--blue);
+    }
+
+    .admin-action-btn:hover .admin-chev { color: var(--blue); }
+
+    .admin-action-btn span { display: flex; align-items: center; gap: .55rem; }
+
+    .admin-chev {
+        font-size: 1.1rem;
+        color: var(--gray-light);
+        line-height: 1;
+        transition: color .12s;
+    }
+
+    /* Colored dots */
+    .admin-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    .dot-blue  { background: var(--blue); }
+    .dot-teal  { background: #0d9488; }
+    .dot-amber { background: #d97706; }
+
+    .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.25rem 2.5rem;
+}
+</style>
+
+<!-- Page header -->
+<div class="container">
+    <div class="page-header">
+    <h1>Admin Panel</h1>
+    <p class="subtitle">Manage users, quizzes, and leaderboard entries.</p>
+    </div>
+</div>
+
+
+<div class="admin-sections">
+
+    <!-- User management -->
+    <div class="admin-card">
+        <div class="admin-card-head">
+            <div class="admin-card-icon icon-blue">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.5">
+                    <circle cx="6" cy="5" r="2.5" />
+                    <path d="M1 13.5c0-2.5 2-4 5-4h2c3 0 5 2 5 4" />
+                </svg>
+            </div>
+            <div>
+                <div class="admin-card-title">User management</div>
+                <div class="admin-card-desc">Accounts, roles &amp; access</div>
+            </div>
+        </div>
+        <div class="admin-btn-list">
+            <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="admin-action-btn">
+                <span><span class="admin-dot dot-blue"></span> View all users</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="UserManagement" asp-action="Create" class="admin-action-btn">
+                <span><span class="admin-dot dot-blue"></span> Create user</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="admin-action-btn">
+                <span><span class="admin-dot dot-blue"></span> Manage roles</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="UserManagement" asp-action="DeletedAccounts" class="admin-action-btn">
+                <span><span class="admin-dot dot-blue"></span> Deleted accounts</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Quiz management -->
+    <div class="admin-card">
+        <div class="admin-card-head">
+            <div class="admin-card-icon icon-teal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#0d9488" stroke-width="1.5">
+                    <rect x="2" y="2" width="12" height="12" rx="2" />
+                    <path d="M5 5h6M5 8h6M5 11h3" />
+                </svg>
+            </div>
+            <div>
+                <div class="admin-card-title">Quiz management</div>
+                <div class="admin-card-desc">Create, edit &amp; publish quizzes</div>
+            </div>
+        </div>
+        <div class="admin-btn-list">
+            <a asp-area="Admin" asp-controller="QuizManagement" asp-action="Index" class="admin-action-btn">
+                <span><span class="admin-dot dot-teal"></span> View all quizzes</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="QuizManagement" asp-action="Create" class="admin-action-btn">
+                <span><span class="admin-dot dot-teal"></span> Create quiz</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="QuizManagement" asp-action="Published" class="admin-action-btn">
+                <span><span class="admin-dot dot-teal"></span> Published quizzes</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="QuizManagement" asp-action="Drafts" class="admin-action-btn">
+                <span><span class="admin-dot dot-teal"></span> Drafts</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Leaderboard management -->
+    <div class="admin-card">
+        <div class="admin-card-head">
+            <div class="admin-card-icon icon-amber">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#d97706" stroke-width="1.5">
+                    <path d="M8 2v12M4 6v8M12 4v10" />
+                </svg>
+            </div>
+            <div>
+                <div class="admin-card-title">Leaderboard management</div>
+                <div class="admin-card-desc">Scores, rankings &amp; history</div>
+            </div>
+        </div>
+        <div class="admin-btn-list">
+            <a asp-area="Admin" asp-controller="LeaderboardManagement" asp-action="Index" class="admin-action-btn">
+                <span><span class="admin-dot dot-amber"></span> View leaderboard</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="LeaderboardManagement" asp-action="ByQuiz" class="admin-action-btn">
+                <span><span class="admin-dot dot-amber"></span> Scores by quiz</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="LeaderboardManagement" asp-action="Reset" class="admin-action-btn">
+                <span><span class="admin-dot dot-amber"></span> Reset scores</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+            <a asp-area="Admin" asp-controller="LeaderboardManagement" asp-action="Export" class="admin-action-btn">
+                <span><span class="admin-dot dot-amber"></span> Export data</span>
+                <span class="admin-chev">&rsaquo;</span>
+            </a>
+        </div>
+    </div>
+
+</div>

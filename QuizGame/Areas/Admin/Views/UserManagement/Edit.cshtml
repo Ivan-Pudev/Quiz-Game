@@ -1,0 +1,168 @@
+﻿@model AdminManageUserRolesViewModel
+
+@{
+    ViewData["Title"] = "Manage Roles";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/UserEdit.css" asp-append-version="true" />
+<!-- Page header -->
+<div class="page-header">
+    <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="back-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back
+    </a>
+    <h1>Manage Roles</h1>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="form-card">
+
+    <!-- Card header -->
+    <div class="form-card-head">
+        <div class="form-card-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.5">
+                <circle cx="6" cy="5" r="2.5"/>
+                <path d="M1 13.5c0-2.5 2-4 5-4h2c3 0 5 2 5 4"/>
+                <circle cx="13" cy="11" r="2.5"/>
+                <path d="M13 9.5V11l1 1"/>
+            </svg>
+        </div>
+        <div>
+            <div class="form-card-title">Role assignment</div>
+            <div class="form-card-desc">Add or remove roles for this account</div>
+        </div>
+    </div>
+
+    <div class="form-card-body">
+
+        <!-- User strip -->
+        @{
+            var initials = Model.Email?.Length >= 2
+                ? Model.Email.Substring(0, 2).ToUpper()
+                : Model.Email?.ToUpper() ?? "??";
+        }
+        <div class="user-strip">
+            <div class="avatar">@initials</div>
+            <div>
+                <div class="user-email">@Model.Email</div>
+                <div class="user-id">@Model.Id</div>
+            </div>
+        </div>
+
+        <!-- Current roles -->
+        <div class="section-label">Current roles</div>
+
+        @if (Model.Roles == null || !Model.Roles.Any())
+        {
+            <div class="no-roles">No roles assigned yet.</div>
+        }
+        else
+        {
+            <div class="roles-list">
+                @foreach (var role in Model.Roles)
+                {
+                    var dotCls = role switch {
+                        "Admin"     => "dot-admin",
+                        "Moderator" => "dot-moderator",
+                        "User"      => "dot-user",
+                        _           => "dot-default"
+                    };
+                    var badgeCls = role switch {
+                        "Admin"     => "badge-admin",
+                        "Moderator" => "badge-moderator",
+                        "User"      => "badge-user",
+                        _           => "badge-default"
+                    };
+
+                    <div class="role-row">
+                        <div class="role-row-left">
+                            <span class="role-dot @dotCls"></span>
+                            <span class="role-name">@role</span>
+                            <span class="badge @badgeCls">@role</span>
+                        </div>
+                        <form asp-area="Admin"
+                              asp-controller="User"
+                              asp-action="RemoveRole"
+                              method="post"
+                              onsubmit="return confirm('Remove the @role role from @Model.Email?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="UserId" value="@Model.Id" />
+                            <input type="hidden" name="Role"   value="@role" />
+                            <button type="submit" class="btn-remove">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+
+        <hr class="form-divider" />
+
+        <!-- Add role -->
+        <div class="section-label">Add a role</div>
+
+        <form asp-area="Admin"
+              asp-controller="User"
+              asp-action="AddRole"
+              method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="UserId" value="@Model.Id" />
+
+            <div class="add-row">
+                <select name="Role" id="roleSelect">
+                    <option value="" disabled selected>Select a role…</option>
+                    @foreach (var role in Model.AvailableRoles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Add
+                </button>
+            </div>
+            <span asp-validation-for="SelectedRole" class="text-danger"></span>
+        </form>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="form-card-footer">
+        <a asp-area="Admin" asp-controller="User" asp-action="Index" class="btn btn-outline">
+            Done
+        </a>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+

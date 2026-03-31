@@ -1,0 +1,156 @@
+﻿@model AdminCreateUserViewModel
+
+@{
+    ViewData["Title"] = "Create User";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/UserCreate.css" asp-append-version="true" />
+<!-- Page header -->
+<div class="page-header">
+    <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="back-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back
+    </a>
+    <h1>Create User</h1>
+</div>
+
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div class="alert-danger">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Please fix the errors below before continuing.
+    </div>
+}
+
+<form asp-area="Admin" asp-controller="UserManagement" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-card">
+
+        <!-- Card header -->
+        <div class="form-card-head">
+            <div class="form-card-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2563eb" stroke-width="1.5">
+                    <circle cx="6" cy="5" r="2.5"/>
+                    <path d="M1 13.5c0-2.5 2-4 5-4h2c3 0 5 2 5 4"/>
+                    <line x1="13" y1="5" x2="13" y2="9"/><line x1="11" y1="7" x2="15" y2="7"/>
+                </svg>
+            </div>
+            <div>
+                <div class="form-card-title">Account details</div>
+                <div class="form-card-desc">Fill in the new user's information</div>
+            </div>
+        </div>
+
+        <!-- Card body -->
+        <div class="form-card-body">
+
+            <!-- Full name -->
+            <div class="field">
+                <label asp-for="FullName">Full name</label>
+                <input asp-for="FullName"
+                       class="@(ViewData.ModelState["FullName"]?.Errors.Count > 0 ? "input-error" : "")"
+                       placeholder="e.g. Jane Doe" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <!-- Email + Birth date side by side -->
+            <div class="field-row">
+                <div class="field">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="email"
+                           class="@(ViewData.ModelState["Email"]?.Errors.Count > 0 ? "input-error" : "")"
+                           placeholder="user@example.com" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="BirthDate">Birth date</label>
+                    <input asp-for="BirthDate" type="date"
+                           class="@(ViewData.ModelState["BirthDate"]?.Errors.Count > 0 ? "input-error" : "")" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Password + Confirm password -->
+            <div class="field-row">
+                <div class="field">
+                    <label asp-for="Password">Password</label>
+                    <input asp-for="Password" type="password"
+                           class="@(ViewData.ModelState["Password"]?.Errors.Count > 0 ? "input-error" : "")"
+                           placeholder="••••••••" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="ConfirmPassword">Confirm password</label>
+                    <input asp-for="ConfirmPassword" type="password"
+                           class="@(ViewData.ModelState["ConfirmPassword"]?.Errors.Count > 0 ? "input-error" : "")"
+                           placeholder="••••••••" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+
+            <hr class="form-divider" />
+
+            <!-- Roles -->
+            <div class="field">
+                <label>Roles</label>
+                <div class="roles-grid" id="rolesGrid">
+                    @{
+                        var roleStyles = new Dictionary<string, string> {
+                            { "Admin",     "checked-amber" },
+                            { "Moderator", "checked-teal"  },
+                            { "User",      "checked-blue"  }
+                        };
+                    }
+                    @foreach (var role in roleStyles)
+                    {
+                        var isChecked = Model?.SelectedRoles != null && Model.SelectedRoles.Contains(role.Key);
+                        <label class="role-chip @(isChecked ? role.Value : "")" id="chip-@role.Key">
+                            <input type="checkbox"
+                                   name="SelectedRoles"
+                                   value="@role.Key"
+                                   @(isChecked ? "checked" : "")
+                                   onchange="toggleChip(this, '@role.Value')" />
+                            @role.Key
+                        </label>
+                    }
+                </div>
+                <span asp-validation-for="SelectedRoles" class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <!-- Card footer -->
+        <div class="form-card-footer">
+            <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="btn btn-outline">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Create user
+            </button>
+        </div>
+
+    </div>
+</form>
+
+<script>
+    function toggleChip(checkbox, activeClass) {
+        const chip = checkbox.closest('.role-chip');
+        if (checkbox.checked) {
+            chip.classList.add(activeClass);
+        } else {
+            chip.classList.remove(activeClass);
+        }
+    }
+</script>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+

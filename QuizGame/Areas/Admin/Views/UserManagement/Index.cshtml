@@ -1,0 +1,238 @@
+﻿@model IEnumerable<AdminUserViewModel>
+
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Management — QuizGame Admin</title>
+    <link rel="stylesheet" href="~/css/UserIndex.css" asp-append-version="true" />
+</head>
+<body>
+<div class="container">
+
+    <!-- Page header -->
+    <div class="page-header">
+        <div>
+            <h1>User Management</h1>
+            <p class="subtitle">View and manage all registered accounts.</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"
+                 viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add User
+        </a>
+    </div>
+
+    <!-- TempData alerts -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Stats -->
+    @{
+        int totalUsers = Model.Count();
+        int adminCount = Model.Count(u => u.Roles.Contains("Admin"));
+        int modCount   = Model.Count(u => u.Roles.Contains("Moderator"));
+        int userCount  = Model.Count(u => !u.Roles.Any() || u.Roles.All(r => r == "User"));
+    }
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value">@totalUsers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Admins</div>
+            <div class="stat-value">@adminCount</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Moderators</div>
+            <div class="stat-value">@modCount</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Players</div>
+            <div class="stat-value">@userCount</div>
+        </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <div class="search-wrap">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input id="searchInput"
+                       class="search-input"
+                       type="search"
+                       placeholder="Search by email or ID…"
+                       oninput="filterTable()" />
+            </div>
+            <select id="roleFilter" class="filter-select" onchange="filterTable()">
+                <option value="">All roles</option>
+                <option value="Admin">Admin</option>
+                <option value="Moderator">Moderator</option>
+                <option value="User">User</option>
+            </select>
+        </div>
+        <div style="display:flex;gap:.5rem;">
+            <button class="btn btn-outline" onclick="window.location.reload()">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+                Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <p>No users found.</p>
+            </div>
+        }
+        else
+        {
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Roles</th>
+                        <th style="width:140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (AdminUserViewModel user in Model)
+                    {
+                        var initials = user.Email.Length >= 2
+                            ? user.Email.Substring(0, 2).ToUpper()
+                            : user.Email.ToUpper();
+
+                        <tr data-email="@user.Email.ToLower()"
+                            data-roles="@string.Join(",", user.Roles)">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar">@initials</div>
+                                    <div>
+                                        <div class="user-email">@user.Email</div>
+                                        <div class="user-id">@user.Id</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="roles-cell">
+                                    @if (!user.Roles.Any())
+                                    {
+                                        <span class="badge badge-default">No roles</span>
+                                    }
+                                    else
+                                    {
+                                        @foreach (string role in user.Roles)
+                                        {
+                                            var cls = role switch {
+                                                "Admin"     => "badge-admin",
+                                                "Moderator" => "badge-moderator",
+                                                "User"      => "badge-user",
+                                                _           => "badge-default"
+                                            };
+                                            <span class="badge @cls">@role</span>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@user.Id"
+                                       method="get"
+                                       class="btn btn-outline btn-sm"
+                                       title="Edit user">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                        Edit
+                                    </a>
+                                    <form asp-action="Delete"
+                                          asp-route-id="@user.Id"
+                                          method="post"
+                                          onsubmit="return confirm('Delete @Html.Raw(user.Email)? This action cannot be undone.');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger-ghost btn-sm" title="Delete user">
+                                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <polyline points="3 6 5 6 21 6"/>
+                                                <path d="M19 6l-1 14H6L5 6"/>
+                                                <path d="M10 11v6M14 11v6"/>
+                                                <path d="M9 6V4h6v2"/>
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- Pagination info -->
+            <div class="pagination-bar">
+                <span id="resultCount">Showing @Model.Count() user(s)</span>
+                <!-- Wire up real pagination via ViewData if needed -->
+            </div>
+        }
+    </div>
+
+</div>
+
+<script>
+    function filterTable() {
+        const search = document.getElementById('searchInput').value.toLowerCase().trim();
+        const role   = document.getElementById('roleFilter').value.toLowerCase();
+        const rows   = document.querySelectorAll('#usersTable tbody tr');
+        let visible  = 0;
+
+        rows.forEach(row => {
+            const email = row.dataset.email || '';
+            const roles = (row.dataset.roles || '').toLowerCase();
+            const matchSearch = !search || email.includes(search);
+            const matchRole   = !role   || roles.includes(role);
+            const show = matchSearch && matchRole;
+            row.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+
+        const countEl = document.getElementById('resultCount');
+        if (countEl) countEl.textContent = `Showing ${visible} user(s)`;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+﻿:root {
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --blue-light: #eff6ff;
+    --black: #111111;
+    --gray: #6b7280;
+    --gray-light: #9ca3af;
+    --border: #d1d5db;
+    --bg: #f9fafb;
+    --white: #ffffff;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --success: #16a34a;
+    --success-bg: #f0fdf4;
+}
+
+/* ── Page header ── */
+.page-header {
+    margin: 2rem 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .875rem;
+    color: var(--gray);
+    text-decoration: none;
+    padding: .35rem .65rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    transition: border-color .15s, color .15s;
+}
+
+    .back-btn:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+    }
+
+.page-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--black);
+}
+
+/* ── Alert ── */
+.alert {
+    border-radius: 6px;
+    padding: .75rem 1rem;
+    font-size: .875rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.alert-success {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid #bbf7d0;
+}
+
+.alert-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #fecaca;
+}
+
+/* ── Card ── */
+.form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 560px;
+}
+
+.form-card-head {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.form-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: var(--blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.form-card-title {
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--black);
+}
+
+.form-card-desc {
+    font-size: .775rem;
+    color: var(--gray);
+    margin-top: .1rem;
+}
+
+.form-card-body {
+    padding: 1.25rem;
+}
+
+/* ── User info strip ── */
+.user-strip {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: .85rem 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 1.25rem;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: var(--white);
+    font-size: .85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.user-email {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--black);
+}
+
+.user-id {
+    font-size: .73rem;
+    color: var(--gray-light);
+    font-family: ui-monospace, monospace;
+    margin-top: .1rem;
+}
+
+/* ── Section label ── */
+.section-label {
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: .65rem;
+}
+
+/* ── Current roles list ── */
+.roles-list {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    margin-bottom: 1.25rem;
+}
+
+.role-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .6rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    transition: background .1s;
+}
+
+    .role-row:hover {
+        background: var(--bg);
+    }
+
+.role-row-left {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+}
+
+.role-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dot-admin {
+    background: #d97706;
+}
+
+.dot-moderator {
+    background: #0d9488;
+}
+
+.dot-user {
+    background: var(--blue);
+}
+
+.dot-default {
+    background: var(--gray-light);
+}
+
+.role-name {
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--black);
+}
+
+.badge {
+    font-size: .72rem;
+    font-weight: 500;
+    padding: .2rem .55rem;
+    border-radius: 999px;
+    line-height: 1;
+}
+
+.badge-admin {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.badge-moderator {
+    background: #f0fdf9;
+    color: #0f6e56;
+}
+
+.badge-user {
+    background: var(--blue-light);
+    color: var(--blue-dark);
+}
+
+.badge-default {
+    background: #f3f4f6;
+    color: var(--gray);
+}
+
+/* Remove button */
+.btn-remove {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding: .3rem .65rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--white);
+    color: var(--danger);
+    font-size: .78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .12s, border-color .12s;
+}
+
+    .btn-remove:hover {
+        background: var(--danger-bg);
+        border-color: var(--danger);
+    }
+
+.no-roles {
+    font-size: .875rem;
+    color: var(--gray-light);
+    padding: .6rem .9rem;
+    border: 1px dashed var(--border);
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 1.25rem;
+}
+
+/* ── Divider ── */
+.form-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.1rem 0;
+}
+
+/* ── Add role row ── */
+.add-row {
+    display: flex;
+    gap: .5rem;
+    align-items: flex-start;
+}
+
+    .add-row select {
+        flex: 1;
+        padding: .55rem .75rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: .875rem;
+        color: var(--black);
+        background: var(--white);
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right .75rem center;
+        padding-right: 2.25rem;
+        transition: border-color .15s, box-shadow .15s;
+    }
+
+        .add-row select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+            outline: none;
+        }
+
+.text-danger {
+    color: var(--danger);
+    font-size: .8rem;
+    margin-top: .3rem;
+    display: block;
+}
+
+/* ── Buttons ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .55rem 1.1rem;
+    border-radius: 4px;
+    font-size: .875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: background .15s, border-color .15s, color .15s;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: var(--blue);
+    color: var(--white);
+}
+
+    .btn-primary:hover {
+        background: var(--blue-dark);
+    }
+
+.btn-outline {
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: var(--black);
+}
+
+    .btn-outline:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+    }
+
+/* ── Card footer ── */
+.form-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5rem;
+    padding: .875rem 1.25rem;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}

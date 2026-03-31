@@ -1,0 +1,270 @@
+﻿:root {
+    --blue: #2563eb;
+    --blue-dark: #1d4ed8;
+    --blue-light: #eff6ff;
+    --black: #111111;
+    --gray: #6b7280;
+    --gray-light: #9ca3af;
+    --border: #d1d5db;
+    --bg: #f9fafb;
+    --white: #ffffff;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+}
+
+/* ── Page header ── */
+.page-header {
+    margin: 2rem 0 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+    .page-header a.back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .875rem;
+        color: var(--gray);
+        text-decoration: none;
+        padding: .35rem .65rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--white);
+        transition: border-color .15s, color .15s;
+    }
+
+        .page-header a.back-btn:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+    .page-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--black);
+    }
+
+/* ── Card ── */
+.form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 580px;
+}
+
+.form-card-head {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.form-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: var(--blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.form-card-title {
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--black);
+}
+
+.form-card-desc {
+    font-size: .775rem;
+    color: var(--gray);
+    margin-top: .1rem;
+}
+
+.form-card-body {
+    padding: 1.5rem 1.25rem;
+}
+
+/* ── Form fields ── */
+.field {
+    margin-bottom: 1.1rem;
+}
+
+    .field label {
+        display: block;
+        font-size: .8rem;
+        font-weight: 500;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        margin-bottom: .4rem;
+    }
+
+    .field input,
+    .field select {
+        width: 100%;
+        padding: .55rem .75rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: .9rem;
+        color: var(--black);
+        background: var(--white);
+        transition: border-color .15s, box-shadow .15s;
+        appearance: none;
+    }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+            outline: none;
+        }
+
+    .field select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right .75rem center;
+        padding-right: 2.25rem;
+    }
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Validation */
+.text-danger {
+    color: var(--danger);
+    font-size: .8rem;
+    margin-top: .3rem;
+    display: block;
+}
+
+.field input.input-error {
+    border-color: var(--danger);
+}
+
+    .field input.input-error:focus {
+        box-shadow: 0 0 0 3px rgba(220,38,38,.15);
+    }
+
+/* ── Divider ── */
+.form-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.25rem 0;
+}
+
+/* ── Roles checkboxes ── */
+.roles-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: .4rem;
+}
+
+.role-chip {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .75rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: .875rem;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .15s, background .15s, color .15s;
+    color: var(--black);
+    background: var(--white);
+}
+
+    .role-chip input[type="checkbox"] {
+        display: none;
+    }
+
+    .role-chip.checked-blue {
+        background: var(--blue-light);
+        border-color: var(--blue);
+        color: var(--blue-dark);
+    }
+
+    .role-chip.checked-teal {
+        background: #f0fdf9;
+        border-color: #0d9488;
+        color: #0f6e56;
+    }
+
+    .role-chip.checked-amber {
+        background: #fffbeb;
+        border-color: #d97706;
+        color: #92400e;
+    }
+
+    .role-chip:hover {
+        border-color: var(--blue);
+    }
+
+/* ── Footer buttons ── */
+.form-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5rem;
+    padding: .875rem 1.25rem;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .55rem 1.1rem;
+    border-radius: 4px;
+    font-size: .875rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: background .15s, border-color .15s, color .15s;
+}
+
+.btn-primary {
+    background: var(--blue);
+    color: var(--white);
+}
+
+    .btn-primary:hover {
+        background: var(--blue-dark);
+    }
+
+.btn-outline {
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: var(--black);
+}
+
+    .btn-outline:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+    }
+
+/* ── Alert ── */
+.alert-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid #fecaca;
+    border-radius: 6px;
+    padding: .75rem 1rem;
+    font-size: .875rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
