@@ -102,7 +102,7 @@
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
+            if (id == Guid.Empty)
             {
                 return BadRequest();
             }
@@ -174,7 +174,7 @@
         {
             try
             {
-                if (id == null)
+                if (id == Guid.Empty)
                 {
                     TempData["Error"] = "Invalid quiz id.";
                     return RedirectToAction(nameof(Index));

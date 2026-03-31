@@ -79,7 +79,7 @@
         {
             try
             {
-                if (selectedAnswerId == null)
+                if (selectedAnswerId == Guid.Empty)
                     return RedirectToAction(nameof(Question), new { attemptId });
 
                 await _gameService.SubmitAnswerAsync(attemptId, questionId, selectedAnswerId);
