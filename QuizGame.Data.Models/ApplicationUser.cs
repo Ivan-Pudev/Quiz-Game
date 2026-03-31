@@ -7,6 +7,8 @@ namespace QuizGame.Data.Models
         public string FullName { get; set; } = null!;
         public DateTime BirthDate { get; set; }
 
+        public bool isDeleted { get; set; }
+
         public virtual ICollection<QuizAttempt> QuizAttempts { get; set; }
         = new List<QuizAttempt>();
 

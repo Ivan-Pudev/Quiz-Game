@@ -21,6 +21,9 @@
         [DataType(DataType.DateTime)]
         [Required]
         public DateTime StartTime { get; set; }
+
+        public bool IsDeleted { get; set; }
+
         public virtual Leaderboard? Leaderboard { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }
