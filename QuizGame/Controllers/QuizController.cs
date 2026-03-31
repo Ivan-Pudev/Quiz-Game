@@ -212,5 +212,22 @@
                 return RedirectToAction(nameof(Index));
             }
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> DeletedQuizzes()
+        {
+            try
+            {
+                //IEnumerable<DetailsQuizViewModel> quizzes = await _quizService.GetAllQuizzesAsync();
+
+                return View(new List<DetailsQuizViewModel>());
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Unable to load deleted quizzes";
+                return View(Enumerable.Empty<Quiz>());
+            }
+        }
     }
 }
