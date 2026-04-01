@@ -1,0 +1,743 @@
+﻿@model AdminManageEntriesViewModel
+
+@{
+    ViewData["Title"] = "Manage Entries";
+    Layout = "_Layout";
+}
+
+<style>
+    :root {
+        --blue:       #2563eb;
+        --blue-dark:  #1d4ed8;
+        --blue-light: #eff6ff;
+        --black:      #111111;
+        --gray:       #6b7280;
+        --gray-light: #9ca3af;
+        --border:     #d1d5db;
+        --bg:         #f9fafb;
+        --white:      #ffffff;
+        --danger:     #dc2626;
+        --danger-bg:  #fef2f2;
+        --success:    #16a34a;
+        --success-bg: #f0fdf4;
+        --amber:      #d97706;
+        --amber-bg:   #fffbeb;
+        --teal:       #0d9488;
+        --teal-bg:    #f0fdf9;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin: 2rem 0 1.5rem;
+    }
+    .page-header-left { display: flex; align-items: center; gap: .75rem; }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        font-size: .875rem;
+        color: var(--gray);
+        text-decoration: none;
+        padding: .35rem .65rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--white);
+        transition: border-color .15s, color .15s;
+    }
+    .back-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+    .page-header h1        { font-size: 1.75rem; font-weight: 700; color: var(--black); }
+    .page-header .subtitle { font-size: .875rem; color: var(--gray); margin-top: .25rem; }
+
+    /* ── Alerts ── */
+    .alert {
+        border-radius: 6px;
+        padding: .75rem 1rem;
+        font-size: .875rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+    }
+    .alert-success { background: var(--success-bg); color: var(--success); border: 1px solid #bbf7d0; }
+    .alert-danger  { background: var(--danger-bg);  color: var(--danger);  border: 1px solid #fecaca; }
+
+    /* ── Stats bar ── */
+    .stats-bar { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+
+    .stat-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: .75rem 1.25rem;
+        min-width: 130px;
+    }
+    .stat-card .stat-label {
+        font-size: .75rem;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        font-weight: 500;
+    }
+    .stat-card .stat-value        { font-size: 1.5rem; font-weight: 700; margin-top: .15rem; }
+    .stat-card .stat-value.amber  { color: var(--amber); }
+    .stat-card .stat-value.teal   { color: var(--teal); }
+    .stat-card .stat-value.success{ color: var(--success); }
+
+    /* ── Two-column layout ── */
+    .layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 1.25rem;
+        align-items: start;
+    }
+
+    media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Card (shared) ── */
+    .card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .card-head {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+    }
+
+    .card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .icon-amber { background: var(--amber-bg); }
+    .icon-blue  { background: var(--blue-light); }
+
+    .card-title { font-size: .95rem; font-weight: 600; color: var(--black); }
+    .card-desc  { font-size: .775rem; color: var(--gray); margin-top: .1rem; }
+
+    /* ── Toolbar (inside table card) ── */
+    .card-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .75rem;
+        padding: .75rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+    }
+
+    .search-wrap { position: relative; flex: 1; max-width: 260px; }
+    .search-wrap svg {
+        position: absolute;
+        left: .7rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray-light);
+        pointer-events: none;
+    }
+    .search-input {
+        width: 100%;
+        padding: .45rem .75rem .45rem 2.1rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: .875rem;
+        color: var(--black);
+        background: var(--white);
+        transition: border-color .15s;
+    }
+    .search-input:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+        outline: none;
+    }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+
+    thead th {
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        padding: .65rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        color: var(--gray);
+        white-space: nowrap;
+    }
+
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--blue-light); }
+
+    td { padding: .65rem 1rem; vertical-align: middle; }
+
+    /* ── User cell ── */
+    .user-cell { display: flex; align-items: center; gap: .65rem; }
+
+    .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: var(--white);
+        font-size: .75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        text-transform: uppercase;
+    }
+
+    .user-email { font-weight: 500; color: var(--black); font-size: .83rem; }
+    .user-id    { font-size: .7rem; color: var(--gray-light); font-family: ui-monospace, monospace; margin-top: .08rem; }
+
+    /* ── Score badge ── */
+    .score-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .25rem;
+        padding: .18rem .55rem;
+        border-radius: 999px;
+        font-size: .78rem;
+        font-weight: 600;
+        background: var(--teal-bg);
+        color: var(--teal);
+        border: 1px solid #99f6e4;
+    }
+
+    /* ── Rank badge ── */
+    .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        font-size: .78rem;
+        font-weight: 700;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--gray);
+    }
+    .rank-badge.rank-1 { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+    .rank-badge.rank-2 { background: #f8fafc; color: #475569; border-color: #cbd5e1; }
+    .rank-badge.rank-3 { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+
+    /* ── Actions cell ── */
+    .actions-cell { display: flex; gap: .35rem; }
+
+    .btn-delete-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .28rem .6rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: transparent;
+        color: var(--danger);
+        font-size: .78rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background .12s, border-color .12s;
+    }
+    .btn-delete-ghost:hover { background: var(--danger-bg); border-color: var(--danger); }
+
+    .btn-edit-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        padding: .28rem .6rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--white);
+        color: var(--black);
+        font-size: .78rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background .12s, border-color .12s, color .12s;
+    }
+    .btn-edit-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* ── Empty state ── */
+    .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--gray); }
+    .empty-state svg { margin-bottom: .65rem; color: var(--gray-light); }
+    .empty-state p { font-size: .875rem; }
+
+    /* ── Pagination bar ── */
+    .pagination-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .75rem 1.25rem;
+        border-top: 1px solid var(--border);
+        font-size: .8rem;
+        color: var(--gray);
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+
+    /* ── Add entry form card ── */
+    .form-body { padding: 1.25rem; }
+
+    .field { margin-bottom: 1rem; }
+    .field:last-of-type { margin-bottom: 0; }
+
+    .field label {
+        display: block;
+        font-size: .78rem;
+        font-weight: 500;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        margin-bottom: .35rem;
+    }
+
+    .field input,
+    .field select {
+        width: 100%;
+        padding: .5rem .75rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: .875rem;
+        color: var(--black);
+        background: var(--white);
+        transition: border-color .15s, box-shadow .15s;
+        appearance: none;
+    }
+    .field input:focus,
+    .field select:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+        outline: none;
+    }
+    .field select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right .75rem center;
+        padding-right: 2.25rem;
+    }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+    .text-danger { color: var(--danger); font-size: .78rem; margin-top: .28rem; display: block; }
+
+    /* ── Card footer ── */
+    .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: .5rem;
+        padding: .875rem 1.25rem;
+        border-top: 1px solid var(--border);
+        background: var(--bg);
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .5rem 1rem;
+        border-radius: 4px;
+        font-size: .875rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        transition: background .15s, border-color .15s, color .15s;
+        white-space: nowrap;
+    }
+    .btn-primary { background: var(--blue); color: var(--white); }
+    .btn-primary:hover { background: var(--blue-dark); }
+
+    .btn-outline {
+        background: var(--white);
+        border: 1px solid var(--border);
+        color: var(--black);
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* ── Leaderboard info strip ── */
+    .lb-strip {
+        display: flex;
+        align-items: center;
+        gap: .85rem;
+        padding: .85rem 1rem;
+        background: var(--amber-bg);
+        border: 1px solid #fde68a;
+        border-radius: 6px;
+        margin-bottom: 1.25rem;
+    }
+    .lb-strip-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        background: var(--amber-bg);
+        border: 1px solid #fde68a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--amber);
+    }
+    .lb-strip-title { font-size: .9rem; font-weight: 600; color: var(--black); }
+    .lb-strip-meta  { font-size: .775rem; color: var(--gray); margin-top: .1rem; }
+</style>
+
+<!-- Page header -->
+<div class="page-header">
+    <div class="page-header-left">
+        <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="back-btn">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Back
+        </a>
+        <div>
+            <h1>Manage Entries</h1>
+            <p class="subtitle">Add, edit, or remove entries for this leaderboard.</p>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<!-- Stats -->
+@{
+    var total    = Model.Entries.Count;
+    var avgScore = total > 0 ? Model.Entries.Average(e => e.Score) : 0;
+    var topScore = total > 0 ? Model.Entries.Max(e => e.Score) : 0;
+    var topUser  = total > 0 ? Model.Entries.OrderBy(e => e.Rank).First().UserName : "—";
+}
+<div class="stats-bar">
+    <div class="stat-card">
+        <div class="stat-label">Total Entries</div>
+        <div class="stat-value">@total</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Avg Score</div>
+        <div class="stat-value teal">@avgScore.ToString("F0")</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Top Score</div>
+        <div class="stat-value amber">@topScore</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Leader</div>
+        <div class="stat-value success" style="font-size:1rem;padding-top:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;" title="@topUser">@topUser</div>
+    </div>
+</div>
+
+<!-- Two-column layout -->
+<div class="layout">
+
+    <!-- LEFT: entries table -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon icon-amber">
+                <svg width="16" height="16" fill="none" stroke="#d97706" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M8 2v12M4 6v8M12 4v10"/>
+                </svg>
+            </div>
+            <div>
+                <div class="card-title">@Model.LeaderboardTitle</div>
+                <div class="card-desc">@total entr(ies) · Last updated @Model.LastUpdated.ToString("dd MMM yyyy")</div>
+            </div>
+        </div>
+
+        <!-- Toolbar inside card -->
+        <div class="card-toolbar">
+            <div class="search-wrap">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input id="searchInput"
+                       class="search-input"
+                       type="search"
+                       placeholder="Search by user…"
+                       oninput="filterTable()" />
+            </div>
+        </div>
+
+        <!-- Entries table -->
+        @if (!Model.Entries.Any())
+        {
+            <div class="empty-state">
+                <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                </svg>
+                <p>No entries yet. Add one using the form.</p>
+            </div>
+        }
+        else
+        {
+            <table id="entriesTable">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Score</th>
+                        <th>Rank</th>
+                        <th style="width:130px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in Model.Entries.OrderBy(e => e.Rank))
+                    {
+                        var initials = entry.UserName?.Length >= 2
+                            ? entry.UserName.Substring(0, 2).ToUpper()
+                            : entry.UserName?.ToUpper() ?? "??";
+
+                        var rankCls = entry.Rank switch {
+                            1 => "rank-1",
+                            2 => "rank-2",
+                            3 => "rank-3",
+                            _ => ""
+                        };
+
+                        <tr data-email="@entry.UserName?.ToLower()">
+                            <td>
+                                <div class="user-cell">
+                                    <div class="avatar">@initials</div>
+                                    <div>
+                                        <div class="user-email">@entry.UserName</div>
+                                        <div class="user-id">@entry.UserId</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="score-badge">
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                    @entry.Score pts
+                                </span>
+                            </td>
+                            <td>
+                                <span class="rank-badge @rankCls">#@entry.Rank</span>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <!-- Edit inline trigger -->
+                                    <button type="button"
+                                            class="btn-edit-ghost"
+                                            onclick="openEdit('@entry.Id', @entry.Score, @entry.Rank)">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                        Edit
+                                    </button>
+
+                                    <!-- Delete -->
+                                    <form asp-area=""
+                                          asp-controller="Leaderboard"
+                                          asp-action="DeleteEntry"
+                                          method="post"
+                                          onsubmit="return confirm('Remove entry for @Html.Raw(entry.UserName)?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@entry.Id" />
+                                        <input type="hidden" name="leaderboardId" value="@Model.LeaderboardId" />
+                                        <button type="submit" class="btn-delete-ghost">
+                                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <polyline points="3 6 5 6 21 6"/>
+                                                <path d="M19 6l-1 14H6L5 6"/>
+                                                <path d="M10 11v6M14 11v6"/>
+                                                <path d="M9 6V4h6v2"/>
+                                            </svg>
+                                            Remove
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination-bar">
+                <span id="resultCount">Showing @Model.Entries.Count entr(ies)</span>
+            </div>
+        }
+    </div>
+
+    <!-- RIGHT: add / edit entry form -->
+    <div>
+
+        <!-- Add entry card -->
+        <div class="card" id="addCard">
+            <div class="card-head">
+                <div class="card-icon icon-blue">
+                    <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <line x1="19" y1="8" x2="19" y2="14"/>
+                        <line x1="16" y1="11" x2="22" y2="11"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="card-title" id="formCardTitle">Add entry</div>
+                    <div class="card-desc">Assign a score and rank to a user</div>
+                </div>
+            </div>
+
+            <form asp-area="Admin"
+                  asp-controller="Leaderboard"
+                  asp-action="AddEntry"
+                  method="post"
+                  id="entryForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="leaderboardId" value="@Model.LeaderboardId" />
+                <input type="hidden" name="entryId" id="entryId" value="" />
+
+                <div class="form-body">
+
+                    <!-- User select -->
+                    <div class="field" id="userFieldWrap">
+                        <label asp-for="NewEntry.UserId">User</label>
+                        <select asp-for="NewEntry.UserId" name="UserId" id="userSelect">
+                            <option value="" disabled selected>Select a user…</option>
+                            @foreach (var user in Model.AvailableUsers)
+                            {
+                                <option value="@user.Id">@user.UserName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="NewEntry.UserId" class="text-danger"></span>
+                    </div>
+
+                    <!-- Score + Rank -->
+                    <div class="field-row">
+                        <div class="field">
+                            <label asp-for="NewEntry.Score">Score</label>
+                            <input asp-for="NewEntry.Score"
+                                   name="Score"
+                                   id="scoreInput"
+                                   type="number"
+                                   min="0"
+                                   placeholder="e.g. 850" />
+                            <span asp-validation-for="NewEntry.Score" class="text-danger"></span>
+                        </div>
+                        <div class="field">
+                            <label asp-for="NewEntry.Rank">Rank</label>
+                            <input asp-for="NewEntry.Rank"
+                                   name="Rank"
+                                   id="rankInput"
+                                   type="number"
+                                   min="1"
+                                   placeholder="e.g. 1" />
+                            <span asp-validation-for="NewEntry.Rank" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+                    <button type="button" class="btn btn-outline" id="cancelEditBtn" style="display:none;" onclick="resetForm()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        <span id="submitLabel">Add entry</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /* ── Table search ── */
+    function filterTable() {
+        const search = document.getElementById('searchInput').value.toLowerCase().trim();
+        const rows   = document.querySelectorAll('#entriesTable tbody tr');
+        let visible  = 0;
+
+        rows.forEach(row => {
+            const email = row.dataset.email || '';
+            const show  = !search || email.includes(search);
+            row.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+
+        const countEl = document.getElementById('resultCount');
+        if (countEl) countEl.textContent = `Showing ${visible} entr(ies)`;
+    }
+
+    /* ── Edit mode ── */
+    function openEdit(id, score, rank) {
+        document.getElementById('entryId').value    = id;
+        document.getElementById('scoreInput').value = score;
+        document.getElementById('rankInput').value  = rank;
+
+        // Switch form to edit action
+        document.getElementById('entryForm').action = '@Url.Action("EditEntry", "Leaderboard", new { area = "Admin" })';
+
+        document.getElementById('formCardTitle').textContent = 'Edit entry';
+        document.getElementById('submitLabel').textContent   = 'Save changes';
+        document.getElementById('cancelEditBtn').style.display = '';
+        document.getElementById('userFieldWrap').style.display = 'none';
+
+        document.getElementById('addCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetForm() {
+        document.getElementById('entryId').value    = '';
+        document.getElementById('scoreInput').value = '';
+        document.getElementById('rankInput').value  = '';
+        document.getElementById('userSelect').value = '';
+
+        document.getElementById('entryForm').action = '@Url.Action("AddEntry", "Leaderboard", new { area = "Admin" })';
+
+        document.getElementById('formCardTitle').textContent   = 'Add entry';
+        document.getElementById('submitLabel').textContent     = 'Add entry';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        document.getElementById('userFieldWrap').style.display = '';
+    }
+</script>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

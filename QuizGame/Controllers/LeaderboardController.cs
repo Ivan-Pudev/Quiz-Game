@@ -2,8 +2,10 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using QuizGame.Core;
     using QuizGame.Core.Contracts;
     using QuizGame.Data.Models;
+    using QuizGame.ViewModels.Admin.Leaderboard;
     using QuizGame.ViewModels.Leaderboards;
 
     [Authorize]
@@ -34,7 +36,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Rankings(Guid? id)
         {
             try
             {
@@ -49,5 +51,108 @@
                 return RedirectToAction(nameof(Index));
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details()
+        {
+            try
+            {
+                IEnumerable<AdminLeaderboardViewModel> leaderboardViewModels = await _leaderboardService.GetLeaderboardsToManageAsync();
+                return View(leaderboardViewModels);
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Unable to load leaderboard details.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageEntries()
+        {
+            try
+            {
+                IEnumerable<AdminLeaderboardEntryViewModel> leaderboardViewModels = await _leaderboardService
+                    .GetLeaderboardsEntriesToManageAsync();
+                return View(leaderboardViewModels);
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Unable to load leaderboard details.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeletedEntries()
+        {
+            try
+            {
+                IEnumerable<AdminLeaderboardEntryViewModel> leaderboardViewModels = await _leaderboardService
+                    .GetLeaderboardsEntriesToManageAsync();
+                return View(leaderboardViewModels);
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Unable to load leaderboard details.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteEntry(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["Error"] = "Invalid entry id.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                await _leaderboardService.HardDeleteEntryAsync(id);
+                TempData["Success"] = "Quiz deleted successfully.";
+            }
+            catch (InvalidOperationException)
+            {
+                TempData["Error"] = "Quiz not found.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to delete quiz.";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        //[Authorize]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Delete(Guid id)
+        //{
+        //    try
+        //    {
+        //        if (id == Guid.Empty)
+        //        {
+        //            TempData["Error"] = "Invalid quiz id.";
+        //            return RedirectToAction(nameof(Index));
+        //        }
+
+        //        await _quizService.DeleteQuizAsync(id);
+        //        TempData["Success"] = "Quiz deleted successfully.";
+        //    }
+        //    catch (InvalidOperationException)
+        //    {
+        //        TempData["Error"] = "Quiz not found.";
+        //    }
+        //    catch (Exception)
+        //    {
+        //        TempData["Error"] = "Failed to delete quiz.";
+        //    }
+
+        //    return RedirectToAction(nameof(Index));
+        //}
     }
 }

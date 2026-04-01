@@ -1,5 +1,6 @@
 ﻿namespace QuizGame.Data.Repository
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using QuizGame.Data.Models;
     using QuizGame.Data.Repository.Contracts;
@@ -7,6 +8,8 @@
 
     public class LeaderboardRepository : BaseRepository, ILeaderboardRepository
     {
+        private Guid userId;
+
         public LeaderboardRepository(QuizGameDbContext dbContext) 
             : base(dbContext)
         {
@@ -58,6 +61,21 @@
                 .ToListAsync();
         }
 
+        public async Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync(Guid leaderboardId, Guid userId)
+        {
+            return await DbContext.LeaderboardEntries
+                .FirstOrDefaultAsync(e => e.Id == leaderboardId && e.UserId == userId);
+        }
+
+        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardsWithEntriesAsync()
+        {
+            return await DbContext.LeaderboardEntries
+                .AsNoTracking()
+                .Include(l => l.Leaderboard)
+                .AsSplitQuery()
+                .ToListAsync();
+        }
+
         public async Task<bool> AddLeaderboardAsync(Leaderboard leaderboard)
         {
             await DbContext.Leaderboards.AddAsync(leaderboard);
@@ -66,11 +84,6 @@
             return resultCount > 0;
         }
 
-        public async Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync(Guid leaderboardId, Guid userId)
-        {
-            return await DbContext.LeaderboardEntries
-                .FirstOrDefaultAsync(e => e.Id == leaderboardId && e.UserId == userId);
-        }
 
         public async Task<bool> AddLeaderboardEntryAsync(LeaderboardEntry leaderboardEntry)
         {
@@ -86,6 +99,56 @@
             int resultCount = await SaveChangesAsync();
 
             return resultCount > 0;
+        }
+
+        public async Task<bool> RestoreEntryAsync(Guid entryId)
+        {
+            LeaderboardEntry? entry = DbContext
+                .LeaderboardEntries
+                .FirstOrDefault(l => l.Id == userId);
+
+            if (entry == null)
+            {
+                return false;
+            }
+
+            entry.IsDeleted = false;
+            int resultsCount = await SaveChangesAsync();
+
+            return resultsCount > 0;
+        }
+        public async Task<bool> SoftDeleteEntryAsync(Guid entryId)
+        {
+            LeaderboardEntry? entry = DbContext
+                .LeaderboardEntries
+                .FirstOrDefault(l => l.Id == entryId);
+
+            if (entry == null)
+            {
+                return false;
+            }
+
+            entry.IsDeleted = true;
+            int resultsCount = await SaveChangesAsync();
+
+            return resultsCount > 0;
+        }
+
+        public async Task<bool> HardDeleteEntryAsync(Guid entryId)
+        {
+            LeaderboardEntry? entry = DbContext
+                .LeaderboardEntries
+                .FirstOrDefault(l => l.Id == entryId);
+
+            if (entry == null)
+            {
+                return false;
+            }
+
+            DbContext.Remove(entry);
+            int resultsCount = await SaveChangesAsync();
+
+            return resultsCount > 0;
         }
     }
 }

@@ -20,10 +20,19 @@
         Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync
             (Guid leaderboardId, Guid userId);
 
+        Task<IEnumerable<LeaderboardEntry>> GetLeaderboardsWithEntriesAsync();
+
         Task<bool> AddLeaderboardAsync(Leaderboard leaderboard);
 
         Task<bool> AddLeaderboardEntryAsync(LeaderboardEntry leaderboardEntry);
 
         Task<bool> UpdateLeaderboardEntriesAsync(LeaderboardEntry leaderboardEntry);
+
+        Task<bool> RestoreEntryAsync(Guid entryId);
+
+        Task<bool> SoftDeleteEntryAsync(Guid entryId);
+
+        Task<bool> HardDeleteEntryAsync(Guid entryId);
+
     }
 }

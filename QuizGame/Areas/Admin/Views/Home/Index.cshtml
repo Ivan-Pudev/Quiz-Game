@@ -26,6 +26,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1.25rem;
+        align-items: start;
     }
 
     /* ── Card ── */
@@ -34,6 +35,7 @@
         border: 1px solid var(--border);
         border-radius: 6px;
         overflow: hidden;
+        height: fit-content;
     }
 
     /* Card header */
@@ -125,6 +127,8 @@
     max-width: 1100px;
     margin: 0 auto;
     padding: 0 1.25rem 2.5rem;
+
+
 }
 </style>
 
@@ -162,10 +166,7 @@
                 <span><span class="admin-dot dot-blue"></span> Create user</span>
                 <span class="admin-chev">&rsaquo;</span>
             </a>
-            <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="admin-action-btn">
-                <span><span class="admin-dot dot-blue"></span> Manage roles</span>
-                <span class="admin-chev">&rsaquo;</span>
-            </a>
+            
             <a asp-area="Admin" asp-controller="UserManagement" asp-action="DeletedAccounts" class="admin-action-btn">
                 <span><span class="admin-dot dot-blue"></span> Deleted accounts</span>
                 <span class="admin-chev">&rsaquo;</span>
@@ -196,10 +197,7 @@
                 <span><span class="admin-dot dot-teal"></span> Create quiz</span>
                 <span class="admin-chev">&rsaquo;</span>
             </a>
-            <a asp-area="" asp-controller="Quiz" asp-action="Published" class="admin-action-btn">
-                <span><span class="admin-dot dot-teal"></span> Published quizzes</span>
-                <span class="admin-chev">&rsaquo;</span>
-            </a>
+            
             <a asp-area="" asp-controller="Quiz" asp-action="DeletedQuizzes" class="admin-action-btn">
                 <span><span class="admin-dot dot-teal"></span> Deleted quizzes</span>
                 <span class="admin-chev">&rsaquo;</span>
@@ -221,20 +219,17 @@
             </div>
         </div>
         <div class="admin-btn-list">
-            <a asp-area="" asp-controller="Leaderboard" asp-action="Index" class="admin-action-btn">
-                <span><span class="admin-dot dot-amber"></span> View leaderboard</span>
+            <a asp-area="" asp-controller="Leaderboard" asp-action="Details" class="admin-action-btn">
+                <span><span class="admin-dot dot-amber"></span> View leaderboards</span>
                 <span class="admin-chev">&rsaquo;</span>
             </a>
-            <a asp-area="" asp-controller="Leaderboard" asp-action="ByQuiz" class="admin-action-btn">
-                <span><span class="admin-dot dot-amber"></span> Scores by quiz</span>
+            <a asp-area="" asp-controller="Leaderboard" asp-action="Add" class="admin-action-btn">
+                <span><span class="admin-dot dot-amber"></span>Add Leaderboard</span>
                 <span class="admin-chev">&rsaquo;</span>
             </a>
-            <a asp-area="" asp-controller="Leaderboard" asp-action="Reset" class="admin-action-btn">
-                <span><span class="admin-dot dot-amber"></span> Reset scores</span>
-                <span class="admin-chev">&rsaquo;</span>
-            </a>
-            <a asp-area="" asp-controller="Leaderboard" asp-action="Export" class="admin-action-btn">
-                <span><span class="admin-dot dot-amber"></span> Export data</span>
+            
+            <a asp-area="" asp-controller="Leaderboard" asp-action="DeletedEntries" class="admin-action-btn">
+                <span><span class="admin-dot dot-amber"></span>Deleted entries</span>
                 <span class="admin-chev">&rsaquo;</span>
             </a>
         </div>

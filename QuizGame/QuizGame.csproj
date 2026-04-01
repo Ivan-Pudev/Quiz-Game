@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Views\QuizManagement\" />
     <Folder Include="Areas\Identity\Pages\Account\Manage\" />
   </ItemGroup>
 
