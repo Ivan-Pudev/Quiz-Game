@@ -5,10 +5,6 @@ namespace QuizGame.ViewModels.Admin.Leaderboard
     public class UserSelectViewModel
     {
         public Guid Id { get; set; }
-
-        public Guid UserId { get; set; }
-
         public string UserName { get; set; } = null!;
-        public List<ApplicationUser> Users { get; set; } 
     }
 }

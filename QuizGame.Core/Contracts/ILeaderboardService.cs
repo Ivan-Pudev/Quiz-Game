@@ -17,6 +17,8 @@
 
         Task<IEnumerable<AdminLeaderboardEntryViewModel>> GetLeaderboardsEntriesToManageAsync();
 
+        Task<AdminManageEntriesViewModel> GetLeaderboardsEntriesToManageDetailsAsync(Guid id);
+
         Task<bool> RestoreEntryAsync(Guid entryId);
 
         Task<bool> SoftDeleteEntryAsync(Guid entryId);

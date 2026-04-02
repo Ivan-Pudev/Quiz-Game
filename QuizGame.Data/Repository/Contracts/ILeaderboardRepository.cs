@@ -1,18 +1,19 @@
 ﻿namespace QuizGame.Data.Repository.Contracts
 {
     using QuizGame.Data.Models;
-    using QuizGame.ViewModels.Leaderboards;
     using System.Collections.Generic;
 
     public interface ILeaderboardRepository
     {
+        Task<Leaderboard?> GetLeaderboardWithEntriesAndUserBydAsync(Guid leaderboardId);
+
         Task<Leaderboard?> GetLeaderboardWithEntriesAndUserByQuizIdAsync(Guid quizId);
 
         Task<IEnumerable<Leaderboard>> GetLeaderboardsWithQuizzesAsync();
 
         Task<Leaderboard?> GetLeaderboardsWithEntriesByQuizIdAsync(Guid quizId);
 
-        Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(Guid? id);
+        Task<IEnumerable<LeaderboardEntry>> GetLeaderboardWithEntriesAndUserBydAsync(Guid? id);
 
         Task<List<LeaderboardEntry>> GetLeaderboardEntriesOrderedByScoreByLeaderboardIdAsync
             (Guid leaderboardId);

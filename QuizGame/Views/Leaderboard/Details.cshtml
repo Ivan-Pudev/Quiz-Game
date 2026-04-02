@@ -461,9 +461,9 @@
                                 </a>
 
                                 <!-- Edit -->
-                                <a asp-area="Admin"
+                                <a asp-area=""
                                    asp-controller="Leaderboard"
-                                   asp-action="Edit"
+                                   asp-action="ManageEntries"
                                    asp-route-id="@lb.Id"
                                    class="btn btn-edit btn-sm"
                                    title="Edit leaderboard">
@@ -475,9 +475,9 @@
                                 </a>
 
                                 <!-- Delete -->
-                                <form asp-area="Admin"
+                                <form asp-area=""
                                       asp-controller="Leaderboard"
-                                      asp-action="Delete"
+                                      asp-action="DeleteEntries"
                                       method="post"
                                       onsubmit="return confirm('Delete leaderboard \'@Html.Raw(lb.Title)\'? This will also remove all entries.');">
                                     @Html.AntiForgeryToken()

@@ -2,7 +2,6 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using QuizGame.Core;
     using QuizGame.Core.Contracts;
     using QuizGame.Data.Models;
     using QuizGame.ViewModels.Admin.Leaderboard;
@@ -68,17 +67,17 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> ManageEntries()
+        public async Task<IActionResult> ManageEntries(Guid id)
         {
             try
             {
-                IEnumerable<AdminLeaderboardEntryViewModel> leaderboardViewModels = await _leaderboardService
-                    .GetLeaderboardsEntriesToManageAsync();
-                return View(leaderboardViewModels);
+                AdminManageEntriesViewModel leaderboardViewModel = await _leaderboardService
+                    .GetLeaderboardsEntriesToManageDetailsAsync(id);
+                return View(leaderboardViewModel);
             }
             catch (Exception)
             {
-                TempData["Error"] = "Unable to load leaderboard details.";
+                TempData["Error"] = "Unable to load leaderboard entries.";
                 return RedirectToAction(nameof(Index));
             }
         }

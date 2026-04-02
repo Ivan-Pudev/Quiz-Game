@@ -10,9 +10,19 @@
     {
         private Guid userId;
 
-        public LeaderboardRepository(QuizGameDbContext dbContext) 
+        public LeaderboardRepository(QuizGameDbContext dbContext)
             : base(dbContext)
         {
+        }
+
+        public async Task<Leaderboard?> GetLeaderboardWithEntriesAndUserBydAsync(Guid leaderboardId)
+        {
+            return await DbContext.Leaderboards
+                .AsNoTracking()
+                .Include(l => l.Entries)
+                    //.Include(e => e.User)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(l => l.Id == leaderboardId);
         }
 
         public async Task<Leaderboard?> GetLeaderboardWithEntriesAndUserByQuizIdAsync(Guid quizId)
@@ -41,7 +51,7 @@
                 .FirstOrDefaultAsync(l => l.QuizId == quizId);
         }
 
-        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardEntriesByIdAsync(Guid? id)
+        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardWithEntriesAndUserBydAsync(Guid? id)
         {
             return await DbContext.LeaderboardEntries
                 .AsNoTracking()

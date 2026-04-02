@@ -23,7 +23,7 @@ namespace QuizGame.Core
 
         public async Task<IEnumerable<LeaderboardRowVm>?> GetLeaderboardEntriesByQuizIdAsync(Guid? quizId)
         {
-            IEnumerable<LeaderboardEntry> entries = await _leaderboardRepository.GetLeaderboardEntriesByIdAsync(quizId);
+            IEnumerable<LeaderboardEntry> entries = await _leaderboardRepository.GetLeaderboardWithEntriesAndUserBydAsync(quizId);
 
             return entries
                 .Select((e, index) => new LeaderboardRowVm
@@ -80,6 +80,41 @@ namespace QuizGame.Core
             }
             
             return leaderboardsViewModels;
+        }
+
+        public async Task<AdminManageEntriesViewModel> GetLeaderboardsEntriesToManageDetailsAsync(Guid id)
+        {
+            Leaderboard? leaderboard = await _leaderboardRepository
+                .GetLeaderboardWithEntriesAndUserBydAsync(id);
+
+            return new AdminManageEntriesViewModel
+            {
+                LeaderboardId = leaderboard.Id,
+                LeaderboardTitle = leaderboard.Title,
+                LastUpdated = leaderboard.LastUpdated,
+                
+                Entries = leaderboard.Entries.Select(entry => new AdminLeaderboardEntryViewModel
+                {
+                    LeaderboardId = entry.LeaderboardId,
+                    LeaderboardTitle = entry.Leaderboard.Title,
+                    Id = entry.Id,
+                    Rank = entry.Rank,
+                    Score = entry.Score,
+                    UserId = entry.UserId,
+                    UserName = entry?.User!.UserName!
+                }).ToList(),
+                NewEntry = leaderboard.Entries.Select(entry => new AddEntryInputModel
+                {
+                    Rank = entry.Rank,
+                    Score = entry.Score,
+                    UserId = entry.UserId,
+                }).First(),
+                AvailableUsers = leaderboard.Entries.Select(entry => new UserSelectViewModel
+                {
+                    Id = entry!.UserId,
+                    UserName = entry.User.UserName!
+                }).ToList()
+            };
         }
 
         public async Task<bool> RestoreEntryAsync(Guid entryId)
