@@ -494,7 +494,7 @@
                             <div class="actions-cell">
 
                                 <!-- Restore -->
-                                <form asp-area="Admin"
+                                <form asp-area=""
                                       asp-controller="Leaderboard"
                                       asp-action="RestoreEntry"
                                       method="post"
@@ -511,9 +511,9 @@
                                 </form>
 
                                 <!-- Permanent delete -->
-                                <form asp-area="Admin"
+                                <form asp-area=""
                                       asp-controller="Leaderboard"
-                                      asp-action="DeleteEntryPermanent"
+                                      asp-action="DeleteEntry"
                                       method="post"
                                       onsubmit="return confirm('Permanently delete this entry for @Html.Raw(entry.UserName)? This cannot be undone.');">
                                     @Html.AntiForgeryToken()

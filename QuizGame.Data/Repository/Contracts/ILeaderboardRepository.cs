@@ -23,6 +23,8 @@
 
         Task<IEnumerable<LeaderboardEntry>> GetLeaderboardsWithEntriesAsync();
 
+        Task<IEnumerable<LeaderboardEntry>> GetLeaderboardsWithEntriesWithQuizAsync();
+
         Task<bool> AddLeaderboardAsync(Leaderboard leaderboard);
 
         Task<bool> AddLeaderboardEntryAsync(LeaderboardEntry leaderboardEntry);

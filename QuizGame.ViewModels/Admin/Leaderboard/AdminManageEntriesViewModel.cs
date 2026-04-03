@@ -14,6 +14,5 @@
         = new List<AdminLeaderboardEntryViewModel>();
         public List<UserSelectViewModel> AvailableUsers { get; set; }
         = new List<UserSelectViewModel>();
-        public AddEntryInputModel NewEntry { get; set; } = null!;
     }
 }

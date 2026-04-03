@@ -83,6 +83,22 @@
         }
 
         [HttpGet]
+        public async Task<IActionResult> GlobalLeaderboard()
+        {
+            try
+            {
+                AdminGlobalLeaderboardViewModel globalLeaderboard = await _leaderboardService
+                    .GetGlobalLeaderboardAsync();
+                return View(globalLeaderboard);
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Unable to load global leaderboard.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> DeletedEntries()
         {
             try
@@ -96,6 +112,34 @@
                 TempData["Error"] = "Unable to load leaderboard details.";
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestoreEntry(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["Error"] = "Invalid quiz id.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                //await _leaderboardService.DeleteQuizAsync(id);
+                TempData["Success"] = "Quiz deleted successfully.";
+            }
+            catch (InvalidOperationException)
+            {
+                TempData["Error"] = "Quiz not found.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to delete quiz.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize]
@@ -125,33 +169,5 @@
 
             return RedirectToAction(nameof(Index));
         }
-
-        //[Authorize]
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Delete(Guid id)
-        //{
-        //    try
-        //    {
-        //        if (id == Guid.Empty)
-        //        {
-        //            TempData["Error"] = "Invalid quiz id.";
-        //            return RedirectToAction(nameof(Index));
-        //        }
-
-        //        await _quizService.DeleteQuizAsync(id);
-        //        TempData["Success"] = "Quiz deleted successfully.";
-        //    }
-        //    catch (InvalidOperationException)
-        //    {
-        //        TempData["Error"] = "Quiz not found.";
-        //    }
-        //    catch (Exception)
-        //    {
-        //        TempData["Error"] = "Failed to delete quiz.";
-        //    }
-
-        //    return RedirectToAction(nameof(Index));
-        //}
     }
 }

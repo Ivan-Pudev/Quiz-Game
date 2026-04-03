@@ -10,7 +10,6 @@ namespace QuizGame.Core
     public class LeaderboardService : ILeaderboardService
     {
         private readonly ILeaderboardRepository _leaderboardRepository;
-
         public LeaderboardService(ILeaderboardRepository leaderboardRepository)
         {
             _leaderboardRepository = leaderboardRepository;
@@ -87,34 +86,60 @@ namespace QuizGame.Core
             Leaderboard? leaderboard = await _leaderboardRepository
                 .GetLeaderboardWithEntriesAndUserBydAsync(id);
 
-            return new AdminManageEntriesViewModel
+            List<AdminLeaderboardEntryViewModel> entries = new List<AdminLeaderboardEntryViewModel>();
+            List<UserSelectViewModel> users = new List<UserSelectViewModel>();
+            foreach (var entry in leaderboard.Entries.ToList())
             {
-                LeaderboardId = leaderboard.Id,
-                LeaderboardTitle = leaderboard.Title,
-                LastUpdated = leaderboard.LastUpdated,
-                
-                Entries = leaderboard.Entries.Select(entry => new AdminLeaderboardEntryViewModel
+                entries.Add(new AdminLeaderboardEntryViewModel
                 {
                     LeaderboardId = entry.LeaderboardId,
                     LeaderboardTitle = entry.Leaderboard.Title,
                     Id = entry.Id,
                     Rank = entry.Rank,
                     Score = entry.Score,
-                    UserId = entry.UserId,
+                    UserId= entry.UserId,
                     UserName = entry?.User!.UserName!
-                }).ToList(),
-                NewEntry = leaderboard.Entries.Select(entry => new AddEntryInputModel
-                {
-                    Rank = entry.Rank,
-                    Score = entry.Score,
-                    UserId = entry.UserId,
-                }).First(),
-                AvailableUsers = leaderboard.Entries.Select(entry => new UserSelectViewModel
+                });
+
+                users.Add(new UserSelectViewModel
                 {
                     Id = entry!.UserId,
                     UserName = entry.User.UserName!
+                });
+            }
+
+            return new AdminManageEntriesViewModel
+            {
+                LeaderboardId = leaderboard.Id,
+                LeaderboardTitle = leaderboard.Title,
+                LastUpdated = leaderboard.LastUpdated,
+                Entries = entries,
+                AvailableUsers = users
+            };
+        }
+
+        public async Task<AdminGlobalLeaderboardViewModel> GetGlobalLeaderboardAsync()
+        {
+            IEnumerable<LeaderboardEntry> entries = await _leaderboardRepository
+                .GetLeaderboardsWithEntriesWithQuizAsync();
+           
+            AdminGlobalLeaderboardViewModel globalLeaderboardViewModel = new AdminGlobalLeaderboardViewModel
+            {
+                Entries = entries.Select(e=>new GlobalEntryViewModel
+                {
+                    UserId = e.UserId,
+                    UserName = e.User!.UserName!,
+                    TotalScore = e.Score
+                }).ToList(),
+
+                QuizBreakdown = entries.Select(e=>new QuizBreakdownViewModel
+                {
+                    QuizTitle = e.Leaderboard.Quiz.Title,
+                    EntryCount = e.Leaderboard.Entries.Count()
                 }).ToList()
             };
+
+            return globalLeaderboardViewModel;
         }
 
         public async Task<bool> RestoreEntryAsync(Guid entryId)

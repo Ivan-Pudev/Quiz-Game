@@ -20,7 +20,7 @@
             return await DbContext.Leaderboards
                 .AsNoTracking()
                 .Include(l => l.Entries)
-                    //.Include(e => e.User)
+                    .ThenInclude(e => e.User)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(l => l.Id == leaderboardId);
         }
@@ -82,6 +82,18 @@
             return await DbContext.LeaderboardEntries
                 .AsNoTracking()
                 .Include(l => l.Leaderboard)
+                .Include(l=>l.User)
+                .AsSplitQuery()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardsWithEntriesWithQuizAsync()
+        {
+            return await DbContext.LeaderboardEntries
+                .AsNoTracking()
+                .Include(l => l.Leaderboard)
+                .Include(l => l.User)
+                .Include(l=>l.Leaderboard.Quiz)
                 .AsSplitQuery()
                 .ToListAsync();
         }
