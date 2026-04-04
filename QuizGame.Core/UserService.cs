@@ -32,10 +32,20 @@
             };
         }
 
-        public async Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync(string adminUserId)
+        public async Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync(string adminUserId, bool getDeletedUsers = false)
         {
-            IEnumerable<ApplicationUser> users = await _userRepository
-                .GetAllUsersAsync(filter: u => u.Id.ToString() != adminUserId);
+            IEnumerable<ApplicationUser> users;
+            if (getDeletedUsers)
+            {
+                users = await _userRepository
+                .GetAllUsersAsync(filter: u => u.isDeleted == true);
+            }
+            else
+            {
+                users = await _userRepository
+                .GetAllUsersAsync(filter: u => u.isDeleted == false);
+            }
+             
 
             List<AdminUserViewModel> userViewModels = new List<AdminUserViewModel>();
             foreach (ApplicationUser user in users)
@@ -46,7 +56,8 @@
                 {
                     Id = user.Id,
                     Email = user.Email!,
-                    Roles = userRoles.ToList()
+                    Roles = userRoles.ToList(),
+                    IsDeleted = true
                 });
             }
             return userViewModels;

@@ -19,7 +19,7 @@ namespace QuizGame.Areas.Admin.Controllers
             string userId = this.GetAdminUserId()!;
 
             IEnumerable<AdminUserViewModel> adminUserViewModels = await _userService
-                .GetAllUsersAsync(userId);
+                .GetAllUsersAsync(userId,false);
             
             return View(adminUserViewModels);
         }
@@ -162,12 +162,13 @@ namespace QuizGame.Areas.Admin.Controllers
         {
             string userId = GetAdminUserId()!;
 
-            IEnumerable<AdminUserViewModel> users = await _userService.GetAllUsersAsync(userId);
+            IEnumerable<AdminUserViewModel> users = await _userService.GetAllUsersAsync(userId,true);
+
             return View(users);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RestoreAccount([FromRoute]Guid userId)
+        public async Task<IActionResult> RestoreAccount([FromRoute(Name = "id")] Guid userId)
         {
             try
             {
@@ -189,7 +190,34 @@ namespace QuizGame.Areas.Admin.Controllers
 
                 return RedirectToAction(nameof(DeletedAccounts));
             }
-            
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAccount([FromRoute(Name = "id")] Guid userId)
+        {
+            try
+            {
+                bool deleteResult = await _userService
+                    .HardDeleteUserAsync(userId);
+                if (!deleteResult)
+                {
+                    TempData["Error"] = "User can't be deleted.";
+
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Role cannot be removed."; ;
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

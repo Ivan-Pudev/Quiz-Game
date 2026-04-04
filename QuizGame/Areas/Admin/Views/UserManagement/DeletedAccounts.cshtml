@@ -423,7 +423,8 @@
                                 <!-- Restore -->
                                 <form asp-area="Admin"
                                       asp-controller="UserManagement"
-                                      asp-action="Restore"
+                                      asp-action="RestoreAccount"
+                                      asp-route-id="@user.Id"
                                       method="post"
                                       onsubmit="return confirm('Restore access for @Html.Raw(user.Email)?');">
                                     @Html.AntiForgeryToken()
@@ -439,8 +440,9 @@
 
                                 <!-- Permanent delete -->
                                 <form asp-area="Admin"
-                                      asp-controller="User"
-                                      asp-action="Delete"
+                                      asp-controller="UserManagement"
+                                      asp-action="DeleteAccount"
+                                      asp-route-id="@user.Id"
                                       method="post"
                                       onsubmit="return confirm('Permanently delete @Html.Raw(user.Email)? This cannot be undone.');">
                                     @Html.AntiForgeryToken()

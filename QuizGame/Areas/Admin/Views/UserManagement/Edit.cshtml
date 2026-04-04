@@ -102,8 +102,9 @@
                             <span class="badge @badgeCls">@role</span>
                         </div>
                         <form asp-area="Admin"
-                              asp-controller="User"
+                              asp-controller="UserManagement"
                               asp-action="RemoveRole"
+                              asp-route-id="@Model.Id"
                               method="post"
                               onsubmit="return confirm('Remove the @role role from @Model.Email?');">
                             @Html.AntiForgeryToken()
@@ -127,8 +128,9 @@
         <div class="section-label">Add a role</div>
 
         <form asp-area="Admin"
-              asp-controller="User"
-              asp-action="AddRole"
+              asp-controller="UserManagement"
+              asp-action="AssignRole"
+              asp-route-id="@Model.Id"
               method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" name="UserId" value="@Model.Id" />
@@ -155,7 +157,7 @@
 
     <!-- Footer -->
     <div class="form-card-footer">
-        <a asp-area="Admin" asp-controller="User" asp-action="Index" class="btn btn-outline">
+        <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="btn btn-outline">
             Done
         </a>
     </div>

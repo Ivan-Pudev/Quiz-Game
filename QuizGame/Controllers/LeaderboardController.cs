@@ -114,9 +114,7 @@
             }
         }
 
-        [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestoreEntry(Guid id)
         {
             try
@@ -142,9 +140,7 @@
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteEntry(Guid id)
         {
             try

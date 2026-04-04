@@ -27,7 +27,8 @@
         }
 
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync(Expression<Func<ApplicationUser, bool>>? filter = null)
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync
+            (Expression<Func<ApplicationUser, bool>>? filter = null)
         {
             IQueryable<ApplicationUser> applicationUsers = DbContext!
                 .Users

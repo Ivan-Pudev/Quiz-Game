@@ -1,9 +1,10 @@
 ﻿namespace QuizGame.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using QuizGame.Core;
     using QuizGame.Core.Contracts;
     using QuizGame.Data.Models;
+    using QuizGame.ViewModels.Admin.User;
     using QuizGame.ViewModels.Leaderboards;
     using QuizGame.ViewModels.Quizzes;
     using System.Collections.Generic;
@@ -19,7 +20,6 @@
             _leaderboardService = leaderboardService;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -35,7 +35,6 @@
             }
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -52,9 +51,7 @@
             }
         }
 
-        [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateQuizViewModel quizViewModel)
         {
             try
@@ -72,7 +69,6 @@
             }
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -98,7 +94,6 @@
             
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -127,9 +122,7 @@
             }
         }
 
-        [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, EditQuizViewModel quizViewModel)
         {
             try
@@ -167,9 +160,7 @@
             }
         }
 
-        [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -180,7 +171,7 @@
                     return RedirectToAction(nameof(Index));
                 }
 
-                await _quizService.DeleteQuizAsync(id);
+                await _quizService.SoftDeleteQuizAsync(id);
                 TempData["Success"] = "Quiz deleted successfully.";
             }
             catch (InvalidOperationException)
@@ -195,7 +186,6 @@
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Leaderboard(Guid id)
         {
@@ -213,13 +203,12 @@
             }
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> DeletedQuizzes()
         {
             try
             {
-                //IEnumerable<DetailsQuizViewModel> quizzes = await _quizService.GetAllQuizzesAsync();
+                IEnumerable<DetailsQuizViewModel> quizzes = await _quizService.GetAllDeletedQuizzesAsync();
 
                 return View(new List<DetailsQuizViewModel>());
             }
@@ -228,6 +217,59 @@
                 TempData["Error"] = "Unable to load deleted quizzes";
                 return View(Enumerable.Empty<Quiz>());
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RestoreQuiz([FromRoute(Name = "id")] Guid userId)
+        {
+            try
+            {
+                bool isRestoreSuccessful = await _quizService.RestoreQuizAsync(userId);
+
+                if (!isRestoreSuccessful)
+                {
+                    throw new InvalidOperationException();
+                }
+                return RedirectToAction(nameof(DeletedQuizzes));
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Quiz cannot be restored."; ;
+
+                return RedirectToAction(nameof(DeletedQuizzes));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteQuiz([FromRoute(Name = "id")] Guid userId)
+        {
+            try
+            {
+                bool deleteResult = await _quizService
+                    .HardDeleteQuizAsync(userId);
+                if (!deleteResult)
+                {
+                    TempData["Error"] = "Quiz can't be deleted.";
+
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Quiz cannot be removed."; ;
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

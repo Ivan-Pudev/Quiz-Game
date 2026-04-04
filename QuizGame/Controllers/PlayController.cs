@@ -34,7 +34,6 @@
             }
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Start(Guid id) 
         {
@@ -52,7 +51,6 @@
             
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Question(Guid attemptId)
         {
@@ -73,7 +71,6 @@
             }
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> SubmitAnswer(Guid attemptId,Guid questionId,Guid selectedAnswerId)
         {
@@ -92,7 +89,6 @@
             }
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Finish(Guid attemptId,Guid quizId,Guid userId)
         {
