@@ -14,12 +14,14 @@
 
         public DateTime StartTime { get; set; }
 
+        public bool IsDeleted { get; set; }
+            
         public int TotalPoints
             => Questions.Sum(q => q.Points);
 
-        public Guid LeaderboardId { get; set; }
+        public Guid? LeaderboardId { get; set; }
 
-        public virtual Leaderboard Leaderboard { get; set; } = null!;
+        public virtual Leaderboard? Leaderboard { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }
         = new List<Question>();

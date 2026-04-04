@@ -210,7 +210,7 @@
             {
                 IEnumerable<DetailsQuizViewModel> quizzes = await _quizService.GetAllDeletedQuizzesAsync();
 
-                return View(new List<DetailsQuizViewModel>());
+                return View(quizzes);
             }
             catch (Exception)
             {

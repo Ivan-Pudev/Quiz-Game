@@ -3,6 +3,7 @@
     using QuizGame.Data.Models;
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
 
     public interface IQuizRepository
     {
@@ -12,6 +13,8 @@
 
         Task<IEnumerable<Quiz>> GetAllQuizzesWithQuestionAnswersCategoriesAndLeaderboardAsync();
 
+        Task<IEnumerable<Quiz>> GetAllDeletedQuizzesAsync(Expression<Func<ApplicationUser, bool>>? filter = null);
+
         Task<Quiz?> GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(Guid? id);
 
         Task<Quiz?> GetQuizWithQuestionsByIdAsync(Guid? id);
@@ -19,6 +22,10 @@
         Task<bool> AddQuizAsync(Quiz quiz);
 
         Task<bool> UpdateQuizAsync(Quiz quiz);
+
+        Task<bool> RestoreQuizAsync(Quiz quiz);
+
+        Task<bool> SoftDeleteQuizAsync(Quiz quiz);
 
         Task<bool> HardDeleteQuizAsync(Quiz quiz);
     }

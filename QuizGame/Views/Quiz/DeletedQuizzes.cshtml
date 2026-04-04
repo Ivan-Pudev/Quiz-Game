@@ -287,7 +287,7 @@
 <!-- Page header -->
 <div class="page-header">
     <div class="page-header-left">
-        <a asp-area="Admin" asp-controller="Quiz" asp-action="Index" class="back-btn">
+        <a asp-area="" asp-controller="Quiz" asp-action="Index" class="back-btn">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <polyline points="15 18 9 12 15 6"/>
             </svg>
@@ -321,10 +321,10 @@
 
 <!-- Stats -->
 @{
-    var total           = Model.Count();
-    var withLeaderboard = Model.Count(q => q.Leaderboard != null);
-    var upcoming        = Model.Count(q => q.StartTime > DateTime.UtcNow);
-    var totalQuestions  = Model.Sum(q => q.Questions.Count());
+    var total           = Model.Where(q=>q.IsDeleted == true).Count();
+    var withLeaderboard = Model.Where(q=>q.IsDeleted == true).Count(q => q.Leaderboard != null);
+    var upcoming        = Model.Where(q=>q.IsDeleted == true).Count(q => q.StartTime > DateTime.UtcNow);
+    var totalQuestions  = Model.Where(q=>q.IsDeleted == true).Sum(q => q.Questions.Count());
 }
 <div class="stats-bar">
     <div class="stat-card">
@@ -369,7 +369,7 @@
 
 <!-- Table -->
 <div class="table-wrap">
-    @if (!Model.Any())
+    @if (!Model.Where(q=>q.IsDeleted == true).Any())
     {
         <div class="empty-state">
             <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -393,7 +393,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var quiz in Model)
+                @foreach (var quiz in Model.Where(q=>q.IsDeleted == true))
                 {
                     <tr data-title="@quiz.Title.ToLower()" data-id="@quiz.Id.ToString().ToLower()">
 
@@ -444,9 +444,10 @@
 
                         <td>
                             <div class="actions-cell">
-                                <form asp-area="Admin"
-                                      asp-controller="Quizz"
-                                      asp-action="Restore"
+                                <form asp-area=""
+                                      asp-controller="Quiz"
+                                      asp-action="RestoreQuiz"
+                                      asp-route-id="@quiz.Id"
                                       method="post"
                                       onsubmit="return confirm('Restore quiz \'@Html.Raw(quiz.Title)\'?');">
                                     @Html.AntiForgeryToken()
@@ -461,8 +462,9 @@
                                 </form>
 
                                 <form asp-area="Admin"
-                                      asp-controller="Quizz"
-                                      asp-action="DeletePermanent"
+                                      asp-controller="Quiz"
+                                      asp-action="DeleteQuiz"
+                                      asp-route-id="@quiz.Id"
                                       method="post"
                                       onsubmit="return confirm('Permanently delete \'@Html.Raw(quiz.Title)\'? This cannot be undone.');">
                                     @Html.AntiForgeryToken()

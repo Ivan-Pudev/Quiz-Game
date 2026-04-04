@@ -9,6 +9,8 @@
 
         Task<IEnumerable<Quiz>> GetAllQuizzesAsync();
 
+        Task<IEnumerable<DetailsQuizViewModel>> GetAllDeletedQuizzesAsync();
+
         Task<IEnumerable<Question>> GetAllQuestionsAsync();
 
         Task<CreateQuizViewModel> CreateQuizFormAsync();
@@ -23,7 +25,11 @@
 
         Task EditQuizAsync(EditQuizViewModel viewModel, List<Guid> selectedQuestionIds);
 
-        Task DeleteQuizAsync(Guid id);
+        Task<bool> RestoreQuizAsync(Guid id);
+
+        Task<bool> SoftDeleteQuizAsync(Guid id);
+
+        Task<bool> HardDeleteQuizAsync(Guid id);
 
         Task<Leaderboard> CreateLeaderboardAsync(Guid quizId);
 

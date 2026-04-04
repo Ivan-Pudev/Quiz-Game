@@ -1,16 +1,18 @@
 ﻿namespace QuizGame.Data.Repository
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using QuizGame.Data.Models;
     using QuizGame.Data.Repository.Contracts;
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Text;
 
     public class QuizRepository : BaseRepository, IQuizRepository
     {
-        public QuizRepository(QuizGameDbContext dbContext) 
-            : base(dbContext) {}
+        public QuizRepository(QuizGameDbContext dbContext)
+            : base(dbContext) { }
 
         public async Task<IEnumerable<Question>> GetAllQuestionsOrderByContentAsync()
         {
@@ -32,7 +34,7 @@
 
         public async Task<IEnumerable<Quiz>> GetAllQuizzesWithQuestionAnswersCategoriesAndLeaderboardAsync()
         {
-            return await DbContext
+            var result = await DbContext
                 .Quizzes
                 .AsNoTracking()
                 .Include(q => q.Questions)
@@ -42,6 +44,8 @@
                 .Include(q => q.Leaderboard)
                 .AsSplitQuery()
                 .ToListAsync();
+
+            return result;
         }
 
         public async Task<Quiz?> GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(Guid? id)
@@ -81,6 +85,22 @@
             return resultCount > 0;
         }
 
+        public async Task<bool> RestoreQuizAsync(Quiz quiz)
+        {
+            quiz.IsDeleted = false;
+            int resultsCount = await SaveChangesAsync();
+
+            return resultsCount > 0;
+        }
+
+        public async Task<bool> SoftDeleteQuizAsync(Quiz quiz)
+        {
+            quiz.IsDeleted = true;
+            int resultsCount = await SaveChangesAsync();
+
+            return resultsCount > 0;
+        }
+
         public async Task<bool> HardDeleteQuizAsync(Quiz quiz)
         {
             DbContext.Quizzes.Remove(quiz);
@@ -89,6 +109,20 @@
             return resultCount > 0;
         }
 
-        
+        public async Task<IEnumerable<Quiz>> GetAllDeletedQuizzesAsync
+            (Expression<Func<ApplicationUser, bool>>? filter = null)
+        {
+            return await DbContext
+                .Quizzes
+                .AsNoTracking()
+                .Include(q => q.Questions)
+                    .ThenInclude(qq => qq.Answers)
+                .Include(q => q.Questions)
+                    .ThenInclude(qq => qq.Categories)
+                .Include(q => q.Leaderboard)
+                .Where(q=>q.IsDeleted == true)
+                .AsSplitQuery()
+                .ToListAsync();
+        }
     }
 }

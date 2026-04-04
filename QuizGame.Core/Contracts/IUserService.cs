@@ -7,7 +7,7 @@
     {
         Task<AdminManageUserRolesViewModel?> GetUserByIdAsync(Guid userId);
 
-        Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync(string adminUserId);
+        Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync(string adminUserId, bool getDeletedUsers = false);
 
         Task<bool> CreateUserAsync(AdminCreateUserViewModel viewModel);
 
