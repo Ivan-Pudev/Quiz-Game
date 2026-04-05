@@ -1,5 +1,7 @@
 ﻿@model EditQuizViewModel
 
+<script src="~/js/Admin/Leaderboard/entries-management.css" asp-append-version="true"></script>
+
 <div class="container mt-4">
     <h2 class="text-primary mb-4">Edit Quiz: @Model.Title</h2>
 
@@ -85,15 +87,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-        function updateCount() {
-            const checked = document.querySelectorAll(".question-checkbox:checked").length;
-            document.getElementById("selectedCount").innerText = `${checked} selected`;
-        }
-        document.addEventListener("change", (e) => {
-            if (e.target.classList.contains("question-checkbox")) updateCount();
-        });
-        updateCount();
-    </script>
 }

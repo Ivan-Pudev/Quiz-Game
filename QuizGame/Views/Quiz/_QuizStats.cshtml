@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DetailsQuizViewModel>
+
+@{
+    var total = Model.Where(q => q.IsDeleted == true).Count();
+    var withLeaderboard = Model.Where(q => q.IsDeleted == true).Count(q => q.Leaderboard != null);
+    var upcoming = Model.Where(q => q.IsDeleted == true).Count(q => q.StartTime > DateTime.UtcNow);
+    var totalQuestions = Model.Where(q => q.IsDeleted == true).Sum(q => q.Questions.Count());
+}
+<div class="stats-bar">
+    <div class="stat-card">
+        <div class="stat-label">Deleted Total</div>
+        <div class="stat-value danger">@total</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Questions</div>
+        <div class="stat-value amber">@totalQuestions</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Had Leaderboard</div>
+        <div class="stat-value">@withLeaderboard</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Were Upcoming</div>
+        <div class="stat-value">@upcoming</div>
+    </div>
+</div>
+
