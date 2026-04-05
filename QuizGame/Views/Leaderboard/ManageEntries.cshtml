@@ -500,7 +500,7 @@
         </div>
 
         <!-- Entries table -->
-        @if (!Model.Entries.Any())
+        @if (!Model.Entries.Where(e=>e.IsDeleted == false).Any())
         {
             <div class="empty-state">
                 <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -557,9 +557,37 @@
                                 <span class="rank-badge @rankCls">#@entry.Rank</span>
                             </td>
                             <td>
-                                <div class="actions-cell">
+                                 <div class="actions-cell">
+                                     <form asp-controller="Leaderboard" asp-action="UpdateEntry" method="post" 
+      onsubmit="return promptForScore(this, '@entry.UserName', '@entry.Score')">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@entry.Id" />
+    <input type="hidden" name="leaderboardId" value="@Model.LeaderboardId" />
+    <input type="hidden" name="newScore" id="score_@entry.Id" />
+
+    <button type="submit" class="btn-edit-ghost">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Edit
+    </button>
+</form>
+
+<script>
+function promptForScore(form, username, currentScore) {
+    const newScore = prompt(`Enter new score for ${username}:`, currentScore);
+    
+    // If user cancelled or didn't enter a number, stop the form submit
+    if (newScore === null || newScore === "" || isNaN(newScore)) return false;
+    
+    // Set the hidden field value to what the user typed
+    form.querySelector('input[name="newScore"]').value = newScore;
+    return true;
+}
+</script>
                                     <!-- Edit inline trigger -->
-                                    <button type="button"
+                                    @* <button type="button"
                                             class="btn-edit-ghost"
                                             onclick="openEdit('@entry.Id', @entry.Score, @entry.Rank)">
                                         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -567,12 +595,12 @@
                                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                         </svg>
                                         Edit
-                                    </button>
+                                    </button>  *@
 
                                     <!-- Delete -->
                                     <form asp-area=""
                                           asp-controller="Leaderboard"
-                                          asp-action="DeleteEntry"
+                                          asp-action="Delete"
                                           method="post"
                                           onsubmit="return confirm('Remove entry for @Html.Raw(entry.UserName)?');">
                                         @Html.AntiForgeryToken()

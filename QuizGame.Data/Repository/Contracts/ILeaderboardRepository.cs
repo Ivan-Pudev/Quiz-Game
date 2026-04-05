@@ -21,6 +21,8 @@
         Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync
             (Guid leaderboardId, Guid userId);
 
+        Task<LeaderboardEntry?> GetLeaderboardEntryByIdAsync(Guid? entryId);
+
         Task<IEnumerable<LeaderboardEntry>> GetLeaderboardsWithEntriesAsync();
 
         Task<IEnumerable<LeaderboardEntry>> GetLeaderboardsWithEntriesWithQuizAsync();

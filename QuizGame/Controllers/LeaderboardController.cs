@@ -2,6 +2,8 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using QuizGame.Core;
     using QuizGame.Core.Contracts;
     using QuizGame.Data.Models;
     using QuizGame.ViewModels.Admin.Leaderboard;
@@ -31,7 +33,7 @@
                 TempData["Error"] = "Unable to load leaderboards.";
                 return View(Enumerable.Empty<Leaderboard>());
             }
-            
+
         }
 
         [HttpGet]
@@ -82,6 +84,58 @@
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateEntry(Guid id, int newScore)
+        {
+            try
+            {
+                bool isUpdateSuccessful = await _leaderboardService.UpdateEntryAsync(id,newScore);
+
+                if (!isUpdateSuccessful)
+                {
+                    throw new InvalidOperationException();
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Entry cannot be edited."; ;
+
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["Error"] = "Invalid entry id.";
+                    return RedirectToAction(nameof(Details));
+                }
+
+                await _leaderboardService.SoftDeleteEntryAsync(id);
+                TempData["Success"] = "Entry deleted successfully.";
+            }
+            catch (InvalidOperationException)
+            {
+                TempData["Error"] = "Entry not found.";
+            }
+            catch (Exception)
+            {
+                TempData["Error"] = "Failed to delete entry.";
+            }
+
+            return RedirectToAction(nameof(Details));
+        }
+
         [HttpGet]
         public async Task<IActionResult> GlobalLeaderboard()
         {
@@ -115,52 +169,53 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> RestoreEntry(Guid id)
+        public async Task<IActionResult> RestoreEntry([FromRoute(Name = "id")] Guid userId)
         {
             try
             {
-                if (id == Guid.Empty)
-                {
-                    TempData["Error"] = "Invalid quiz id.";
-                    return RedirectToAction(nameof(Index));
-                }
+                bool isRestoreSuccessful = await _leaderboardService.RestoreEntryAsync(userId);
 
-                //await _leaderboardService.DeleteQuizAsync(id);
-                TempData["Success"] = "Quiz deleted successfully.";
+                if (!isRestoreSuccessful)
+                {
+                    throw new InvalidOperationException();
+                }
+                return RedirectToAction(nameof(DeletedEntries));
             }
             catch (InvalidOperationException)
             {
-                TempData["Error"] = "Quiz not found.";
+                return BadRequest();
             }
             catch (Exception)
             {
-                TempData["Error"] = "Failed to delete quiz.";
-            }
+                TempData["Error"] = "Quiz cannot be restored."; ;
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(DeletedEntries));
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteEntry(Guid id)
+        public async Task<IActionResult> DeleteEntry([FromRoute(Name = "id")] Guid userId)
         {
             try
             {
-                if (id == Guid.Empty)
+                bool deleteResult = await _leaderboardService
+                    .HardDeleteEntryAsync(userId);
+                if (!deleteResult)
                 {
-                    TempData["Error"] = "Invalid entry id.";
-                    return RedirectToAction(nameof(Index));
-                }
+                    TempData["Error"] = "Quiz can't be deleted.";
 
-                await _leaderboardService.HardDeleteEntryAsync(id);
-                TempData["Success"] = "Quiz deleted successfully.";
+                    return RedirectToAction("Index", "Home");
+                }
             }
             catch (InvalidOperationException)
             {
-                TempData["Error"] = "Quiz not found.";
+                return BadRequest();
             }
             catch (Exception)
             {
-                TempData["Error"] = "Failed to delete quiz.";
+                TempData["Error"] = "Quiz cannot be removed."; ;
+
+                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));

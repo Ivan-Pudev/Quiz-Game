@@ -1,10 +1,8 @@
 ﻿namespace QuizGame.Data.Repository
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using QuizGame.Data.Models;
     using QuizGame.Data.Repository.Contracts;
-    using QuizGame.ViewModels.Leaderboards;
 
     public class LeaderboardRepository : BaseRepository, ILeaderboardRepository
     {
@@ -75,6 +73,14 @@
         {
             return await DbContext.LeaderboardEntries
                 .FirstOrDefaultAsync(e => e.Id == leaderboardId && e.UserId == userId);
+        }
+
+        public async Task<LeaderboardEntry?> GetLeaderboardEntryByIdAsync(Guid? entryId)
+        {
+            return await DbContext
+                .LeaderboardEntries
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => e.Id == entryId);
         }
 
         public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardsWithEntriesAsync()
@@ -172,5 +178,6 @@
 
             return resultsCount > 0;
         }
+
     }
 }

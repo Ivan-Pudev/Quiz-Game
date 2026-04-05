@@ -98,7 +98,8 @@ namespace QuizGame.Core
                     Rank = entry.Rank,
                     Score = entry.Score,
                     UserId= entry.UserId,
-                    UserName = entry?.User!.UserName!
+                    UserName = entry?.User!.UserName!,
+                    IsDeleted = entry!.IsDeleted
                 });
 
                 users.Add(new UserSelectViewModel
@@ -114,7 +115,7 @@ namespace QuizGame.Core
                 LeaderboardTitle = leaderboard.Title,
                 LastUpdated = leaderboard.LastUpdated,
                 Entries = entries,
-                AvailableUsers = users
+                AvailableUsers = users,
             };
         }
 
@@ -140,6 +141,29 @@ namespace QuizGame.Core
             };
 
             return globalLeaderboardViewModel;
+        }
+
+        public async Task<bool> UpdateEntryAsync(Guid entryId, int score)
+        {
+            if (entryId == Guid.Empty)
+            {
+                throw new InvalidOperationException();
+            }
+
+            LeaderboardEntry? entry = await _leaderboardRepository
+                .GetLeaderboardEntryByIdAsync(entryId);
+
+            if (entry == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            entry.Score = score;
+
+            bool result = await _leaderboardRepository
+                .UpdateLeaderboardEntriesAsync(entry);
+
+            return result;
         }
 
         public async Task<bool> RestoreEntryAsync(Guid entryId)

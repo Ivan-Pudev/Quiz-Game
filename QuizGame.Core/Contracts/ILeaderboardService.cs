@@ -21,10 +21,13 @@
 
         Task<AdminGlobalLeaderboardViewModel> GetGlobalLeaderboardAsync();
 
+        Task<bool> UpdateEntryAsync(Guid userId, int score);
+
         Task<bool> RestoreEntryAsync(Guid entryId);
 
         Task<bool> SoftDeleteEntryAsync(Guid entryId);
 
         Task<bool> HardDeleteEntryAsync(Guid entryId);
+        
     }
 }

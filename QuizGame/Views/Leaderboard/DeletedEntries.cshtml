@@ -346,10 +346,10 @@
 
 <!-- Stats -->
 @{
-    var total     = Model.Count();
-    var avgScore  = total > 0 ? Model.Average(e => e.Score) : 0;
-    var topScore  = total > 0 ? Model.Max(e => e.Score) : 0;
-    var affected  = Model.Select(e => e.LeaderboardTitle).Distinct().Count();
+    var total     = Model.Where(e=>e.IsDeleted == true).Count();
+    var avgScore  = total > 0 ? Model.Where(e=>e.IsDeleted == true).Average(e => e.Score) : 0;
+    var topScore  = total > 0 ? Model.Where(e=>e.IsDeleted == true).Max(e => e.Score) : 0;
+    var affected  = Model.Where(e=>e.IsDeleted == true).Select(e => e.LeaderboardTitle).Distinct().Count();
 }
 <div class="stats-bar">
     <div class="stat-card">
@@ -395,7 +395,7 @@
 
 <!-- Table -->
 <div class="table-wrap">
-    @if (!Model.Any())
+    @if (!Model.Where(E=>E.IsDeleted == true).Any())
     {
         <div class="empty-state">
             <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -420,7 +420,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var entry in Model)
+                @foreach (var entry in Model.Where(e=>e.IsDeleted == true))
                 {
                     var initials = entry.UserName?.Length >= 2
                         ? entry.UserName.Substring(0, 2).ToUpper()
@@ -538,7 +538,7 @@
         </table>
 
         <div class="pagination-bar">
-            <span id="resultCount">Showing @Model.Count() deleted entr(ies)</span>
+            <span id="resultCount">Showing @Model.Where(e=>e.IsDeleted == true).Count() deleted entr(ies)</span>
         </div>
     }
 </div>
