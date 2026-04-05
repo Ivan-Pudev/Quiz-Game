@@ -1,23 +1,26 @@
 ﻿namespace QuizGame.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using QuizGame.Core;
     using QuizGame.Core.Contracts;
     using QuizGame.Data.Models;
-    using QuizGame.ViewModels.Admin.User;
     using QuizGame.ViewModels.Leaderboards;
     using QuizGame.ViewModels.Quizzes;
     using System.Collections.Generic;
+    using static GCommon.OutputMessages.ErrorMessages;
+    using static GCommon.OutputMessages.SuccessMessages;
 
     public class QuizController : BaseController
     {
         private readonly IQuizService _quizService;
         private readonly ILeaderboardService _leaderboardService;
+        private readonly ILogger<QuizController> _logger;
 
-        public QuizController(IQuizService quizService, ILeaderboardService leaderboardService)
+        public QuizController(IQuizService quizService, ILeaderboardService leaderboardService,
+            ILogger<QuizController> logger)
         {
             _quizService = quizService;
             _leaderboardService = leaderboardService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -28,10 +31,11 @@
                 IEnumerable<Quiz> quizzes = await _quizService.GetAllQuizzesAsync();
                 return View(quizzes);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load quizzes";
-                return View(Enumerable.Empty<Quiz>());
+                _logger.LogError(ex, string.Format(ErrorLoad, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoad, nameof(Quiz));
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -44,26 +48,38 @@
 
                 return View(quiz);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to create quiz";
-                return View(new CreateQuizViewModel());
+                _logger.LogError(ex, string.Format(ErrorDisplayCreatePage, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorDisplayCreatePage, nameof(Quiz));
+                return RedirectToAction(nameof(Index));
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateQuizViewModel quizViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(quizViewModel);
+            }
+
             try
             {
                 await _quizService.CreateQuizAsync(quizViewModel);
-                TempData["Success"] = "Created quiz successfully.";
+                TempData["SuccessMessage"] = string.Format(SuccessCreate, nameof(Quiz));
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (InvalidOperationException ioe)
             {
-                TempData["Error"] = "Failed to create quiz.";
-
+                _logger.LogError(ioe, string.Format(ErrorCreate, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorCreate, nameof(Quiz));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorCreate, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorCreate, nameof(Quiz));
                 quizViewModel.Questions = (await _quizService.GetAllQuestionsAsync()).ToList();
                 return View(quizViewModel);
             }
@@ -72,26 +88,32 @@
         [HttpGet]
         public async Task<IActionResult> Details(Guid? id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
+                return BadRequest();
+            }
+
             try
             {
                 Quiz? currentQuiz = await _quizService.GetQuizByIdAsync(id);
-                if (currentQuiz == null) return NotFound();
 
-                Leaderboard? leaderboard = await _leaderboardService.GetLeaderboardByQuizIdAsync(currentQuiz.Id);
-                if (leaderboard == null)
-                    leaderboard = await _quizService.CreateLeaderboardAsync(currentQuiz.Id);
+                if (currentQuiz == null)
+                {
+                    return NotFound();
+                }
 
                 DetailsQuizViewModel viewModel = _quizService.ShowQuizDetails(currentQuiz);
-                viewModel.LeaderboardId = leaderboard.Id;
 
                 return View(viewModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load page.";
+                _logger.LogError(ex, string.Format(ErrorLoadDetails, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoadDetails, nameof(Quiz));
                 return RedirectToAction(nameof(Index));
             }
-            
+
         }
 
         [HttpGet]
@@ -99,6 +121,7 @@
         {
             if (id == Guid.Empty)
             {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
                 return BadRequest();
             }
 
@@ -115,9 +138,10 @@
 
                 return View(viewModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to open edit page.";
+                _logger.LogError(ex, string.Format(ErrorDisplayEditPage, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorDisplayEditPage, nameof(Quiz));
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -125,18 +149,27 @@
         [HttpPost]
         public async Task<IActionResult> Edit(Guid id, EditQuizViewModel quizViewModel)
         {
+            if (id != quizViewModel.Id)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(quizViewModel);
+            }
+
             try
             {
-                if (id != quizViewModel.Id) return NotFound();
+                Quiz? quiz = await _quizService.GetQuizByIdAsync(id);
 
-                if (!ModelState.IsValid)
+                if (quiz == null)
                 {
-                    Quiz? quiz = await _quizService.GetQuizByIdAsync(id);
-                    if (quiz == null) return NotFound();
-
-                    quizViewModel = await _quizService.EditQuizGetDataFromForm(quiz);
-                    return View(quizViewModel);
+                    return NotFound();
                 }
+
+                quizViewModel = await _quizService.EditQuizGetDataFromForm(quiz);
 
                 List<Guid> selectedIds = quizViewModel.SelectedQuestions
                     .Where(q => q.IsSelected)
@@ -145,16 +178,19 @@
 
                 await _quizService.EditQuizAsync(quizViewModel, selectedIds);
 
-                TempData["Success"] = "Updated quiz successfully.";
+                TempData["SuccessMessage"] = string.Format(SuccessUpdate,nameof(Quiz));
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (InvalidOperationException ioe)
             {
-                TempData["Error"] = "Failed to update quiz.";
-
-                var quiz = await _quizService.GetQuizByIdAsync(id);
-                if (quiz != null)
-                    quizViewModel = await _quizService.EditQuizGetDataFromForm(quiz);
+                _logger.LogError(ioe, string.Format(ErrorUpdate, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorUpdate,nameof(Quiz));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorUpdate, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorUpdate, nameof(Quiz));
 
                 return View(quizViewModel);
             }
@@ -163,27 +199,32 @@
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId,nameof(Quiz));
+                return BadRequest();
+            }
+
             try
             {
-                if (id == Guid.Empty)
-                {
-                    TempData["Error"] = "Invalid quiz id.";
-                    return RedirectToAction(nameof(Index));
-                }
-
                 await _quizService.SoftDeleteQuizAsync(id);
-                TempData["Success"] = "Quiz deleted successfully.";
-            }
-            catch (InvalidOperationException)
-            {
-                TempData["Error"] = "Quiz not found.";
-            }
-            catch (Exception)
-            {
-                TempData["Error"] = "Failed to delete quiz.";
-            }
 
-            return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = string.Format(SuccessSoftDelete,nameof(Quiz));
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ioe)
+            {
+                _logger.LogError(ioe, string.Format(ErrorSoftDelete, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorSoftDelete, nameof(Quiz));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorSoftDelete, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorSoftDelete, nameof(Quiz));
+                
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
@@ -193,12 +234,12 @@
             {
                 IEnumerable<LeaderboardRowVm>? rows = await _leaderboardService.GetLeaderboardEntriesByQuizIdAsync(id);
 
-                ViewBag.QuizId = id;
                 return View(rows);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load leaderboard for this quiz";
+                _logger.LogError(ex, string.Format(ErrorLoadLeaderboard));
+                TempData["ErrorMessage"] = string.Format(ErrorLoadLeaderboard);
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -212,10 +253,11 @@
 
                 return View(quizzes);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load deleted quizzes";
-                return View(Enumerable.Empty<Quiz>());
+                _logger.LogError(ex, string.Format(ErrorLoadDeletedList, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoadDeletedList, nameof(Quiz));
+                return RedirectToAction(nameof(Index));
             }
         }
 
@@ -224,22 +266,20 @@
         {
             try
             {
-                bool isRestoreSuccessful = await _quizService.RestoreQuizAsync(userId);
+                await _quizService.RestoreQuizAsync(userId);
 
-                if (!isRestoreSuccessful)
-                {
-                    throw new InvalidOperationException();
-                }
                 return RedirectToAction(nameof(DeletedQuizzes));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe)
             {
+                _logger.LogError(ioe, string.Format(ErrorRestore, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorRestore, nameof(Quiz));
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Quiz cannot be restored."; ;
-
+                _logger.LogError(ex, string.Format(ErrorRestore, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorRestore, nameof(Quiz));
                 return RedirectToAction(nameof(DeletedQuizzes));
             }
         }
@@ -249,27 +289,23 @@
         {
             try
             {
-                bool deleteResult = await _quizService
+                await _quizService
                     .HardDeleteQuizAsync(userId);
-                if (!deleteResult)
-                {
-                    TempData["Error"] = "Quiz can't be deleted.";
-
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                return BadRequest();
-            }
-            catch (Exception)
-            {
-                TempData["Error"] = "Quiz cannot be removed."; ;
 
                 return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (InvalidOperationException ioe)
+            {
+                _logger.LogError(ioe, string.Format(ErrorDelete, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorDelete, nameof(Quiz));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorDelete, nameof(Quiz)));
+                TempData["ErrorMessage"] = string.Format(ErrorDelete, nameof(Quiz));
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

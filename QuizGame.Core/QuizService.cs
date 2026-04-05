@@ -17,12 +17,14 @@ namespace QuizGame.Core
 
         public async Task<Quiz?> GetQuizByIdAsync(Guid? id)
         {
-            return await _quizRepository.GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(id);
+            return await _quizRepository
+                .GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(id);
         }
 
         public async Task<IEnumerable<Quiz>> GetAllQuizzesAsync()
         {
-            return await _quizRepository.GetAllQuizzesWithQuestionAnswersCategoriesAndLeaderboardAsync();
+            return await _quizRepository
+                .GetAllQuizzesWithQuestionAnswersCategoriesAndLeaderboardAsync();
         }
 
         public async Task<IEnumerable<DetailsQuizViewModel>> GetAllDeletedQuizzesAsync()
@@ -88,6 +90,7 @@ namespace QuizGame.Core
             }
             await CreateLeaderboardAsync(newQuiz.Id);
         }
+
         public async Task AddSelectedQuestions(Quiz selectedQuiz, List<Guid> selectedIds)
         {
             IEnumerable<Question> selectedQuestions = await _quizRepository
@@ -137,23 +140,23 @@ namespace QuizGame.Core
             return viewModel;
         }
 
-        public async Task EditQuizAsync(EditQuizViewModel viewModel, List<Guid> selectedQuestionId)
+        public async Task EditQuizAsync(EditQuizViewModel viewModel, List<Guid> selectedQuestionsIds)
         {
 
             Quiz? quiz = await _quizRepository.GetQuizWithQuestionsByIdAsync(viewModel.Id);
 
             if (quiz == null)
-                throw new InvalidOperationException("Quiz not found");
+                throw new InvalidOperationException();
 
             quiz.Title = viewModel.Title;
             quiz.Description = viewModel.Description;
             quiz.StartTime = viewModel.StartTime;
 
-            if (selectedQuestionId.Count > 0)
+            if (selectedQuestionsIds.Count > 0)
             {
                 quiz.Questions.Clear();
 
-                await AddSelectedQuestions(quiz, selectedQuestionId);
+                await AddSelectedQuestions(quiz, selectedQuestionsIds);
 
                 bool isUpdateSuccessful = await _quizRepository.UpdateQuizAsync(quiz);
 
@@ -164,13 +167,13 @@ namespace QuizGame.Core
             }
         }
 
-        public async Task<bool> RestoreQuizAsync(Guid id)
+        public async Task RestoreQuizAsync(Guid id)
         {
             Quiz? quiz = await _quizRepository
                 .GetQuizWithQuestionsByIdAsync(id);
 
             if (quiz == null)
-                throw new InvalidOperationException("Quiz not found.");
+                throw new InvalidOperationException();
 
             bool isRestoreSuccessful = await _quizRepository.RestoreQuizAsync(quiz);
 
@@ -178,17 +181,15 @@ namespace QuizGame.Core
             {
                 throw new InvalidOperationException();
             }
-
-            return isRestoreSuccessful;
         }
 
-        public async Task<bool> SoftDeleteQuizAsync(Guid id)
+        public async Task SoftDeleteQuizAsync(Guid id)
         {
             Quiz? quiz = await _quizRepository
                 .GetQuizWithQuestionsByIdAsync(id);
 
             if (quiz == null)
-                throw new InvalidOperationException("Quiz not found.");
+                throw new InvalidOperationException();
 
             bool isDeleteSuccessful = await _quizRepository.SoftDeleteQuizAsync(quiz);
 
@@ -196,17 +197,15 @@ namespace QuizGame.Core
             {
                 throw new InvalidOperationException();
             }
-
-            return isDeleteSuccessful;
         }
 
-        public async Task<bool> HardDeleteQuizAsync(Guid id)
+        public async Task HardDeleteQuizAsync(Guid id)
         {
             Quiz? quiz = await _quizRepository
                 .GetQuizWithQuestionsByIdAsync(id);
 
             if (quiz == null)
-                throw new InvalidOperationException("Quiz not found.");
+                throw new InvalidOperationException();
 
             quiz.Questions.Clear();
 
@@ -217,7 +216,6 @@ namespace QuizGame.Core
                 throw new InvalidOperationException();
             }
 
-            return isDeleteSuccessful;
         }
 
         public async Task<Leaderboard> CreateLeaderboardAsync(Guid quizId)

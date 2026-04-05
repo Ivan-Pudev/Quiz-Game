@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QuizGame.ViewModels.Admin.Leaderboard
+﻿namespace QuizGame.ViewModels.Admin.Leaderboard
 {
+    using System.Collections.Generic;
+
     public class AdminGlobalLeaderboardViewModel
     {
 

@@ -9,9 +9,7 @@
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info">
-            No leaderboards available yet.
-        </div>
+        <partial name="_EmptyState" model='@("No leaderboards available yet.")' />
     }
     else
     {

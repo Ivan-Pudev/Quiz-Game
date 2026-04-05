@@ -2,8 +2,6 @@
 {
     using QuizGame.ViewModels.Leaderboards;
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
 
     public class AdminLeaderboardEntryViewModel : LeaderboardRowVm
