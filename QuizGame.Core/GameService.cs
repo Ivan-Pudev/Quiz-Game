@@ -60,7 +60,7 @@
             QuizAttempt? attempt = await _gameRepository
                 .GetQuizAttemptWithQuizQuestionsAndAnswersByIdAsync(attemptId);
 
-            if (attempt == null) throw new Exception("Attempt not found");
+            if (attempt == null) return null;
             if (attempt.IsFinished) return null;
 
             List<Question> questions = attempt.Quiz.Questions
@@ -90,7 +90,7 @@
         {
             QuizAttempt? attempt = await _gameRepository.GetQuizAttemptWithQuizQuestionsAndAnswersByIdAsync(attemptId);
 
-            if (attempt == null) throw new Exception("Attempt not found");
+            if (attempt == null) return;
             if (attempt.IsFinished) return;
 
             Question? question = attempt.Quiz.Questions.FirstOrDefault(q => q.Id == questionId);

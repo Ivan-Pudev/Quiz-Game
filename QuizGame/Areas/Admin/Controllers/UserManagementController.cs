@@ -1,27 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using QuizGame.Core.Contracts;
-using QuizGame.ViewModels.Admin.User;
-
-namespace QuizGame.Areas.Admin.Controllers
+﻿namespace QuizGame.Areas.Admin.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using QuizGame.Core.Contracts;
+    using QuizGame.Data.Models;
+    using QuizGame.ViewModels.Admin.User;
+    using static GCommon.OutputMessages.ErrorMessages;
+    using static GCommon.OutputMessages.SuccessMessages;
+
     public class UserManagementController : BaseAdminController
     {
         private readonly IUserService _userService;
+        private ILogger<UserManagementController> _logger;
 
-        public UserManagementController(IUserService userService)
+        public UserManagementController(IUserService userService,
+            ILogger<UserManagementController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string userId = this.GetAdminUserId()!;
+            try
+            {
 
-            IEnumerable<AdminUserViewModel> adminUserViewModels = await _userService
-                .GetAllUsersAsync(userId,false);
-            
-            return View(adminUserViewModels);
+                IEnumerable<AdminUserViewModel> adminUserViewModels = await _userService
+                    .GetAllUsersAsync(false);
+
+                return View(adminUserViewModels);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorLoad, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoad, nameof(User));
+                return RedirectToAction(nameof(Index));
+            }
+
         }
 
         [HttpGet]
@@ -31,35 +46,49 @@ namespace QuizGame.Areas.Admin.Controllers
             {
                 return View();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to create user";
-                return View(new AdminCreateUserViewModel());
+                _logger.LogError(ex, string.Format(ErrorDisplayCreatePage, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorDisplayCreatePage, nameof(User));
+
+                return RedirectToAction(nameof(Index));
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(AdminCreateUserViewModel quizViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(quizViewModel);
+            }
             try
             {
                 await _userService.CreateUserAsync(quizViewModel);
-                TempData["Success"] = "Created user successfully.";
+                TempData["SuccessMessage"] = string.Format(SuccessCreate, nameof(User));
+
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception)
+            catch (InvalidOperationException ioe)
             {
-                TempData["Error"] = "Failed to create user.";
-
-                return View();
+                _logger.LogError(ioe, string.Format(ErrorCreate, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorCreate, nameof(User));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorCreate, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorCreate, nameof(User));
+                return RedirectToAction(nameof(Index));
             }
         }
         [HttpGet]
-        public async Task<IActionResult> Edit([FromRoute(Name = "id")] Guid userId)
+        public async Task<IActionResult> Edit([FromRoute(Name = "id")] Guid? userId)
         {
             if (userId == Guid.Empty)
             {
-                return BadRequest();
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(User));
+                return NotFound();
             }
 
             try
@@ -68,156 +97,192 @@ namespace QuizGame.Areas.Admin.Controllers
 
                 return View(viewModel);
             }
-            catch (Exception)
+
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to open edit page.";
+                _logger.LogError(ex, string.Format(ErrorDisplayEditPage, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorDisplayEditPage, nameof(User));
                 return RedirectToAction(nameof(Index));
             }
         }
         [HttpPost]
-        public async Task<IActionResult> AssignRole(Guid userId, string role)
+        public async Task<IActionResult> AssignRole([FromRoute(Name = "id")] Guid? userId, string role)
         {
+            if (userId == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(User));
+                return NotFound();
+            }
             try
             {
-                bool assignRoleResult = await _userService
+                await _userService
                     .AssignRoleToUserAsync(userId, role);
-                if (!assignRoleResult)
-                {
-                    TempData["Success"] = "Role assigned successfully";
 
-                    return RedirectToAction(nameof(Index));
-                }
+                TempData["SuccessMessage"] = string.Format(SuccessAssignRole);
+
+                return RedirectToAction(nameof(Index));
+
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe)
             {
+                _logger.LogError(ioe, string.Format(ErrorAssignRole));
+                TempData["ErrorMessage"] = string.Format(ErrorAssignRole);
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Role can't be assigned."; 
+                _logger.LogError(ex, string.Format(ErrorAssignRole));
+                TempData["ErrorMessage"] = string.Format(ErrorAssignRole);
 
                 return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveRole(Guid userId, string role)
+        public async Task<IActionResult> RemoveRole([FromRoute(Name = "id")] Guid? userId, string role)
         {
+            if (userId == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(User));
+                return NotFound();
+            }
             try
             {
-                bool removeRoleResult = await _userService
+                await _userService
                     .RemoveRoleFromUserAsync(userId, role);
-                if (!removeRoleResult)
-                {
-                    TempData["Error"] = "Role cannot be removed.";
 
-                    return RedirectToAction(nameof(Index));
-                }
+                TempData["SuccessMessage"] = string.Format(SuccessRemoveRole);
+
+                return RedirectToAction(nameof(Index));
+
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe)
             {
+                _logger.LogError(ioe, string.Format(ErrorRemoveRole));
+                TempData["ErrorMessage"] = string.Format(ErrorRemoveRole);
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Role cannot be removed.";
+                _logger.LogError(ex, string.Format(ErrorRemoveRole));
+                TempData["ErrorMessage"] = string.Format(ErrorRemoveRole);
 
                 return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete([FromRoute(Name = "id")]Guid userId)
+        public async Task<IActionResult> Delete([FromRoute(Name = "id")] Guid? userId)
         {
+            if (userId == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(User));
+                return NotFound();
+            }
             try
             {
-                bool deleteResult = await _userService
+                await _userService
                     .SoftDeleteUserAsync(userId);
-                if (!deleteResult)
-                {
-                    TempData["Error"] = "User can't be deleted.";
 
-                    return RedirectToAction("Index","Home");
-                }
+                TempData["SuccessMessage"] = string.Format(SuccessSoftDelete, nameof(User));
+
+                return RedirectToAction("Index", "Home");
+
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe)
             {
+                _logger.LogError(ioe, string.Format(ErrorSoftDelete, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorSoftDelete, nameof(User));
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Role cannot be removed."; ;
+                _logger.LogError(ex, string.Format(ErrorSoftDelete, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorSoftDelete, nameof(User));
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
-
-            return RedirectToAction(nameof(Index));
         }
         [HttpGet]
         public async Task<IActionResult> DeletedAccounts()
         {
-            string userId = GetAdminUserId()!;
-
-            IEnumerable<AdminUserViewModel> users = await _userService.GetAllUsersAsync(userId,true);
-
-            return View(users);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> RestoreAccount([FromRoute(Name = "id")] Guid userId)
-        {
             try
             {
-                bool isRestoreSuccessful = await _userService.RestoreUserAsync(userId);
+                IEnumerable<AdminUserViewModel> users = await _userService.GetAllUsersAsync(true);
 
-                if (!isRestoreSuccessful)
-                {
-                    throw new InvalidOperationException();
-                }
-                return RedirectToAction(nameof(DeletedAccounts));
+                return View(users);
             }
-            catch (InvalidOperationException)
+            catch (Exception ex)
             {
-                return BadRequest();
-            }
-            catch (Exception)
-            {
-                TempData["Error"] = "User cannot be restored."; ;
-
-                return RedirectToAction(nameof(DeletedAccounts));
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteAccount([FromRoute(Name = "id")] Guid userId)
-        {
-            try
-            {
-                bool deleteResult = await _userService
-                    .HardDeleteUserAsync(userId);
-                if (!deleteResult)
-                {
-                    TempData["Error"] = "User can't be deleted.";
-
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                return BadRequest();
-            }
-            catch (Exception)
-            {
-                TempData["Error"] = "Role cannot be removed."; ;
+                _logger.LogError(ex, string.Format(ErrorLoadDeletedList, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoadDeletedList, nameof(User));
 
                 return RedirectToAction(nameof(Index));
             }
+        }
 
-            return RedirectToAction(nameof(Index));
+        [HttpPost]
+        public async Task<IActionResult> RestoreAccount([FromRoute(Name = "id")] Guid? userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(User));
+                return NotFound();
+            }
+
+            try
+            {
+                await _userService.RestoreUserAsync(userId);
+
+                TempData["SuccessMessage"] = string.Format(SuccessRestore, nameof(User));
+                return RedirectToAction(nameof(DeletedAccounts));
+            }
+            catch (InvalidOperationException ioe)
+            {
+                _logger.LogError(ioe, string.Format(ErrorRestore, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorUpdate, nameof(User));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorRestore, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorRestore, nameof(User));
+
+                return RedirectToAction(nameof(DeletedAccounts));
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAccount([FromRoute(Name = "id")] Guid? userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(User));
+                return NotFound();
+            }
+
+            try
+            {
+                await _userService
+                    .HardDeleteUserAsync(userId);
+
+                TempData["SuccessMessage"] = string.Format(SuccessHardDelete, nameof(User));
+                return RedirectToAction(nameof(DeletedAccounts));
+
+            }
+            catch (InvalidOperationException ioe)
+            {
+                _logger.LogError(ioe, string.Format(ErrorHardDelete, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorHardDelete, nameof(User));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorHardDelete, nameof(User)));
+                TempData["ErrorMessage"] = string.Format(ErrorHardDelete, nameof(User));
+
+                return RedirectToAction(nameof(DeletedAccounts));
+            }
         }
     }
 }

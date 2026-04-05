@@ -5,20 +5,20 @@
     using System.Collections.Generic;
     public interface IUserService
     {
-        Task<AdminManageUserRolesViewModel?> GetUserByIdAsync(Guid userId);
+        Task<AdminManageUserRolesViewModel?> GetUserByIdAsync(Guid? userId);
 
-        Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync(string adminUserId, bool getDeletedUsers = false);
+        Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync(bool getDeletedUsers = false);
 
-        Task<bool> CreateUserAsync(AdminCreateUserViewModel viewModel);
+        Task CreateUserAsync(AdminCreateUserViewModel viewModel);
 
-        Task<bool> AssignRoleToUserAsync(Guid userId, string role);
+        Task<bool> AssignRoleToUserAsync(Guid? userId, string role);
 
-        Task<bool> RemoveRoleFromUserAsync(Guid userId, string role);
+        Task RemoveRoleFromUserAsync(Guid? userId, string role);
 
-        Task<bool> RestoreUserAsync(Guid userId);
+        Task RestoreUserAsync(Guid? userId);
 
-        Task<bool> SoftDeleteUserAsync(Guid userId);
+        Task SoftDeleteUserAsync(Guid? userId);
 
-        Task<bool> HardDeleteUserAsync(Guid userId);
+        Task HardDeleteUserAsync(Guid? userId);
     }
 }

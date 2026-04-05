@@ -8,7 +8,7 @@
 
     public interface IUserRepository
     {
-        Task<ApplicationUser?> FindUserByIdAsync(Guid userId);
+        Task<ApplicationUser?> FindUserByIdAsync(Guid? userId);
 
         Task<IEnumerable<ApplicationUser>> GetAllUsersAsync(Expression<Func<ApplicationUser, bool>>? filter = null);
 
@@ -18,12 +18,12 @@
 
         Task<bool> AddUserAsync(ApplicationUser newAppUser);
 
-        Task<bool> UpdateUserRoleAsync(Guid userId, string role, bool removingRole = false);
+        Task<bool> UpdateUserRoleAsync(Guid? id, string role, bool removingRole = false);
 
-        Task<bool> RestoreUserAsync(Guid userId);
+        Task<bool> RestoreUserAsync(Guid? id);
 
-        Task<bool> SoftDeleteUserAsync(Guid userId);
+        Task<bool> SoftDeleteUserAsync(Guid? id);
 
-        Task<bool> HardDeleteUserAsync(Guid userId);
+        Task<bool> HardDeleteUserAsync(Guid? id);
     }
 }

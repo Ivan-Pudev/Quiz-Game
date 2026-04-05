@@ -15,9 +15,14 @@
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
         }
-        public async Task<AdminManageUserRolesViewModel?> GetUserByIdAsync(Guid userId)
+        public async Task<AdminManageUserRolesViewModel?> GetUserByIdAsync(Guid? userId)
         {
             ApplicationUser? user = await _userRepository.FindUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException();
+            }
 
             IEnumerable<string> rolesStr = await _userRepository.GetUserRolesAsync(user!);
 
@@ -25,14 +30,14 @@
 
             return new AdminManageUserRolesViewModel
             {
-                Id = userId,
+                Id = user.Id,
                 Email = user!.Email!,
                 Roles = rolesStr.ToList(),
                 AvailableRoles = identityRoles.ToList()
             };
         }
 
-        public async Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync(string adminUserId, bool getDeletedUsers = false)
+        public async Task<IEnumerable<AdminUserViewModel>> GetAllUsersAsync(bool getDeletedUsers = false)
         {
             IEnumerable<ApplicationUser> users;
             if (getDeletedUsers)
@@ -63,7 +68,7 @@
             return userViewModels;
         }
 
-        public async Task<bool> CreateUserAsync(AdminCreateUserViewModel viewModel)
+        public async Task CreateUserAsync(AdminCreateUserViewModel viewModel)
         {
             if (viewModel.Password != viewModel.ConfirmPassword)
                 throw new InvalidOperationException();
@@ -105,72 +110,73 @@
                     }
                 }
             }
-            return isAddSuccessful;
         }
 
-        public async Task<bool> AssignRoleToUserAsync(Guid userId, string role)
+        public async Task<bool> AssignRoleToUserAsync(Guid? id, string role)
         {
-            if (userId == Guid.Empty || string.IsNullOrWhiteSpace(role))
+            if (string.IsNullOrWhiteSpace(role))
             {
                 throw new InvalidOperationException();
             }
 
-            bool result = await _userRepository
-                .UpdateUserRoleAsync(userId, role);
+            bool isAssignSuccessful = await _userRepository
+                .UpdateUserRoleAsync(id, role);
 
-            return result;
-        }
-
-        public async Task<bool> RemoveRoleFromUserAsync(Guid userId, string role)
-        {
-            if (userId == Guid.Empty || string.IsNullOrWhiteSpace(role))
+            if (!isAssignSuccessful)
             {
                 throw new InvalidOperationException();
             }
 
-            bool result = await _userRepository
-                .UpdateUserRoleAsync(userId, role, removingRole: true);
-
-            return result;
+            return isAssignSuccessful;
         }
 
-        public async Task<bool> RestoreUserAsync(Guid userId)
+        public async Task RemoveRoleFromUserAsync(Guid? id, string role)
         {
-            if (userId == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(role))
             {
                 throw new InvalidOperationException();
             }
 
-            bool result = await _userRepository
-                .RestoreUserAsync(userId);
+            bool isRemoveSuccessful = await _userRepository
+                .UpdateUserRoleAsync(id, role, removingRole: true);
 
-            return result;
-        }
-
-        public async Task<bool> SoftDeleteUserAsync(Guid userId)
-        {
-            if (userId == Guid.Empty)
+            if (!isRemoveSuccessful)
             {
                 throw new InvalidOperationException();
             }
-
-            bool result = await _userRepository
-                .SoftDeleteUserAsync(userId);
-
-            return result;
         }
 
-        public async Task<bool> HardDeleteUserAsync(Guid userId)
+        public async Task RestoreUserAsync(Guid? id)
         {
-            if (userId == Guid.Empty)
+            bool isRestoreSuccessful = await _userRepository
+                .RestoreUserAsync(id);
+
+            if (!isRestoreSuccessful)
             {
                 throw new InvalidOperationException();
             }
+        }
 
-            bool result = await _userRepository
-                .HardDeleteUserAsync(userId);
+        public async Task SoftDeleteUserAsync(Guid? id)
+        {
+            bool isSoftDeleteSuccessful = await _userRepository
+                .SoftDeleteUserAsync(id);
 
-            return result;
+            if (!isSoftDeleteSuccessful)
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        public async Task HardDeleteUserAsync(Guid? id)
+        {
+            bool isHardDeleteSuccessful = await _userRepository
+                .HardDeleteUserAsync(id);
+
+            if (!isHardDeleteSuccessful)
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }

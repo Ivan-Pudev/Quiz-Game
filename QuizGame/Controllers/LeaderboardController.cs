@@ -2,21 +2,24 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using QuizGame.Core;
     using QuizGame.Core.Contracts;
     using QuizGame.Data.Models;
     using QuizGame.ViewModels.Admin.Leaderboard;
     using QuizGame.ViewModels.Leaderboards;
+    using static GCommon.OutputMessages.ErrorMessages;
+    using static GCommon.OutputMessages.SuccessMessages;
 
     [Authorize]
     public class LeaderboardController : BaseController
     {
         private readonly ILeaderboardService _leaderboardService;
+        private readonly ILogger<LeaderboardController> _logger;
 
-        public LeaderboardController(ILeaderboardService leaderboardService)
+        public LeaderboardController(ILeaderboardService leaderboardService
+            , ILogger<LeaderboardController> logger)
         {
             _leaderboardService = leaderboardService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -28,10 +31,12 @@
 
                 return View(leaderboards);
             }
-            catch (Exception)
+            
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load leaderboards.";
-                return View(Enumerable.Empty<Leaderboard>());
+                _logger.LogError(ex, string.Format(ErrorLoad, nameof(Leaderboard)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoad, nameof(Leaderboard));
+                return RedirectToAction(nameof(Index));
             }
 
         }
@@ -39,6 +44,11 @@
         [HttpGet]
         public async Task<IActionResult> Rankings(Guid? id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Leaderboard));
+                return NotFound();
+            }
             try
             {
                 IEnumerable<LeaderboardRowVm>? leaderboard = await _leaderboardService
@@ -46,9 +56,16 @@
 
                 return View(leaderboard);
             }
-            catch (Exception)
+            catch (InvalidOperationException ioe)
             {
-                TempData["Error"] = "Unable to load leaderboard details.";
+                _logger.LogError(ioe, string.Format(ErrorLoad), nameof(Rankings));
+                TempData["ErrorMessage"] = string.Format(ErrorLoad, nameof(Rankings));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorLoad), nameof(Rankings));
+                TempData["ErrorMessage"] = string.Format(ErrorLoad, nameof(Rankings));
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -61,79 +78,95 @@
                 IEnumerable<AdminLeaderboardViewModel> leaderboardViewModels = await _leaderboardService.GetLeaderboardsToManageAsync();
                 return View(leaderboardViewModels);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load leaderboard details.";
+                _logger.LogError(ex, string.Format(ErrorLoadDetails, nameof(Leaderboard)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoadDetails, nameof(Leaderboard));
                 return RedirectToAction(nameof(Index));
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> ManageEntries(Guid id)
+        public async Task<IActionResult> ManageEntries(Guid? id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Leaderboard));
+                return NotFound();
+            }
+
             try
             {
                 AdminManageEntriesViewModel leaderboardViewModel = await _leaderboardService
                     .GetLeaderboardsEntriesToManageDetailsAsync(id);
                 return View(leaderboardViewModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load leaderboard entries.";
+                _logger.LogError(ex, string.Format(ErrorDisplayEditPage, nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorDisplayEditPage, nameof(LeaderboardEntry));
                 return RedirectToAction(nameof(Index));
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateEntry(Guid id, int newScore)
+        public async Task<IActionResult> UpdateEntry(Guid? id, int newScore)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(LeaderboardEntry));
+                return NotFound();
+            }
+
             try
             {
-                bool isUpdateSuccessful = await _leaderboardService.UpdateEntryAsync(id,newScore);
+                await _leaderboardService.UpdateEntryAsync(id,newScore);
 
-                if (!isUpdateSuccessful)
-                {
-                    throw new InvalidOperationException();
-                }
                 return RedirectToAction(nameof(Index));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe)
             {
+                _logger.LogError(ioe, string.Format(ErrorUpdate, nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorUpdate, nameof(LeaderboardEntry));
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Entry cannot be edited."; ;
-
+                _logger.LogError(ex, string.Format(ErrorUpdate, nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorUpdate, nameof(LeaderboardEntry));
                 return RedirectToAction(nameof(Index));
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(LeaderboardEntry));
+                return NotFound();
+            }
+
             try
             {
-                if (id == Guid.Empty)
-                {
-                    TempData["Error"] = "Invalid entry id.";
-                    return RedirectToAction(nameof(Details));
-                }
-
                 await _leaderboardService.SoftDeleteEntryAsync(id);
-                TempData["Success"] = "Entry deleted successfully.";
-            }
-            catch (InvalidOperationException)
-            {
-                TempData["Error"] = "Entry not found.";
-            }
-            catch (Exception)
-            {
-                TempData["Error"] = "Failed to delete entry.";
-            }
 
-            return RedirectToAction(nameof(Details));
+                TempData["SuccessMessage"] = string.Format(SuccessSoftDelete, nameof(LeaderboardEntry));
+                return RedirectToAction(nameof(Details));
+            }
+            catch (InvalidOperationException ioe)
+            {
+                _logger.LogError(ioe, string.Format(ErrorSoftDelete,nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorSoftDelete, nameof(LeaderboardEntry));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorSoftDelete, nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorSoftDelete, nameof(LeaderboardEntry));
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
@@ -145,9 +178,10 @@
                     .GetGlobalLeaderboardAsync();
                 return View(globalLeaderboard);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load global leaderboard.";
+                _logger.LogError(ex, string.Format(ErrorLoad, nameof(Leaderboard)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoad, nameof(Leaderboard));
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -161,64 +195,72 @@
                     .GetLeaderboardsEntriesToManageAsync();
                 return View(leaderboardViewModels);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Unable to load leaderboard details.";
+                _logger.LogError(ex, string.Format(ErrorLoadDeletedList,nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorLoadDeletedList, nameof(LeaderboardEntry));
                 return RedirectToAction(nameof(Index));
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> RestoreEntry([FromRoute(Name = "id")] Guid userId)
+        public async Task<IActionResult> RestoreEntry(Guid? id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(LeaderboardEntry));
+                return NotFound();
+            }
+
             try
             {
-                bool isRestoreSuccessful = await _leaderboardService.RestoreEntryAsync(userId);
+                await _leaderboardService.RestoreEntryAsync(id);
 
-                if (!isRestoreSuccessful)
-                {
-                    throw new InvalidOperationException();
-                }
+                TempData["SuccessMessage"] = string.Format(SuccessUpdate, nameof(LeaderboardEntry));
                 return RedirectToAction(nameof(DeletedEntries));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ioe)
             {
+                _logger.LogError(ioe, string.Format(ErrorRestore,nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorRestore, nameof(LeaderboardEntry));
                 return BadRequest();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["Error"] = "Quiz cannot be restored."; ;
-
+                _logger.LogError(ex, string.Format(ErrorRestore, nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorRestore, nameof(LeaderboardEntry));
                 return RedirectToAction(nameof(DeletedEntries));
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteEntry([FromRoute(Name = "id")] Guid userId)
+        public async Task<IActionResult> DeleteEntry(Guid? id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(LeaderboardEntry));
+                return NotFound();
+            }
+
             try
             {
-                bool deleteResult = await _leaderboardService
-                    .HardDeleteEntryAsync(userId);
-                if (!deleteResult)
-                {
-                    TempData["Error"] = "Quiz can't be deleted.";
+                await _leaderboardService.HardDeleteEntryAsync(id);
 
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                return BadRequest();
-            }
-            catch (Exception)
-            {
-                TempData["Error"] = "Quiz cannot be removed."; ;
-
+                TempData["SuccessMessage"] = string.Format(SuccessHardDelete, nameof(LeaderboardEntry));
                 return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (InvalidOperationException ioe)
+            {
+                _logger.LogError(ioe, string.Format(ErrorHardDelete,nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorHardDelete, nameof(LeaderboardEntry));
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, string.Format(ErrorHardDelete, nameof(LeaderboardEntry)));
+                TempData["ErrorMessage"] = string.Format(ErrorHardDelete, nameof(LeaderboardEntry));
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

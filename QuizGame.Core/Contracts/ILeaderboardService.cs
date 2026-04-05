@@ -11,23 +11,23 @@
 
         Task<IEnumerable<LeaderboardRowVm>?> GetLeaderboardEntriesByQuizIdAsync(Guid? quizId);
 
-        Task<Leaderboard?> GetLeaderboardByQuizIdAsync(Guid id);
+        Task<Leaderboard?> GetLeaderboardByQuizIdAsync(Guid? id);
 
-        Task<AdminLeaderboardPageViewModel> GetLeaderboardsToManageAsync();
+        Task<IEnumerable<AdminLeaderboardViewModel>> GetLeaderboardsToManageAsync();
 
         Task<IEnumerable<AdminLeaderboardEntryViewModel>> GetLeaderboardsEntriesToManageAsync();
 
-        Task<AdminManageEntriesViewModel> GetLeaderboardsEntriesToManageDetailsAsync(Guid id);
+        Task<AdminManageEntriesViewModel> GetLeaderboardsEntriesToManageDetailsAsync(Guid? id);
 
         Task<AdminGlobalLeaderboardViewModel> GetGlobalLeaderboardAsync();
 
-        Task<bool> UpdateEntryAsync(Guid userId, int score);
+        Task UpdateEntryAsync(Guid? id, int score);
 
-        Task<bool> RestoreEntryAsync(Guid entryId);
+        Task RestoreEntryAsync(Guid? id);
 
-        Task<bool> SoftDeleteEntryAsync(Guid entryId);
+        Task SoftDeleteEntryAsync(Guid? id);
 
-        Task<bool> HardDeleteEntryAsync(Guid entryId);
+        Task HardDeleteEntryAsync(Guid? id);
         
     }
 }

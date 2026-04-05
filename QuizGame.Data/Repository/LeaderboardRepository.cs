@@ -6,14 +6,12 @@
 
     public class LeaderboardRepository : BaseRepository, ILeaderboardRepository
     {
-        private Guid userId;
-
         public LeaderboardRepository(QuizGameDbContext dbContext)
             : base(dbContext)
         {
         }
 
-        public async Task<Leaderboard?> GetLeaderboardWithEntriesAndUserBydAsync(Guid leaderboardId)
+        public async Task<Leaderboard?> GetLeaderboardWithEntriesAndUserBydAsync(Guid? leaderboardId)
         {
             return await DbContext.Leaderboards
                 .AsNoTracking()
@@ -23,7 +21,7 @@
                 .FirstOrDefaultAsync(l => l.Id == leaderboardId);
         }
 
-        public async Task<Leaderboard?> GetLeaderboardWithEntriesAndUserByQuizIdAsync(Guid quizId)
+        public async Task<Leaderboard?> GetLeaderboardWithEntriesAndUserByQuizIdAsync(Guid? quizId)
         {
             return await DbContext.Leaderboards
                 .AsNoTracking()
@@ -31,6 +29,16 @@
                     .ThenInclude(e => e.User)
                     .AsSplitQuery()
                 .FirstOrDefaultAsync(l => l.QuizId == quizId);
+        }
+
+        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardWithEntriesAndUserByIdAsync(Guid? id)
+        {
+            return await DbContext.LeaderboardEntries
+                .AsNoTracking()
+                .Where(e => e.LeaderboardId == id)
+                .Include(e => e.User)
+                .OrderByDescending(e => e.Score)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Leaderboard>> GetLeaderboardsWithQuizzesAsync()
@@ -42,25 +50,16 @@
                 .ToListAsync();
         }
 
-        public async Task<Leaderboard?> GetLeaderboardsWithEntriesByQuizIdAsync(Guid quizId)
+        public async Task<Leaderboard?> GetLeaderboardsWithEntriesByQuizIdAsync(Guid? quizId)
         {
             return await DbContext.Leaderboards
                 .Include(l => l.Entries)
                 .FirstOrDefaultAsync(l => l.QuizId == quizId);
         }
 
-        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardWithEntriesAndUserBydAsync(Guid? id)
-        {
-            return await DbContext.LeaderboardEntries
-                .AsNoTracking()
-                .Where(e => e.LeaderboardId == id)
-                .Include(e => e.User)
-                .OrderByDescending(e => e.Score)
-                .ToListAsync();
-        }
 
         public async Task<List<LeaderboardEntry>> GetLeaderboardEntriesOrderedByScoreByLeaderboardIdAsync
-            (Guid leaderboardId)
+            (Guid? leaderboardId)
         {
             return await DbContext.LeaderboardEntries
                 .Where(e => e.LeaderboardId == leaderboardId)
@@ -69,7 +68,7 @@
                 .ToListAsync();
         }
 
-        public async Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync(Guid leaderboardId, Guid userId)
+        public async Task<LeaderboardEntry?> GetLeaderboardEntryForUserByIdAsync(Guid? leaderboardId, Guid? userId)
         {
             return await DbContext.LeaderboardEntries
                 .FirstOrDefaultAsync(e => e.Id == leaderboardId && e.UserId == userId);
@@ -129,11 +128,11 @@
             return resultCount > 0;
         }
 
-        public async Task<bool> RestoreEntryAsync(Guid entryId)
+        public async Task<bool> RestoreEntryAsync(Guid? id)
         {
             LeaderboardEntry? entry = DbContext
                 .LeaderboardEntries
-                .FirstOrDefault(l => l.Id == userId);
+                .FirstOrDefault(l => l.Id == id);
 
             if (entry == null)
             {
@@ -145,11 +144,11 @@
 
             return resultsCount > 0;
         }
-        public async Task<bool> SoftDeleteEntryAsync(Guid entryId)
+        public async Task<bool> SoftDeleteEntryAsync(Guid? id)
         {
             LeaderboardEntry? entry = DbContext
                 .LeaderboardEntries
-                .FirstOrDefault(l => l.Id == entryId);
+                .FirstOrDefault(l => l.Id == id);
 
             if (entry == null)
             {
@@ -162,11 +161,11 @@
             return resultsCount > 0;
         }
 
-        public async Task<bool> HardDeleteEntryAsync(Guid entryId)
+        public async Task<bool> HardDeleteEntryAsync(Guid? id)
         {
             LeaderboardEntry? entry = DbContext
                 .LeaderboardEntries
-                .FirstOrDefault(l => l.Id == entryId);
+                .FirstOrDefault(l => l.Id == id);
 
             if (entry == null)
             {

@@ -25,11 +25,11 @@
 
         Task EditQuizAsync(EditQuizViewModel viewModel, List<Guid> selectedQuestionIds);
 
-        Task<bool> RestoreQuizAsync(Guid id);
+        Task RestoreQuizAsync(Guid id);
 
-        Task<bool> SoftDeleteQuizAsync(Guid id);
+        Task SoftDeleteQuizAsync(Guid id);
 
-        Task<bool> HardDeleteQuizAsync(Guid id);
+        Task HardDeleteQuizAsync(Guid id);
 
         Task<Leaderboard> CreateLeaderboardAsync(Guid quizId);
 

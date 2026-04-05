@@ -91,7 +91,7 @@
             if (id == Guid.Empty)
             {
                 TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
-                return BadRequest();
+                return NotFound();
             }
 
             try
@@ -122,7 +122,7 @@
             if (id == Guid.Empty)
             {
                 TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
-                return BadRequest();
+                return NotFound();
             }
 
             try
@@ -152,7 +152,7 @@
             if (id != quizViewModel.Id)
             {
                 TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
-                return BadRequest();
+                return NotFound();
             }
 
             if (!ModelState.IsValid)
@@ -202,7 +202,7 @@
             if (id == Guid.Empty)
             {
                 TempData["ErrorMessage"] = string.Format(ErrorInvalidId,nameof(Quiz));
-                return BadRequest();
+                return NotFound();
             }
 
             try

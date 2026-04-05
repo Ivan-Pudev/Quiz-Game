@@ -2,8 +2,8 @@
 {
     public class GlobalLeaderboardRowVm
     {
-        public string UserName { get; set; }
-        public string UserId { get; set; }
+        public string UserName { get; set; } = null!;
+        public Guid UserId { get; set; }
 
         public int Rank { get; set; }
 

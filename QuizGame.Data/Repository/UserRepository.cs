@@ -21,9 +21,9 @@
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task<ApplicationUser?> FindUserByIdAsync(Guid userId)
+        public async Task<ApplicationUser?> FindUserByIdAsync(Guid? userId)
         {
-            return await _userManager.FindByIdAsync(userId.ToString());
+            return await _userManager.FindByIdAsync(userId.ToString()!);
         }
 
 
@@ -69,10 +69,10 @@
             return resultsCount > 0;
         }
 
-        public async Task<bool> UpdateUserRoleAsync(Guid userId, string role, bool removingRole = false)
+        public async Task<bool> UpdateUserRoleAsync(Guid? userId, string role, bool removingRole = false)
         {
             ApplicationUser? appUser = await _userManager
-                .FindByIdAsync(userId.ToString());
+                .FindByIdAsync(userId.ToString()!);
             if (appUser == null)
             {
                 return false;
@@ -114,10 +114,10 @@
 
             return true;
         }
-        public async Task<bool> RestoreUserAsync(Guid userId)
+        public async Task<bool> RestoreUserAsync(Guid? userId)
         {
             ApplicationUser? appUser = await _userManager
-                .FindByIdAsync(userId.ToString());
+                .FindByIdAsync(userId.ToString()!);
             if (appUser == null)
             {
                 return false;
@@ -128,10 +128,10 @@
 
             return resultsCount > 0;
         }
-        public async Task<bool> SoftDeleteUserAsync(Guid userId)
+        public async Task<bool> SoftDeleteUserAsync(Guid? userId)
         {
             ApplicationUser? appUser = await _userManager
-                .FindByIdAsync(userId.ToString());
+                .FindByIdAsync(userId.ToString()!);
             if (appUser == null)
             {
                 return false;
@@ -143,10 +143,10 @@
             return resultsCount > 0;
         }
 
-        public async Task<bool> HardDeleteUserAsync(Guid userId)
+        public async Task<bool> HardDeleteUserAsync(Guid? userId)
         {
             ApplicationUser? appUser = await _userManager
-                .FindByIdAsync(userId.ToString());
+                .FindByIdAsync(userId.ToString()!);
             if (appUser == null)
             {
                 return false;

@@ -10,5 +10,9 @@
         public const string SuccessSoftDelete = "{0} removed successfully.";
         public const string SuccessRestore = "{0} restored successfully.";
         public const string SuccessHardDelete = "{0} permanently deleted successfully.";
+
+        // User
+        public const string SuccessAssignRole = "Role assigned successfully.";
+        public const string SuccessRemoveRole = "Role removed successfully.";
     }
 }

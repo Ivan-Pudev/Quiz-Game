@@ -4,7 +4,6 @@ using QuizGame.Data.Repository;
 using QuizGame.Data.Repository.Contracts;
 using QuizGame.ViewModels.Admin.Leaderboard;
 using QuizGame.ViewModels.Leaderboards;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuizGame.Core
 {
@@ -23,7 +22,7 @@ namespace QuizGame.Core
 
         public async Task<IEnumerable<LeaderboardRowVm>?> GetLeaderboardEntriesByQuizIdAsync(Guid? quizId)
         {
-            IEnumerable<LeaderboardEntry> entries = await _leaderboardRepository.GetLeaderboardWithEntriesAndUserBydAsync(quizId);
+            IEnumerable<LeaderboardEntry> entries = await _leaderboardRepository.GetLeaderboardWithEntriesAndUserByIdAsync(quizId);
 
             return entries
                 .Select((e, index) => new LeaderboardRowVm
@@ -35,12 +34,12 @@ namespace QuizGame.Core
                 .ToList();
         }
 
-        public async Task<Leaderboard?> GetLeaderboardByQuizIdAsync(Guid id)
+        public async Task<Leaderboard?> GetLeaderboardByQuizIdAsync(Guid? id)
         {
             return await _leaderboardRepository.GetLeaderboardsWithEntriesByQuizIdAsync(id);
         }
 
-        public async Task<AdminLeaderboardPageViewModel> GetLeaderboardsToManageAsync()
+        public async Task<IEnumerable<AdminLeaderboardViewModel>> GetLeaderboardsToManageAsync()
         {
             IEnumerable<Leaderboard> leaderboards = await GetLeaderboardsAsync();
 
@@ -56,16 +55,16 @@ namespace QuizGame.Core
                     Title = l.Quiz.Title,
                 });
 
-            AdminLeaderboardPageViewModel pageViewModel = new AdminLeaderboardPageViewModel
-            {
-                Leaderboards = leaderboardsViewModels,
-                Total = leaderboardsViewModels.Count(),
-                TotalEntries = leaderboardsViewModels.Sum(x => x.EntryCount),
-                UpdatedToday = leaderboardsViewModels.Count(x => x.LastUpdated == DateOnly.FromDateTime(DateTime.UtcNow)),
-                AvgEntries = leaderboardsViewModels.Any() ? leaderboardsViewModels.Average(x => x.EntryCount) : 0
-            };
+            //AdminLeaderboardPageViewModel pageViewModel = new AdminLeaderboardPageViewModel
+            //{
+            //    Leaderboards = leaderboardsViewModels,
+            //    Total = leaderboardsViewModels.Count(),
+            //    TotalEntries = leaderboardsViewModels.Sum(x => x.EntryCount),
+            //    UpdatedToday = leaderboardsViewModels.Count(x => x.LastUpdated == DateOnly.FromDateTime(DateTime.UtcNow)),
+            //    AvgEntries = leaderboardsViewModels.Any() ? leaderboardsViewModels.Average(x => x.EntryCount) : 0
+            //};
 
-            return pageViewModel;
+            return leaderboardsViewModels;
         }
 
         public async Task<IEnumerable<AdminLeaderboardEntryViewModel>> GetLeaderboardsEntriesToManageAsync()
@@ -91,7 +90,7 @@ namespace QuizGame.Core
             return leaderboardsViewModels;
         }
 
-        public async Task<AdminManageEntriesViewModel> GetLeaderboardsEntriesToManageDetailsAsync(Guid id)
+        public async Task<AdminManageEntriesViewModel> GetLeaderboardsEntriesToManageDetailsAsync(Guid? id)
         {
             Leaderboard? leaderboard = await _leaderboardRepository
                 .GetLeaderboardWithEntriesAndUserBydAsync(id);
@@ -136,11 +135,14 @@ namespace QuizGame.Core
            
             AdminGlobalLeaderboardViewModel globalLeaderboardViewModel = new AdminGlobalLeaderboardViewModel
             {
-                RankedEntries = entries.Select(e => new GlobalEntryViewModel
+                RankedEntries = entries.Select(e => new GlobalLeaderboardRowVm
                 {
                     UserId = e.UserId,
                     UserName = e.User!.UserName!,
-                    TotalScore = e.Score
+                    TotalScore = e.Score,
+                    Attempts = 0,
+                    BestScore = 0,
+                    AverageScore = 0,
                 }).ToList(),
 
                 QuizBreakdown = entries.Select(e=>new QuizBreakdownViewModel
@@ -153,13 +155,8 @@ namespace QuizGame.Core
             return globalLeaderboardViewModel;
         }
 
-        public async Task<bool> UpdateEntryAsync(Guid entryId, int score)
+        public async Task UpdateEntryAsync(Guid? entryId, int score)
         {
-            if (entryId == Guid.Empty)
-            {
-                throw new InvalidOperationException();
-            }
-
             LeaderboardEntry? entry = await _leaderboardRepository
                 .GetLeaderboardEntryByIdAsync(entryId);
 
@@ -170,49 +167,48 @@ namespace QuizGame.Core
 
             entry.Score = score;
 
-            bool result = await _leaderboardRepository
+            bool isUpdateSuccessful = await _leaderboardRepository
                 .UpdateLeaderboardEntriesAsync(entry);
 
-            return result;
-        }
-
-        public async Task<bool> RestoreEntryAsync(Guid entryId)
-        {
-            if (entryId == Guid.Empty)
+            if (!isUpdateSuccessful)
             {
                 throw new InvalidOperationException();
             }
-
-            bool result = await _leaderboardRepository
-                .RestoreEntryAsync(entryId);
-
-            return result;
         }
 
-        public async Task<bool> SoftDeleteEntryAsync(Guid entryId)
+        public async Task RestoreEntryAsync(Guid? id)
         {
-            if (entryId == Guid.Empty)
+           
+            bool isRestoreSuccessful = await _leaderboardRepository
+                .RestoreEntryAsync(id);
+
+            if (!isRestoreSuccessful)
             {
                 throw new InvalidOperationException();
             }
-
-            bool result = await _leaderboardRepository
-                .SoftDeleteEntryAsync(entryId);
-
-            return result;
         }
 
-        public async Task<bool> HardDeleteEntryAsync(Guid entryId)
+        public async Task SoftDeleteEntryAsync(Guid? id)
         {
-            if (entryId == Guid.Empty)
+            
+            bool isSoftDeleteSuccessful = await _leaderboardRepository
+                .SoftDeleteEntryAsync(id);
+
+            if (!isSoftDeleteSuccessful)
             {
                 throw new InvalidOperationException();
             }
+        }
 
-            bool result = await _leaderboardRepository
-                .HardDeleteEntryAsync(entryId);
+        public async Task HardDeleteEntryAsync(Guid? id)
+        {
+            bool isSoftHardSuccessful = await _leaderboardRepository
+                .HardDeleteEntryAsync(id);
 
-            return result;
+            if (!isSoftHardSuccessful)
+            {
+                throw new InvalidOperationException();
+            }
         }
     }
 }
