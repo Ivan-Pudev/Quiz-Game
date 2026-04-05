@@ -11,7 +11,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Management — QuizGame Admin</title>
-    <link rel="stylesheet" href="~/css/UserIndex.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin/User/index-user.css" asp-append-version="true" />
+    <script src="~/js/Admin/User/index-user.js" asp-append-version="true"></script>
 </head>
 <body>
 <div class="container">
@@ -29,25 +30,7 @@
         </a>
     </div>
 
-    <!-- TempData alerts -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M20 6L9 17l-5-5"/>
-            </svg>
-            @TempData["SuccessMessage"]
-        </div>
-    }
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            @TempData["ErrorMessage"]
-        </div>
-    }
+    <partial name="_Alerts" />
 
     <!-- Stats -->
     @{
@@ -109,15 +92,7 @@
     <div class="table-wrap">
         @if (!Model.Any())
         {
-            <div class="empty-state">
-                <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                </svg>
-                <p>No users found.</p>
-            </div>
+                <partial name="_EmptyState" model='@("No users found.")' />
         }
         else
         {
@@ -213,26 +188,5 @@
 
 </div>
 
-<script>
-    function filterTable() {
-        const search = document.getElementById('searchInput').value.toLowerCase().trim();
-        const role   = document.getElementById('roleFilter').value.toLowerCase();
-        const rows   = document.querySelectorAll('#usersTable tbody tr');
-        let visible  = 0;
-
-        rows.forEach(row => {
-            const email = row.dataset.email || '';
-            const roles = (row.dataset.roles || '').toLowerCase();
-            const matchSearch = !search || email.includes(search);
-            const matchRole   = !role   || roles.includes(role);
-            const show = matchSearch && matchRole;
-            row.style.display = show ? '' : 'none';
-            if (show) visible++;
-        });
-
-        const countEl = document.getElementById('resultCount');
-        if (countEl) countEl.textContent = `Showing ${visible} user(s)`;
-    }
-</script>
 </body>
 </html>

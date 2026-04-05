@@ -1,0 +1,90 @@
+﻿@model AdminUserViewModel
+@{
+var initials = Model.Email?.Length >= 2
+    ? Model.Email.Substring(0, 2).ToUpper()
+    : Model.Email?.ToUpper() ?? "??";
+
+    <tr data-email="@Model.Email?.ToLower()">
+    <td>
+        <div class="user-cell">
+            <div class="avatar">@initials</div>
+            <div>
+                    <div class="user-email">@Model.Email</div>
+                    <div class="user-id">@Model.Id</div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <span class="badge-banned">
+            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+            </svg>
+            Banned
+        </span>
+    </td>
+    <td>
+        <div class="roles-cell">
+                @if (!Model.Roles.Any())
+            {
+                <span class="badge badge-default">No roles</span>
+            }
+            else
+            {
+                    @foreach (var role in Model.Roles)
+                {
+                    var cls = role switch
+                    {
+                        "Admin" => "badge-admin",
+                        "Moderator" => "badge-moderator",
+                        "User" => "badge-user",
+                        _ => "badge-default"
+                    };
+                    <span class="badge @cls">@role</span>
+                }
+            }
+        </div>
+    </td>
+    <td>
+        <div class="actions-cell">
+            <!-- Restore -->
+            <form asp-area="Admin"
+                  asp-controller="UserManagement"
+                  asp-action="RestoreAccount"
+                      asp-route-id="@Model.Id"
+                  method="post"
+                      onsubmit="return confirm('Restore access for @Html.Raw(Model.Email)?');">
+                @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-restore btn-sm">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="23 4 23 10 17 10" />
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                    </svg>
+                    Restore
+                </button>
+            </form>
+
+            <!-- Permanent delete -->
+            <form asp-area="Admin"
+                  asp-controller="UserManagement"
+                  asp-action="DeleteAccount"
+                      asp-route-id="@Model.Id"
+                  method="post"
+                      onsubmit="return confirm('Permanently delete @Html.Raw(Model.Email)? This cannot be undone.');">
+                @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-delete-ghost btn-sm">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14H6L5 6" />
+                        <path d="M10 11v6M14 11v6" />
+                        <path d="M9 6V4h6v2" />
+                    </svg>
+                    Delete
+                </button>
+            </form>
+        </div>
+    </td>
+</tr>
+}

@@ -1,0 +1,20 @@
+﻿@model IEnumerable<AdminUserViewModel>
+
+<div class="stats-bar">
+    <div class="stat-card">
+        <div class="stat-label">Banned Total</div>
+        <div class="stat-value danger">@Model.Where(u => u.IsDeleted).Count()</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Admins Banned</div>
+        <div class="stat-value">@Model.Where(u => u.IsDeleted).Count(u => u.Roles.Contains("Admin"))</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Moderators Banned</div>
+        <div class="stat-value">@Model.Where(u => u.IsDeleted).Count(u => u.Roles.Contains("Moderator"))</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Players Banned</div>
+        <div class="stat-value">@Model.Where(u => u.IsDeleted).Count(u => !u.Roles.Any() || u.Roles.All(r => r == "User"))</div>
+    </div>
+</div>

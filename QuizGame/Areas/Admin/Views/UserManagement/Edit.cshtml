@@ -5,7 +5,7 @@
     Layout = "_Layout";
 }
 
-<link rel="stylesheet" href="~/css/UserEdit.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Admin/User/edit-user.css" asp-append-version="true" />
 <!-- Page header -->
 <div class="page-header">
     <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="back-btn">
@@ -17,24 +17,7 @@
     <h1>Manage Roles</h1>
 </div>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M20 6L9 17l-5-5"/>
-        </svg>
-        @TempData["SuccessMessage"]
-    </div>
-}
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        @TempData["ErrorMessage"]
-    </div>
-}
+<partial name="_Alerts" />
 
 <div class="form-card">
 

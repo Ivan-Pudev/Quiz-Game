@@ -136,7 +136,7 @@ namespace QuizGame.Core
            
             AdminGlobalLeaderboardViewModel globalLeaderboardViewModel = new AdminGlobalLeaderboardViewModel
             {
-                Entries = entries.Select(e=>new GlobalEntryViewModel
+                RankedEntries = entries.Select(e => new GlobalEntryViewModel
                 {
                     UserId = e.UserId,
                     UserName = e.User!.UserName!,

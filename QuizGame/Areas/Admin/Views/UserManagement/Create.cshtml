@@ -5,7 +5,8 @@
     Layout = "_Layout";
 }
 
-<link rel="stylesheet" href="~/css/UserCreate.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Admin/User/create-user.css" asp-append-version="true" />
+<script src="~/js/Admin/User/create-user.js" asp-append-version="true"></script>
 <!-- Page header -->
 <div class="page-header">
     <a asp-area="Admin" asp-controller="UserManagement" asp-action="Index" class="back-btn">
@@ -17,15 +18,7 @@
     <h1>Create User</h1>
 </div>
 
-@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
-{
-    <div class="alert-danger">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        Please fix the errors below before continuing.
-    </div>
-}
+<partial name="_EmptyState" model='@("Please fix the errors below before continuing.")' />
 
 <form asp-area="Admin" asp-controller="UserManagement" asp-action="Create" method="post">
     @Html.AntiForgeryToken()
@@ -138,17 +131,6 @@
 
     </div>
 </form>
-
-<script>
-    function toggleChip(checkbox, activeClass) {
-        const chip = checkbox.closest('.role-chip');
-        if (checkbox.checked) {
-            chip.classList.add(activeClass);
-        } else {
-            chip.classList.remove(activeClass);
-        }
-    }
-</script>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
