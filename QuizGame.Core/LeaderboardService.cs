@@ -4,6 +4,7 @@ using QuizGame.Data.Repository;
 using QuizGame.Data.Repository.Contracts;
 using QuizGame.ViewModels.Admin.Leaderboard;
 using QuizGame.ViewModels.Leaderboards;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuizGame.Core
 {
@@ -39,7 +40,7 @@ namespace QuizGame.Core
             return await _leaderboardRepository.GetLeaderboardsWithEntriesByQuizIdAsync(id);
         }
 
-        public async Task<IEnumerable<AdminLeaderboardViewModel>> GetLeaderboardsToManageAsync()
+        public async Task<AdminLeaderboardPageViewModel> GetLeaderboardsToManageAsync()
         {
             IEnumerable<Leaderboard> leaderboards = await GetLeaderboardsAsync();
 
@@ -55,7 +56,16 @@ namespace QuizGame.Core
                     Title = l.Quiz.Title,
                 });
 
-            return leaderboardsViewModels;
+            AdminLeaderboardPageViewModel pageViewModel = new AdminLeaderboardPageViewModel
+            {
+                Leaderboards = leaderboardsViewModels,
+                Total = leaderboardsViewModels.Count(),
+                TotalEntries = leaderboardsViewModels.Sum(x => x.EntryCount),
+                UpdatedToday = leaderboardsViewModels.Count(x => x.LastUpdated == DateOnly.FromDateTime(DateTime.UtcNow)),
+                AvgEntries = leaderboardsViewModels.Any() ? leaderboardsViewModels.Average(x => x.EntryCount) : 0
+            };
+
+            return pageViewModel;
         }
 
         public async Task<IEnumerable<AdminLeaderboardEntryViewModel>> GetLeaderboardsEntriesToManageAsync()

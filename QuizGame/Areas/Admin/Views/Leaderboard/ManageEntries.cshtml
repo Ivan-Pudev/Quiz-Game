@@ -1,0 +1,100 @@
+﻿@model AdminManageEntriesViewModel
+
+@{
+    ViewData["Title"] = "Manage Entries";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Admin/Leaderboard/entries-management.css" asp-append-version="true" />
+<script src="~/js/Admin/Leaderboard/entries-management.css" asp-append-version="true"></script>
+
+<!-- Page header -->
+<div class="page-header">
+    <div class="page-header-left">
+        <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="back-btn">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Back
+        </a>
+        <div>
+            <h1>Manage Entries</h1>
+            <p class="subtitle">Add, edit, or remove entries for this leaderboard.</p>
+        </div>
+    </div>
+</div>
+
+
+<partial name="_Alerts" />
+
+<!-- Stats -->
+<partial name="_EntriesStats" model="@Model" />
+
+<!-- Two-column layout -->
+<div class="layout">
+
+    <!-- LEFT: entries table -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon icon-amber">
+                <svg width="16" height="16" fill="none" stroke="#d97706" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M8 2v12M4 6v8M12 4v10" />
+                </svg>
+            </div>
+            <div>
+                <div class="card-title">@Model.LeaderboardTitle</div>
+                <div class="card-desc">@Model.Entries.Count() entr(ies) · Last updated @Model.LastUpdated.ToString("dd MMM yyyy")</div>
+            </div>
+        </div>
+
+        <!-- Toolbar inside card -->
+        <div class="card-toolbar">
+            <div class="search-wrap">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input id="searchInput"
+                       class="search-input"
+                       type="search"
+                       placeholder="Search by user…"
+                       oninput="filterTable()" />
+            </div>
+        </div>
+
+        <!-- Entries table -->
+        @if (!Model.Entries.Where(e => e.IsDeleted == false).Any())
+        {
+            <partial name="_EmptyState" model='@("No entries yet. Add one using the form.")' />
+        }
+        else
+        {
+            <table id="entriesTable">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Score</th>
+                        <th>Rank</th>
+                        <th style="width:130px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in Model.Entries.OrderBy(e => e.Rank))
+                    {
+                        <partial name="_ManageEntry" model="@entry"/>
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination-bar">
+                <span id="resultCount">Showing @Model.Entries.Count() entr(ies)</span>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

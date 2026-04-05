@@ -1,0 +1,27 @@
+﻿@model AdminGlobalLeaderboardViewModel
+@if (Model.QuizBreakdown != null && Model.QuizBreakdown.Any())
+{
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon icon-teal">
+                <svg width="16" height="16" fill="none" stroke="#0d9488" stroke-width="1.5" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M7 8h10M7 12h10M7 16h5" />
+                </svg>
+            </div>
+            <div>
+                <div class="card-title">Scores by Quiz</div>
+                <div class="card-desc">Total entries per quiz</div>
+            </div>
+        </div>
+        <div class="breakdown-list">
+            @foreach (var q in Model.QuizBreakdown.OrderByDescending(x => x.EntryCount).Take(8))
+            {
+                <div class="breakdown-row">
+                    <div class="breakdown-quiz" title="@q.QuizTitle">@q.QuizTitle</div>
+                    <div class="breakdown-count">@q.EntryCount entries</div>
+                </div>
+            }
+        </div>
+    </div>
+}

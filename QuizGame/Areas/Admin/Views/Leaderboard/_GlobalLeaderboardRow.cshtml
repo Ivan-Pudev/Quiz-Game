@@ -1,0 +1,72 @@
+﻿@model GlobalLeaderboardRowVm
+@{
+    int rank = Model.Rank;
+
+    string rowCls = rank switch
+    {
+        1 => "top-row-1",
+        2 => "top-row-2",
+        3 => "top-row-3",
+        _ => ""
+    };
+    string rankCls = rank switch
+    {
+        1 => "rank-1",
+        2 => "rank-2",
+        3 => "rank-3",
+        _ => ""
+    };
+    string avCls = rank switch
+    {
+        1 => "av-1",
+        2 => "av-2",
+        3 => "av-3",
+        _ => ""
+    };
+
+    string initials = Model.UserName?.Length >= 2
+    ? Model.UserName.Substring(0, 2).ToUpper()
+    : Model.UserName?.ToUpper() ?? "??";
+
+    <tr class="@rowCls" data-email="@Model.UserName?.ToLower()">
+        <td>
+            <span class="rank-badge @rankCls">
+                @if (rank <= 3)
+                {
+                    @(rank == 1 ? "🥇" : rank == 2 ? "🥈" : "🥉")
+                }
+                else
+                {
+                    @rank
+                }
+            </span>
+        </td>
+        <td>
+            <div class="user-cell">
+                <div class="avatar @avCls">@initials</div>
+                <div>
+                    <div class="user-email">@Model.UserName</div>
+                    <div class="user-id">@Model.UserId</div>
+                </div>
+            </div>
+        </td>
+        <td class="td-right">
+            <div class="score-total">@Model.TotalScore pts</div>
+            <div class="score-avg">avg @Model.AverageScore.ToString("F0")/quiz</div>
+        </td>
+        <td class="td-right">
+            <span class="best-badge">
+                ★ @Model.BestScore
+            </span>
+        </td>
+        <td class="td-right">
+            <span class="attempts-badge">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="23 4 23 10 17 10" />
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                </svg>
+                @Model.Attempts
+            </span>
+        </td>
+    </tr>
+}

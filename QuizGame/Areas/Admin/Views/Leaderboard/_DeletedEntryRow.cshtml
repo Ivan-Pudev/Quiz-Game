@@ -1,0 +1,116 @@
+﻿@model AdminLeaderboardEntryViewModel
+
+@{
+    string initials = Model.UserName?.Length >= 2
+? Model.UserName.Substring(0, 2).ToUpper()
+: Model.UserName?.ToUpper() ?? "??";
+
+    string rankCls = Model.Rank switch
+    {
+        1 => "rank-1",
+        2 => "rank-2",
+        3 => "rank-3",
+        _ => ""
+    };
+
+    <tr data-email="@Model.UserName?.ToLower()"
+        data-id="@Model.Id.ToString().ToLower()"
+        data-lb="@Model.LeaderboardTitle.ToLower()">
+
+        <!-- User -->
+        <td>
+            <div class="user-cell">
+                <div class="avatar">@initials</div>
+                <div>
+                    <div class="user-email">@Model.UserName</div>
+                    <div class="user-id">@Model.UserId</div>
+                </div>
+            </div>
+        </td>
+
+        <!-- Leaderboard -->
+        <td>
+            <a asp-area=""
+                   asp-controller="Leaderboard"
+                   asp-action="Rankings"
+                   asp-route-id="@Model.LeaderboardId"
+                   class="lb-link"
+                   title="@Model.LeaderboardTitle">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M8 2v12M4 6v8M12 4v10" />
+                </svg>
+                @Model.LeaderboardTitle
+            </a>
+        </td>
+
+        <!-- Score -->
+        <td>
+            <span class="score-badge">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+                @Model.Score pts
+            </span>
+        </td>
+
+        <!-- Rank -->
+        <td>
+            <span class="rank-badge @rankCls">#@Model.Rank</span>
+        </td>
+
+        <!-- Status -->
+        <td>
+            <span class="badge-deleted">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                </svg>
+                Deleted
+            </span>
+        </td>
+
+        <!-- Actions -->
+        <td>
+            <div class="actions-cell">
+
+                <!-- Restore -->
+                <form asp-area=""
+                      asp-controller="Leaderboard"
+                      asp-action="RestoreEntry"
+                      method="post"
+                      onsubmit="return confirm('Restore entry for @Html.Raw(Model.UserName)?');">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-restore btn-sm">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <polyline points="23 4 23 10 17 10" />
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                        </svg>
+                        Restore
+                    </button>
+                </form>
+
+                <!-- Permanent delete -->
+                <form asp-area=""
+                      asp-controller="Leaderboard"
+                      asp-action="DeleteEntry"
+                      method="post"
+                      onsubmit="return confirm('Permanently delete this entry for @Html.Raw(Model.UserName)? This cannot be undone.');">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-delete-ghost btn-sm">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6l-1 14H6L5 6" />
+                            <path d="M10 11v6M14 11v6" />
+                            <path d="M9 6V4h6v2" />
+                        </svg>
+                        Delete
+                    </button>
+                </form>
+
+            </div>
+        </td>
+
+    </tr>
+}

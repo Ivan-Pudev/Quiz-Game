@@ -1,0 +1,25 @@
+﻿@model IEnumerable<AdminLeaderboardEntryViewModel>
+@{
+    int total = Model.Where(e => e.IsDeleted == true).Count();
+    double avgScore = total > 0 ? Model.Where(e => e.IsDeleted == true).Average(e => e.Score) : 0;
+    int topScore = total > 0 ? Model.Where(e => e.IsDeleted == true).Max(e => e.Score) : 0;
+    int affected = Model.Where(e => e.IsDeleted == true).Select(e => e.LeaderboardTitle).Distinct().Count();
+}
+<div class="stats-bar">
+    <div class="stat-card">
+        <div class="stat-label">Deleted Entries</div>
+        <div class="stat-value danger">@total</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Avg Score</div>
+        <div class="stat-value teal">@avgScore.ToString("F0")</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Top Score</div>
+        <div class="stat-value amber">@topScore</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Leaderboards Affected</div>
+        <div class="stat-value">@affected</div>
+    </div>
+</div>

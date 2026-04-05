@@ -1,0 +1,56 @@
+﻿@model AdminGlobalLeaderboardViewModel
+@if (Model.RankedEntries.Count >= 3)
+{
+    var top3 = Model.RankedEntries.OrderByDescending(e => e.TotalScore).Take(3).ToList();
+    var p1 = top3[0];
+    var p2 = top3[1];
+    var p3 = top3[2];
+
+    var p1Init = p1.UserName?.Length >= 2 ? p1.UserName.Substring(0, 2).ToUpper() : "??";
+    var p2Init = p2.UserName?.Length >= 2 ? p2.UserName.Substring(0, 2).ToUpper() : "??";
+    var p3Init = p3.UserName?.Length >= 2 ? p3.UserName.Substring(0, 2).ToUpper() : "??";
+
+    var p1Name = p1.UserName?.Split('@')[0] ?? "—";
+    var p2Name = p2.UserName?.Split('@')[0] ?? "—";
+    var p3Name = p3.UserName?.Split('@')[0] ?? "—";
+
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon icon-amber">
+                <svg width="16" height="16" fill="none" stroke="#d97706" stroke-width="1.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="6" />
+                    <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+                </svg>
+            </div>
+            <div>
+                <div class="card-title">Top 3 Podium</div>
+                <div class="card-desc">Current leading players</div>
+            </div>
+        </div>
+
+        <div class="podium">
+            <!-- 2nd -->
+            <div class="podium-slot">
+                <div class="podium-avatar p2">@p2Init</div>
+                <div class="podium-name" title="@p2.UserName">@p2Name</div>
+                <div class="podium-score">@p2.TotalScore pts</div>
+                <div class="podium-block b2">2</div>
+            </div>
+            <!-- 1st -->
+            <div class="podium-slot">
+                <div class="podium-avatar p1">@p1Init</div>
+                <div class="podium-name" title="@p1.UserName">@p1Name</div>
+                <div class="podium-score">@p1.TotalScore pts</div>
+                <div class="podium-block b1">1</div>
+            </div>
+            <!-- 3rd -->
+            <div class="podium-slot">
+                <div class="podium-avatar p3">@p3Init</div>
+                <div class="podium-name" title="@p3.UserName">@p3Name</div>
+                <div class="podium-score">@p3.TotalScore pts</div>
+                <div class="podium-block b3">3</div>
+            </div>
+        </div>
+        <div class="podium-base">Ranked by cumulative score</div>
+    </div>
+}

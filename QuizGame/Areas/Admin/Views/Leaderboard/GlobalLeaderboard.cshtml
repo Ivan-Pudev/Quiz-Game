@@ -1,0 +1,105 @@
+﻿@model AdminGlobalLeaderboardViewModel
+
+@{
+    ViewData["Title"] = "Global Leaderboard";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Admin/Leaderboard/global-leaderboard.css" asp-append-version="true" />
+<script src="~/js/Admin/Leaderboard/global-leaderboard.js" asp-append-version="true"></script>
+
+<!-- Page header -->
+<div class="page-header">
+    <div>
+        <h1>Global Leaderboard</h1>
+        <p class="subtitle">Aggregated scores across all quizzes and leaderboards.</p>
+    </div>
+    <button class="btn btn-outline" onclick="window.location.reload()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Refresh
+    </button>
+</div>
+
+<partial name="_Alerts" />
+
+<!-- Stats -->
+<partial name="_GlobalStats" model="@Model"/>
+
+<div class="layout">
+
+    <!-- LEFT: global rankings table -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-icon icon-amber">
+                <svg width="16" height="16" fill="none" stroke="#d97706" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M8 2v12M4 6v8M12 4v10"/>
+                    <path d="M17 5l3 3-3 3"/>
+                </svg>
+            </div>
+            <div>
+                <div class="card-title">Global Rankings</div>
+                <div class="card-desc">Sorted by cumulative score across all quizzes</div>
+            </div>
+        </div>
+
+        <div class="card-toolbar">
+            <div class="search-wrap">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input id="searchInput"
+                       class="search-input"
+                       type="search"
+                       placeholder="Search by email…"
+                       oninput="filterTable()" />
+            </div>
+        </div>
+
+        @if (Model.TotalPlayers == 0)
+        {
+            <partial name="_EmptyState" model='@("No scores recorded yet.")' />
+        }
+        else
+        {
+            <table id="globalTable">
+                <thead>
+                    <tr>
+                        <th style="width:44px;">#</th>
+                        <th>Player</th>
+                        <th class="th-right">Total Score</th>
+                        <th class="th-right">Best</th>
+                        <th class="th-right">Attempts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var ranked = Model.RankedEntries;
+                    }
+                    @foreach (GlobalLeaderboardRowVm item in ranked)
+                    {
+                        <partial name="_GlobalLeaderboardRow" model="@item" />
+                    }
+                </tbody>
+            </table>
+
+            <div class="pagination-bar">
+                <span id="resultCount">Showing @Model.TotalPlayers player(s)</span>
+            </div>
+        }
+    </div>
+
+    <!-- RIGHT sidebar -->
+    <div class="sidebar">
+
+        <!-- Podium card -->
+        <partial name="_GlobalPodium" model="@Model"/>
+
+        <!-- Quiz breakdown card -->
+        <partial name="_GlobalQuizBreakdown" model="@Model" />
+
+    </div>
+</div>
+

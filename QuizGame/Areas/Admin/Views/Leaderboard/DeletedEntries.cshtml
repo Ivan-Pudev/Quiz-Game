@@ -1,0 +1,89 @@
+﻿@model IEnumerable<AdminLeaderboardEntryViewModel>
+
+@{
+    ViewData["Title"] = "Deleted Entries";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Admin/Leaderboard/deleted-entries.css" asp-append-version="true" />
+<script src="~/js/Admin/Leaderboard/deleted-entries.js" asp-append-version="true"></script>
+
+<!-- Page header -->
+<div class="page-header">
+    <div class="page-header-left">
+        <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="back-btn">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            Back
+        </a>
+        <div>
+            <h1>Deleted Entries</h1>
+            <p class="subtitle">Review, restore, or permanently remove deleted leaderboard entries.</p>
+        </div>
+    </div>
+</div>
+
+<partial name="_Alerts" />
+
+<!-- Stats -->
+<partial name="_DeletedStats" model="@Model"/>
+
+<!-- Toolbar -->
+<div class="toolbar">
+    <div class="toolbar-left">
+        <div class="search-wrap">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input id="searchInput"
+                   class="search-input"
+                   type="search"
+                   placeholder="Search by user, leaderboard or ID…"
+                   oninput="filterTable()" />
+        </div>
+    </div>
+    <button class="btn btn-outline" onclick="window.location.reload()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Refresh
+    </button>
+</div>
+
+<!-- Table -->
+<div class="table-wrap">
+    @if (!Model.Where(E=>E.IsDeleted == true).Any())
+    {
+        <partial name="_EmptyState" />
+    }
+    else
+    {
+        <table id="entriesTable">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Leaderboard</th>
+                    <th>Score</th>
+                    <th>Rank</th>
+                    <th>Status</th>
+                    <th style="width:160px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in Model.Where(e=>e.IsDeleted == true))
+                {
+                     <partial name="_DeletedEntryRow" model="entry" />
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination-bar">
+            <span id="resultCount">Showing @Model.Where(e=>e.IsDeleted == true).Count() deleted entr(ies)</span>
+        </div>
+    }
+</div>
+
+
+

@@ -1,0 +1,25 @@
+﻿@model AdminManageEntriesViewModel
+@{
+    int total = Model.Entries.Count;
+    double avgScore = total > 0 ? Model.Entries.Average(e => e.Score) : 0;
+    int topScore = total > 0 ? Model.Entries.Max(e => e.Score) : 0;
+    string topUser = total > 0 ? Model.Entries.OrderBy(e => e.Rank).First().UserName : "—";
+}
+<div class="stats-bar">
+    <div class="stat-card">
+        <div class="stat-label">Total Entries</div>
+        <div class="stat-value">@total</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Avg Score</div>
+        <div class="stat-value teal">@avgScore.ToString("F0")</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Top Score</div>
+        <div class="stat-value amber">@topScore</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Leader</div>
+        <div class="stat-value success" style="font-size:1rem;padding-top:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px;" title="@topUser">@topUser</div>
+    </div>
+</div>

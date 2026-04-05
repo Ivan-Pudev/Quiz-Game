@@ -1,0 +1,25 @@
+﻿@model AdminGlobalLeaderboardViewModel
+@{
+    var total = Model.RankedEntries.Count;
+    var topScore = total > 0 ? Model.RankedEntries.Max(e => e.TotalScore) : 0;
+    var avgScore = total > 0 ? Model.RankedEntries.Average(e => e.TotalScore) : 0;
+    var totalAttempts = total > 0 ? Model.RankedEntries.Sum(e => e.Attempts) : 0;
+}
+<div class="stats-bar">
+    <div class="stat-card">
+        <div class="stat-label">Ranked Players</div>
+        <div class="stat-value">@total</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Top Score</div>
+        <div class="stat-value amber">@topScore</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Avg Score</div>
+        <div class="stat-value teal">@avgScore.ToString("F0")</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Attempts</div>
+        <div class="stat-value success">@totalAttempts</div>
+    </div>
+</div>

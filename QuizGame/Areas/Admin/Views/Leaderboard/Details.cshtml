@@ -1,0 +1,89 @@
+﻿@model AdminLeaderboardPageViewModel
+
+@{
+    ViewData["Title"] = "Leaderboard Management";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/Admin/Leaderboard/details.css" asp-append-version="true" />
+<script src="~/js/Admin/Leaderboard/leaderboard-management.js" asp-append-version="true"></script>
+
+<!-- Page header -->
+<div class="page-header">
+    <div>
+        <h1>Leaderboard Management</h1>
+        <p class="subtitle">View, edit, and manage all quiz leaderboards.</p>
+    </div>
+    <a asp-area="" asp-controller="Leaderboard" asp-action="GlobalLeaderboard" class="btn btn-primary">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        View Global Leaderboard
+    </a>
+</div>
+
+<partial name="_Alerts" />
+
+<!-- Stats -->
+<partial name="_LeaderboardStats" model="@Model" />
+
+<!-- Toolbar -->
+<div class="toolbar">
+    <div class="toolbar-left">
+        <div class="search-wrap">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input id="searchInput"
+                   class="search-input"
+                   type="search"
+                   placeholder="Search by title, quiz or ID…"
+                   oninput="filterTable()" />
+        </div>
+    </div>
+    <button class="btn btn-outline" onclick="window.location.reload()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="23 4 23 10 17 10" />
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+        </svg>
+        Refresh
+    </button>
+</div>
+
+<!-- Table -->
+<div class="table-wrap">
+    @if (Model.TotalEntries == 0)
+    {
+        <partial name="_EmptyState" model='@("No leaderboards found.")' />
+    }
+    else
+    {
+        <table id="lbTable">
+            <thead>
+                <tr>
+                    <th>Leaderboard</th>
+                    <th>Description</th>
+                    <th>Linked Quiz</th>
+                    <th>Entries</th>
+                    <th>Last Updated</th>
+                    <th style="width:190px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var lb in Model.Leaderboards)
+                {
+                    <partial name="_LeaderboardRow" model="@lb" />
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination-bar">
+            <span id="resultCount">Showing @Model.TotalEntries leaderboard(s)</span>
+        </div>
+    }
+</div>
+
+
+
