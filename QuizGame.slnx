@@ -6,6 +6,9 @@
   <Folder Name="/Services/">
     <Project Path="QuizGame.Core/QuizGame.Core.csproj" Id="b11363ac-7024-44f6-a5a1-ac7d7d3f72f7" />
   </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="QuizGame.Services.Tests/QuizGame.Services.Tests.csproj" Id="93fac9a6-ecd8-40e3-ae9d-5244c18f51d0" />
+  </Folder>
   <Folder Name="/Web/">
     <Project Path="QuizGame.ViewModels/QuizGame.ViewModels.csproj" Id="68557bd0-c76a-4bc8-9169-88a65e840ebd" />
     <Project Path="QuizGame.Web.Infrastructure/QuizGame.Web.Infrastructure.csproj" Id="f0e99f17-13f5-4015-a0db-e743792d0cb2" />

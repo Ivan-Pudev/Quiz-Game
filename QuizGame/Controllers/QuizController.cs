@@ -117,7 +117,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == Guid.Empty)
             {
@@ -147,7 +147,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Guid id, EditQuizViewModel quizViewModel)
+        public async Task<IActionResult> Edit(Guid? id, EditQuizViewModel quizViewModel)
         {
             if (id != quizViewModel.Id)
             {
@@ -197,7 +197,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == Guid.Empty)
             {
@@ -228,8 +228,15 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Leaderboard(Guid id)
+        public async Task<IActionResult> Leaderboard(Guid? id)
         {
+
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
+                return NotFound();
+            }
+
             try
             {
                 IEnumerable<LeaderboardRowVm>? rows = await _leaderboardService.GetLeaderboardEntriesByQuizIdAsync(id);
@@ -262,11 +269,18 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> RestoreQuiz([FromRoute(Name = "id")] Guid userId)
+        public async Task<IActionResult> RestoreQuiz(Guid? id)
         {
+
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
+                return NotFound();
+            }
+
             try
             {
-                await _quizService.RestoreQuizAsync(userId);
+                await _quizService.RestoreQuizAsync(id);
 
                 return RedirectToAction(nameof(DeletedQuizzes));
             }
@@ -285,12 +299,17 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteQuiz([FromRoute(Name = "id")] Guid userId)
+        public async Task<IActionResult> DeleteQuiz(Guid? id)
         {
+            if (id == Guid.Empty)
+            {
+                TempData["ErrorMessage"] = string.Format(ErrorInvalidId, nameof(Quiz));
+                return NotFound();
+            }
             try
             {
                 await _quizService
-                    .HardDeleteQuizAsync(userId);
+                    .HardDeleteQuizAsync(id);
 
                 return RedirectToAction(nameof(Index));
             }

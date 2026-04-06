@@ -131,7 +131,7 @@
         public async Task<bool> SoftDeleteUserAsync(Guid? userId)
         {
             ApplicationUser? appUser = await _userManager
-                .FindByIdAsync(userId.ToString()!);
+                .FindByIdAsync(userId.ToString());
             if (appUser == null)
             {
                 return false;

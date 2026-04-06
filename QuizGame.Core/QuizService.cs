@@ -167,7 +167,7 @@ namespace QuizGame.Core
             }
         }
 
-        public async Task RestoreQuizAsync(Guid id)
+        public async Task RestoreQuizAsync(Guid? id)
         {
             Quiz? quiz = await _quizRepository
                 .GetQuizWithQuestionsByIdAsync(id);
@@ -183,7 +183,7 @@ namespace QuizGame.Core
             }
         }
 
-        public async Task SoftDeleteQuizAsync(Guid id)
+        public async Task SoftDeleteQuizAsync(Guid? id)
         {
             Quiz? quiz = await _quizRepository
                 .GetQuizWithQuestionsByIdAsync(id);
@@ -199,7 +199,7 @@ namespace QuizGame.Core
             }
         }
 
-        public async Task HardDeleteQuizAsync(Guid id)
+        public async Task HardDeleteQuizAsync(Guid? id)
         {
             Quiz? quiz = await _quizRepository
                 .GetQuizWithQuestionsByIdAsync(id);
@@ -294,7 +294,6 @@ namespace QuizGame.Core
                 {
                     throw new InvalidOperationException();
                 }
-
             }
         }
     }

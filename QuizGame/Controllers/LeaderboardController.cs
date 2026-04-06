@@ -58,13 +58,13 @@
             }
             catch (InvalidOperationException ioe)
             {
-                _logger.LogError(ioe, string.Format(ErrorLoad), nameof(Rankings));
+                _logger.LogError(ioe, string.Format(ErrorLoad, nameof(Rankings)));
                 TempData["ErrorMessage"] = string.Format(ErrorLoad, nameof(Rankings));
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, string.Format(ErrorLoad), nameof(Rankings));
+                _logger.LogError(ex, string.Format(ErrorLoad, nameof(Rankings)));
                 TempData["ErrorMessage"] = string.Format(ErrorLoad, nameof(Rankings));
                 return RedirectToAction(nameof(Index));
             }
