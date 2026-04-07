@@ -1,373 +1,479 @@
-﻿## 🧠 QuizGame
+﻿# 🧠 QuizGame
 
-QuizGame is an ASP.NET Core MVC web application where users can play quizzes, track their scores, and compete on leaderboards.
-Admins can create and manage quizzes, questions, and answers, while players can attempt quizzes multiple times and view rankings.
+**QuizGame** is an ASP.NET Core MVC web application for creating, managing, and playing quizzes.  
+The platform supports role-based access, multiple quiz attempts, automatic scoring, and dynamic leaderboards so users can compete based on performance.
 
-## 🚀 Features
+Admins can manage quizzes, questions, and answers, while players can sign in, attempt quizzes multiple times, and view ranked results for each quiz.
 
-👤 Authentication & Roles
+---
 
-ASP.NET Core Identity
+## Table of Contents
 
-User registration & login
+- [Overview](#overview)
+- [Features](#features)
+- [How the Application Works](#how-the-application-works)
+- [Architecture](#architecture)
+- [Domain Models](#domain-models)
+- [Controllers](#controllers)
+- [ViewModels](#viewmodels)
+- [Technologies Used](#technologies-used)
+- [Setup Instructions](#setup-instructions)
+- [Default Roles](#default-roles)
+- [Design Decisions](#design-decisions)
+- [Screenshots](#screenshots)
+- [Future Improvements](#future-improvements)
+- [Project Info](#project-info)
+- [Author](#author)
 
-## 📝 Quizzes
+---
 
-Create, edit, delete quizzes
+## Overview
 
-Assign / remove questions dynamically
+QuizGame is designed to provide a complete quiz experience with both **administrative management** and **player gameplay**.
 
-Each quiz has:
+The system allows:
+- administrators to create quizzes and prepare content,
+- players to participate in quiz sessions,
+- scores to be calculated automatically,
+- leaderboards to be updated dynamically after each attempt,
+- and multiple attempts per user to support replayability and competition.
 
-Title
+The project follows clean architectural separation and emphasizes maintainability, extensibility, and clear responsibilities between layers.
 
-Description
+---
 
-Start time
+## Features
 
-Leaderboard
+### 👤 Authentication & Roles
 
-Multiple questions with answers
+- ASP.NET Core Identity integration
+- User registration and login
+- Role-based access control
+- Separate permissions for admins and players
+- Secure account handling
 
-## 🎮 Play Game
+### 📝 Quiz Management
 
-Start a quiz attempt
+- Create new quizzes
+- Edit existing quizzes
+- Delete quizzes
+- Add or remove questions dynamically
+- Assign metadata such as title, description, and start time
+- Support for quiz-related leaderboard tracking
 
-Answer questions one by one
+### ❓ Question Management
 
-Automatic score calculation
+- Create questions with content and scoring
+- Support for different question types
+- Reuse questions across multiple quizzes
+- Assign categories to questions
+- Attach multiple answers to a question
+- Mark correct answers
 
-Multiple attempts per user allowed
+### 🎮 Gameplay
 
-Game summary after finishing
+- Start a quiz attempt
+- Answer questions one by one
+- Track the current question index
+- Automatically calculate score
+- Support multiple attempts per user
+- Display a summary when the quiz is completed
 
-## 🏆 Leaderboards
+### 🏆 Leaderboards
 
-One leaderboard per quiz
+- One leaderboard per quiz
+- Displays all attempts, not only the best one
+- Rankings are generated dynamically based on score
+- Accessible from quiz details, game summary, and leaderboard pages
+- Keeps ranking data updated as new attempts are completed
 
-Shows all attempts (not limited to one per user)
+### 📊 Game Summary
 
-Ranked dynamically by score
+After completing a quiz attempt, the user can see:
+- final score
+- maximum possible score
+- number of correct answers
+- total number of questions
+- a direct link to the quiz leaderboard
 
-Accessible from:
+### 🧩 Clean Application Structure
 
-Quiz details
+- Separation of UI, business logic, and data access
+- ViewModels used only for presentation
+- Services used for application logic
+- Database access handled through Entity Framework Core
+- Controllers kept thin and focused
 
-Game summary
+---
 
-Leaderboards index
+## How the Application Works
 
-## 📊 Game Summary
+### For Players
+1. The user registers or logs in.
+2. The user opens a quiz and starts an attempt.
+3. Questions are shown one at a time.
+4. The user submits answers step by step.
+5. The system calculates the score automatically.
+6. When the attempt is finished, the user sees a summary.
+7. The result is added to the quiz leaderboard.
 
-Final score
+### For Admins
+1. The admin logs in with elevated permissions.
+2. The admin creates quizzes and configures quiz details.
+3. Questions are added or removed from quizzes.
+4. Answers are created and correct answers are marked.
+5. Leaderboards update automatically as users play.
+6. The admin can review quiz structure and results.
 
-Max possible score
+---
 
-Correct answers count
+## Architecture
 
-Total questions
+The application follows **SOLID principles** and a clean separation of concerns.
 
-Direct link to leaderboard
+### Layers
 
-## 🏗️ Architecture
+```text
+QuizGame/
+├── QuizGame.Web          # Web layer: controllers, views, UI logic
+├── QuizGame.Data         # Data access layer
+├── QuizGame.Data.Models  # Database and domain models
+├── QuizGame.Core         # Business logic and services
+├── QuizGame.ViewModels   # Models used by the UI
+├── QuizGame.Common       # Shared helpers, constants, utilities
+```
 
-The application follows SOLID principles and a clean separation of concerns.
+### Responsibilities
 
-Layers
+#### QuizGame.Web
+Contains:
+- controllers
+- Razor views
+- route handling
+- model binding
+- presentation-related logic
 
-├── QuizGame.Web - Web logic
+#### QuizGame.Data
+Contains:
+- DbContext
+- migrations
+- entity configurations
+- persistence setup
 
-├── QuizGame.Data
-├── QuizGame.Data.Models - Database and Domain Models
+#### QuizGame.Data.Models
+Contains:
+- entity classes
+- database-facing domain objects
+- relationships between quizzes, questions, answers, attempts, and leaderboards
 
-├── QuizGame.Core        - Business logic (Services)
+#### QuizGame.Core
+Contains:
+- business rules
+- scoring logic
+- quiz attempt handling
+- leaderboard calculations
+- service implementations
 
-├── QuizGame.ViewModels  - UI models
+#### QuizGame.ViewModels
+Contains:
+- UI-specific models
+- form input models
+- details display models
+- summary and leaderboard models
 
-├── QuizGame.GCommon
+#### QuizGame.Common
+Contains:
+- shared constants
+- utility classes
+- reusable helpers
 
-Key Services
+---
 
-QuizzesService – quiz CRUD & leaderboard integration
+## Key Services
 
-GameService – gameplay, attempts, scoring
+### QuizzesService
+Responsible for:
+- creating quizzes
+- updating quiz details
+- deleting quizzes
+- loading quiz information
+- managing question assignments
+- integrating quiz data with leaderboard logic
 
-LeaderboardsService – leaderboard queries & ranking
+### GameService
+Responsible for:
+- starting quiz attempts
+- progressing through questions
+- storing submitted answers
+- calculating scores
+- finishing attempts
+- creating summary data
 
-## 🧩 Domain Models 
+### LeaderboardsService
+Responsible for:
+- retrieving leaderboard entries
+- ranking participants
+- ordering attempts by score
+- updating leaderboard-related data
+- returning leaderboard views for the UI
+
+---
+
+## Domain Models
 
 ## Quiz
 
-Description:
-
+### Description
 Represents a quiz with its metadata, scheduling details, and related entities.
 
-Properties:
+### Properties
+- `Id` – unique identifier of the quiz
+- `Title` – required quiz title with maximum length validation
+- `Description` – required quiz description with maximum length validation
+- `StartTime` – required date and time when the quiz becomes available
 
--Id: Unique identifier of the quiz.
+### Relationships
+- `Leaderboard` – optional association for tracking scores
+- `Questions` – collection of questions linked to the quiz
 
--Title: Required quiz title with a maximum length constraint.
+### Notes
+- A quiz can exist without a leaderboard initially.
+- A quiz may contain multiple questions.
+- Questions can be reused depending on the many-to-many configuration.
 
--Description: Required quiz description with a maximum length constraint.
-
--StartTime: Required date and time when the quiz starts.
-
-Relationships:
-
--Leaderboard: Optional association used for tracking quiz scores.
-
--Questions: Collection of questions belonging to the quiz (one-to-many).
-
-Notes
-
-A quiz can exist without a leaderboard.
-
-A quiz can contain multiple questions.
+---
 
 ## Question
 
-Description:
-
+### Description
 Represents a question used in quizzes, including its content, type, scoring, and relationships.
 
-Properties:
+### Properties
+- `Id` – unique identifier
+- `Content` – required question text
+- `QuestionType` – type of question such as multiple choice or true/false
+- `Complexity` – difficulty level
+- `Points` – score value awarded for a correct answer
 
--Id: Unique identifier of the question.
+### Relationships
+- `Quizzes` – quizzes that include this question
+- `Categories` – categories associated with the question
+- `Answers` – possible answers for the question
 
--Content: Required question text with a maximum length constraint.
+### Notes
+- Questions may be reused in multiple quizzes.
+- Questions can belong to multiple categories.
+- A question should normally have at least one answer.
 
--QuestionType: Required value defining the type of the question (e.g. multiple choice, true/false).
-
--Complexity: Numeric value representing the difficulty level of the question.
-
--Points: Required number of points awarded for a correct answer.
-
-Relationships
-
--Quizzes: Collection of quizzes that include this question (many-to-many).
-
--Categories: Collection of categories associated with the question (many-to-many).
-
--Answers: Collection of possible answers for the question (one-to-many).
-
-Notes
-
-A question can be reused across multiple quizzes.
-
-A question can belong to multiple categories.
-
-A question should typically have at least one answer.
+---
 
 ## Answer
 
-Description:
+### Description
+Represents a possible answer to a question, including whether it is correct.
 
-Represents a possible answer to a question, including its content and correctness.
+### Properties
+- `Id` – unique identifier
+- `Content` – answer text
+- `IsCorrect` – indicates if the answer is correct
+- `QuestionId` – foreign key to the related question
 
-Properties:
+### Relationships
+- `Question` – the question this answer belongs to
 
--Id: Unique identifier of the answer.
+### Notes
+- Each answer must belong to one question.
+- Questions may have multiple answers.
+- At least one answer should typically be marked correct.
 
--Content: Required answer text with a maximum length constraint.
-
--IsCorrect: Indicates whether the answer is correct.
-
--QuestionId: Required foreign key referencing the related question.
-
-Relationships:
-
--Question: Required association to the question this answer belongs to (many-to-one).
-
-Notes
-
-Each answer must be linked to a question.
-
-A question can have multiple answers.
-
-Typically, at least one answer per question should be marked as correct.
+---
 
 ## QuizAttempt
 
-Description:
+### Description
+Represents a user’s attempt at taking a quiz, tracking progress, submitted answers, and scoring.
+
+### Properties
+- `Id` – unique identifier
+- `QuizId` – associated quiz
+- `UserId` – user taking the quiz
+- `CurrentQuestionIndex` – current progress position
+- `Score` – current score
+- `MaxScore` – maximum possible score
+- `IsFinished` – indicates completion status
+
+### Relationships
+- `Quiz` – quiz being attempted
+- `Answers` – submitted answers during the attempt
+
+### Notes
+- A user may have multiple attempts for the same quiz.
+- `IsFinished` is set when the last question has been answered.
+- `Score` should never exceed `MaxScore`.
 
-Represents a user’s attempt at taking a quiz, tracking progress, answers, and scoring.
+---
 
-Properties:
+## Leaderboard
 
--Id: Unique identifier of the quiz attempt.
+### Description
+Represents a leaderboard associated with a quiz and used to display rankings.
 
--QuizId: Foreign key referencing the associated quiz.
+### Properties
+- `Id` – unique identifier
+- `Title` – required leaderboard title
+- `Description` – required leaderboard description
+- `LastUpdated` – timestamp of last modification
+- `QuizId` – foreign key to the related quiz
 
--UserId: Identifier of the user taking the quiz.
+### Relationships
+- `Quiz` – quiz that owns the leaderboard
+- `Entries` – leaderboard entries containing user results
 
--CurrentQuestionIndex: Index of the current question the user is on.
+### Notes
+- Every leaderboard must be linked to a quiz.
+- `LastUpdated` should change whenever entries are updated.
+- Rankings are calculated from leaderboard entries.
 
--Score: Current score achieved by the user.
+---
 
--MaxScore: Maximum possible score for the quiz.
+## LeaderboardEntry
 
--IsFinished: Indicates whether the quiz attempt has been completed.
+### Description
+Represents one user’s result in a leaderboard.
 
-Relationships
+### Properties
+- `Id` – unique identifier
+- `UserId` – user associated with the entry
+- `Score` – score achieved by the user
+- `Rank` – ranking position
+- `LeaderboardId` – leaderboard foreign key
 
--Quiz: Required association to the quiz being attempted (many-to-one).
+### Relationships
+- `User` – the application user
+- `Leaderboard` – leaderboard containing the entry
 
--Answers: Collection of answers submitted during the attempt (one-to-many).
+### Notes
+- Each entry corresponds to one user result within a leaderboard.
+- Rankings can be recalculated dynamically when new results are added.
+- A leaderboard may contain many entries.
 
-Notes
+---
 
-A user can have multiple attempts for the same quiz (depending on business rules).
+## Controllers
 
-IsFinished should be set when all questions are answered.
+| Controller | Responsibility |
+|---|---|
+| `QuizzesController` | Manage quizzes, quiz details, CRUD operations |
+| `PlayController` | Handle gameplay, answer submission, quiz completion |
+| `LeaderboardsController` | Show leaderboard rankings and quiz results |
+| `Account / Identity` | Handle authentication and user sessions |
 
-Score should not exceed MaxScore.
+### Controller Design Notes
+- Controllers stay lightweight.
+- Business logic is handled by services.
+- Controllers focus on request handling and response generation.
+- This improves testability and separation of concerns.
 
-## Leaderboard 
+---
 
-Description:
+## ViewModels
 
-Represents a leaderboard associated with a quiz, used to track and display participant rankings and scores.
+ViewModels are used to pass only the data needed by the UI.
 
-Properties:
+### Common ViewModels
+- `CreateQuizViewModel`
+- `EditQuizViewModel`
+- `DetailsQuizViewModel`
+- `GameSummaryViewModel`
+- `LeaderboardRowVm`
 
--Id: Unique identifier of the leaderboard.
+### ViewModel Rules
+- ViewModels are not used for database access
+- ViewModels are not entity classes
+- ViewModels help keep views simple and strongly typed
+- ViewModels prevent unnecessary exposure of internal data models
 
--Title: Required leaderboard title with a maximum length constraint.
+---
 
--Description: Required leaderboard description with a maximum length constraint.
+## Technologies Used
 
--LastUpdated: Required date indicating when the leaderboard was last updated.
+- ASP.NET Core MVC
+- Entity Framework Core
+- SQL Server
+- ASP.NET Core Identity
+- Bootstrap 5
+- Razor Views
+- LINQ
+- C#
 
--QuizId: Required foreign key referencing the related quiz.
+---
 
-Relationships
+## Setup Instructions
 
--Quiz: Required association to the quiz this leaderboard belongs to (one-to-one or many-to-one, depending on configuration).
+### 1. Clone the repository
 
--Entries: Collection of leaderboard entries representing individual user results (one-to-many).
+```bash
+git clone https://github.com/Ivan-Pudev/Quiz-Game.git
+cd Quiz-Game
+```
 
-Notes
+### 2. Configure the database
 
-Each leaderboard must be linked to a quiz.
+Update `appsettings.json` with your connection string:
 
-LastUpdated should be refreshed whenever leaderboard entries change.
-
-Leaderboard entries are used to calculate and display rankings.
-
-## LeaderboardEntry 
-
-Description:
-
-Represents a single user’s result within a leaderboard, including score and ranking.
-
-Properties:
-
--Id: Unique identifier of the leaderboard entry.
-
--UserId: Required identifier of the user associated with this entry.
-
--Score: Score achieved by the user in the quiz.
-
--Rank: Ranking position of the user on the leaderboard.
-
--LeaderboardId: Required foreign key referencing the related leaderboard.
-
-Relationships:
-
--User: Required association to the application user.
-
--Leaderboard: Required association to the leaderboard this entry belongs to (many-to-one).
-
-Notes
-
-Each entry corresponds to one user on a leaderboard.
-
-Rankings are typically recalculated when scores change.
-
-A leaderboard can contain multiple entries.
-
-## 🖥️ Controllers
-
-Controller	Responsibility
-
-QuizzesController	Manage quizzes (CRUD, details)
-
-PlayController	Play quiz, submit answers, finish game
-
-LeaderboardsController	View leaderboards
-
-Account / Identity	Authentication
-
-## 🧪 ViewModels
-
-CreateQuizViewModel
-
-EditQuizViewModel
-
-DetailsQuizViewModel
-
-GameSummaryViewModel
-
-LeaderboardRowVm
-
-ViewModels are never used for database access.
-
-## 🛠️ Technologies Used
-
-ASP.NET Core MVC
-
-Entity Framework Core
-
-SQL Server
-
-ASP.NET Core Identity
-
-Bootstrap 5
-
-Razor Views
-
-LINQ
-
-## ⚙️ Setup Instructions
-1️⃣ Clone the repository
-git clone https://github.com/<Ivan-Pudev>/QuizGame
-cd QuizGame
-
-2️⃣ Configure database
-
-Update appsettings.json:
-
+```json
 "ConnectionStrings": {
   "DefaultConnection": "Server=.;Database=QuizGameDb;Trusted_Connection=True;"
 }
+```
 
-3️⃣ Apply migrations
+Adjust the connection string if your SQL Server configuration is different.
+
+### 3. Apply migrations
+
+```bash
 dotnet ef database update
+```
 
-4️⃣ Run the app
+### 4. Run the application
+
+```bash
 dotnet run
+```
 
-🔐 Default Roles
+### 5. Open the application
 
-Create roles on startup or seed:
+Navigate to the local host address shown in the terminal.
 
-Player
+---
 
-Players can manage quizzes, players can only play.
+## Default Roles
 
-🧠 Design Decisions
+The application can use seeded roles such as:
 
-Multiple attempts per user are allowed
+- **Admin**
+- **Player**
 
-Leaderboard rank is calculated dynamically (not stored)
+### Role Behavior
+- **Admin** users can manage quizzes, questions, answers, and leaderboard-related content.
+- **Player** users can browse and attempt quizzes.
+- Authorization rules control access to protected pages and actions.
 
-No business logic in controllers
+---
 
-No database access in views
+## Design Decisions
 
-EF Core tracking used only where needed
+- Multiple attempts per user are allowed to encourage replayability.
+- Leaderboard rank is calculated dynamically instead of being stored permanently.
+- Controllers contain no business logic.
+- Views do not directly access the database.
+- EF Core tracking is used only where necessary.
+- The application separates domain logic from presentation logic.
+- ViewModels are used to keep the UI layer clean and safe.
 
-## 📸 Screenshots
+---
+
+## Screenshots
 
 ### Play Quiz
 ![Play Quiz](screenshots/play-quiz.png)
@@ -378,23 +484,38 @@ EF Core tracking used only where needed
 ### Leaderboard
 ![Leaderboard](screenshots/leaderboard.png)
 
+---
+
+## Future Improvements
+
+- Timed questions
+- Question category filtering
+- Leaderboard pagination
+- Answer review after completing a quiz
+- Admin dashboard enhancements
+- Quiz difficulty levels
+- Better analytics for quiz attempts
+- Exportable leaderboard results
+- Better mobile UI support
+- Notifications for quiz completion
+
+---
+
 ## Project Info
 
-This project is for educational purposes.
+This project was created for educational and portfolio purposes.
 
-✨ Future Improvements
+It demonstrates:
+- ASP.NET Core MVC application structure
+- Entity Framework Core data modeling
+- Authentication and authorization
+- Service-based architecture
+- Clean UI model separation
+- Real-world leaderboard and scoring logic
 
-Timed questions
+---
 
-Question categories filtering
+## Author
 
-Pagination for leaderboards
-
-Answer review after game
-
-Admin dashboard
-
-## 👨‍💻 Author
-
-Ivan Pudev
+**Ivan Pudev**  
 ASP.NET Core MVC Quiz Game Project
