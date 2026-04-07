@@ -23,8 +23,6 @@
         [Required]
         public int Points { get; set; }
 
-        public bool isDeleted { get; set; }
-
         public virtual ICollection<Quiz> Quizzes { get; set; }
         = new List<Quiz>();
 

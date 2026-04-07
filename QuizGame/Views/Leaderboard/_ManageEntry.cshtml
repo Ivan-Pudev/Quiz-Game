@@ -1,0 +1,76 @@
+﻿@model AdminLeaderboardEntryViewModel
+@{
+    var initials = Model.UserName?.Length >= 2
+? Model.UserName.Substring(0, 2).ToUpper()
+: Model.UserName?.ToUpper() ?? "??";
+
+    var rankCls = Model.Rank switch
+{
+1 => "rank-1",
+2 => "rank-2",
+3 => "rank-3",
+_ => ""
+};
+
+<tr data-email="@Model.UserName?.ToLower()">
+    <td>
+        <div class="user-cell">
+            <div class="avatar">@initials</div>
+            <div>
+                    <div class="user-name">@Model.UserName</div>
+                    <div class="user-id">@Model.UserId</div>
+            </div>
+        </div>
+    </td>
+    <td>
+        <span class="score-badge">
+            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+                @Model.Score pts
+        </span>
+    </td>
+    <td>
+            <span class="rank-badge @rankCls">#@Model.Rank</span>
+    </td>
+    <td>
+     <div class="actions-cell">
+         <form asp-area=""
+               asp-controller="Leaderboard"
+               asp-action="UpdateEntry"
+               method="post"
+               onclick="return promptForScore(this, @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.UserName)), @Model.Score);">
+             @Html.AntiForgeryToken()
+
+             <input type="hidden" name="id" value="@Model.Id" />
+             <input type="hidden" name="leaderboardId" value="@Model.LeaderboardId" />
+             <input type="hidden" name="newScore" />
+
+             <button type="submit" class="btn-edit-ghost">
+                 Edit
+             </button>
+         </form>
+
+         <!-- Delete -->
+         <form asp-area=""
+               asp-controller="Leaderboard"
+               asp-action="Delete"
+               method="post"
+               onsubmit="return confirm('Remove entry for ' + @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.UserName)) + '?');">
+             @Html.AntiForgeryToken()
+             <input type="hidden" name="id" value="@Model.Id" />
+             <input type="hidden" name="leaderboardId" value="@Model.LeaderboardId" />
+             <button type="submit" class="btn-delete-ghost">
+                 <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                     <polyline points="3 6 5 6 21 6" />
+                     <path d="M19 6l-1 14H6L5 6" />
+                     <path d="M10 11v6M14 11v6" />
+                     <path d="M9 6V4h6v2" />
+                 </svg>
+                 Remove
+             </button>
+         </form>
+     </div>
+    </td>
+</tr>
+}

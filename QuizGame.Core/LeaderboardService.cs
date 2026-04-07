@@ -39,7 +39,7 @@ namespace QuizGame.Core
             return await _leaderboardRepository.GetLeaderboardsWithEntriesByQuizIdAsync(id);
         }
 
-        public async Task<IEnumerable<AdminLeaderboardViewModel>> GetLeaderboardsToManageAsync()
+        public async Task<AdminLeaderboardPageViewModel> GetLeaderboardsToManageAsync()
         {
             IEnumerable<Leaderboard> leaderboards = await GetLeaderboardsAsync();
 
@@ -53,18 +53,19 @@ namespace QuizGame.Core
                     EntryCount = l.Entries.Count(),
                     LastUpdated = l.LastUpdated,
                     Title = l.Quiz.Title,
-                });
+                })
+                .ToList();
 
-            //AdminLeaderboardPageViewModel pageViewModel = new AdminLeaderboardPageViewModel
-            //{
-            //    Leaderboards = leaderboardsViewModels,
-            //    Total = leaderboardsViewModels.Count(),
-            //    TotalEntries = leaderboardsViewModels.Sum(x => x.EntryCount),
-            //    UpdatedToday = leaderboardsViewModels.Count(x => x.LastUpdated == DateOnly.FromDateTime(DateTime.UtcNow)),
-            //    AvgEntries = leaderboardsViewModels.Any() ? leaderboardsViewModels.Average(x => x.EntryCount) : 0
-            //};
+            AdminLeaderboardPageViewModel pageViewModel = new AdminLeaderboardPageViewModel
+            {
+                Leaderboards = leaderboardsViewModels,
+                Total = leaderboardsViewModels.Count(),
+                TotalEntries = leaderboardsViewModels.Sum(x => x.EntryCount),
+                UpdatedToday = leaderboardsViewModels.Count(x => x.LastUpdated == DateOnly.FromDateTime(DateTime.UtcNow)),
+                AvgEntries = leaderboardsViewModels.Any() ? leaderboardsViewModels.Average(x => x.EntryCount) : 0
+            };
 
-            return leaderboardsViewModels;
+            return pageViewModel;
         }
 
         public async Task<IEnumerable<AdminLeaderboardEntryViewModel>> GetLeaderboardsEntriesToManageAsync()
@@ -83,7 +84,8 @@ namespace QuizGame.Core
                     Rank = entry.Rank,
                     Score = entry.Score,
                     UserId = entry.UserId,
-                    UserName = entry.User!.UserName!
+                    UserName = entry.User!.UserName!,
+                    IsDeleted = entry.IsDeleted
                 });
             }
             
@@ -94,10 +96,11 @@ namespace QuizGame.Core
         {
             Leaderboard? leaderboard = await _leaderboardRepository
                 .GetLeaderboardWithEntriesAndUserBydAsync(id);
+            var filteredEntries = leaderboard.Entries.Where(e => e.IsDeleted == false).ToList();
 
             List<AdminLeaderboardEntryViewModel> entries = new List<AdminLeaderboardEntryViewModel>();
             List<UserSelectViewModel> users = new List<UserSelectViewModel>();
-            foreach (var entry in leaderboard.Entries.ToList())
+            foreach (var entry in filteredEntries)
             {
                 entries.Add(new AdminLeaderboardEntryViewModel
                 {

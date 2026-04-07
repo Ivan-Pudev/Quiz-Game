@@ -169,8 +169,6 @@
                     return NotFound();
                 }
 
-                quizViewModel = await _quizService.EditQuizGetDataFromForm(quiz);
-
                 List<Guid> selectedIds = quizViewModel.SelectedQuestions
                     .Where(q => q.IsSelected)
                     .Select(q => q.QuestionId)

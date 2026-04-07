@@ -28,6 +28,6 @@
         = new List<QuestionSelectionViewModel>();
 
         public virtual List<Guid> SelectedQuestionsIds 
-         => SelectedQuestions.Select(q=>q.QuestionId).ToList();
+         => SelectedQuestions.Where(q=>q.IsSelected).Select(q=>q.QuestionId).ToList();
     }
 }

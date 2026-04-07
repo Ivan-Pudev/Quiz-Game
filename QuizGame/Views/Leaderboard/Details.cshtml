@@ -54,7 +54,7 @@
 
 <!-- Table -->
 <div class="table-wrap">
-    @if (Model.TotalEntries == 0)
+    @if (!Model.Leaderboards.Any())
     {
         <partial name="_EmptyState" model='@("No leaderboards found.")' />
     }

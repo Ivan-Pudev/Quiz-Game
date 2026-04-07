@@ -20,6 +20,8 @@ namespace QuizGame.Data.Models
         [MaxLength(QuizDescriptionMaxLength)]
         public string Description { get; set; } = null!;
 
+        public bool  IsDeleted { get; set; }
+
         [Required]
         [DataType(DataType.Date)]
         public DateOnly LastUpdated { get; set; }

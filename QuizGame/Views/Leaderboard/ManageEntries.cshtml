@@ -43,7 +43,7 @@
             </div>
             <div>
                 <div class="card-title">@Model.LeaderboardTitle</div>
-                <div class="card-desc">@Model.Entries.Count() entr(ies) · Last updated @Model.LastUpdated.ToString("dd MMM yyyy")</div>
+                <div class="card-desc">@Model.Entries.Count() entry(ies) · Last updated @Model.LastUpdated.ToString("dd MMM yyyy")</div>
             </div>
         </div>
 
@@ -63,7 +63,7 @@
         </div>
 
         <!-- Entries table -->
-        @if (!Model.Entries.Where(e => e.IsDeleted == false).Any())
+        @if (Model.Entries.Count == 0)
         {
             <partial name="_EmptyState" model='@("No entries yet. Add one using the form.")' />
         }

@@ -137,7 +137,7 @@ namespace QuizGame.Services.Tests.Controllers
         [Test]
         public async Task Details_ReturnsViewResult_WithAdminViewModels()
         {
-            var viewModels = new List<AdminLeaderboardViewModel> { new AdminLeaderboardViewModel() };
+            var viewModels = new AdminLeaderboardPageViewModel();
             _leaderboardServiceMock
                 .Setup(s => s.GetLeaderboardsToManageAsync())
                 .ReturnsAsync(viewModels);
@@ -463,7 +463,7 @@ namespace QuizGame.Services.Tests.Controllers
         }
 
         [Test]
-        public async Task DeleteEntry_WithValidId_RedirectsToIndex_AndSetsSuccessTempData()
+        public async Task DeleteEntry_WithValidId_RedirectsToDeletedEntries_AndSetsSuccessTempData()
         {
             var id = Guid.NewGuid();
             _leaderboardServiceMock
@@ -474,7 +474,7 @@ namespace QuizGame.Services.Tests.Controllers
 
             var redirect = result as RedirectToActionResult;
             Assert.That(redirect, Is.Not.Null);
-            Assert.That(redirect!.ActionName, Is.EqualTo(nameof(LeaderboardController.Index)));
+            Assert.That(redirect!.ActionName, Is.EqualTo(nameof(LeaderboardController.DeletedEntries)));
             Assert.That(_controller.TempData["SuccessMessage"], Is.Not.Null);
         }
 
@@ -504,7 +504,7 @@ namespace QuizGame.Services.Tests.Controllers
 
             var redirect = result as RedirectToActionResult;
             Assert.That(redirect, Is.Not.Null);
-            Assert.That(redirect!.ActionName, Is.EqualTo(nameof(LeaderboardController.Index)));
+            Assert.That(redirect!.ActionName, Is.EqualTo(nameof(LeaderboardController.DeletedEntries)));
         }
     }
 }

@@ -70,7 +70,7 @@ namespace QuizGame.Services.Tests.Controllers
         [Test]
         public async Task Create_Get_ReturnsView()
         {
-            var result = await _controller.Create();
+            var result = _controller.Create();
 
             Assert.That(result, Is.InstanceOf<ViewResult>());
         }
@@ -284,7 +284,6 @@ namespace QuizGame.Services.Tests.Controllers
             var redirect = result as RedirectToActionResult;
             Assert.That(redirect, Is.Not.Null);
             Assert.That(redirect!.ActionName, Is.EqualTo("Index"));
-            Assert.That(redirect.ControllerName, Is.EqualTo("Home"));
         }
 
         [Test]

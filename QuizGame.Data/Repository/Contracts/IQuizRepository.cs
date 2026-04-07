@@ -13,7 +13,7 @@
 
         Task<IEnumerable<Quiz>> GetAllQuizzesWithQuestionAnswersCategoriesAndLeaderboardAsync();
 
-        Task<IEnumerable<Quiz>> GetAllDeletedQuizzesAsync(Expression<Func<ApplicationUser, bool>>? filter = null);
+        Task<IEnumerable<Quiz>> GetAllDeletedQuizzesAsync();
 
         Task<Quiz?> GetQuizWithQuestionsAnswersCategoriesAndLeaderboardByIdAsync(Guid? id);
 

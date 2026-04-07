@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuizGame.Data;
 
@@ -11,9 +12,11 @@ using QuizGame.Data;
 namespace QuizGame.Data.Migrations
 {
     [DbContext(typeof(QuizGameDbContext))]
-    partial class QuizGameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407091813_UPDATEcONTEXT")]
+    partial class UPDATEcONTEXT
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

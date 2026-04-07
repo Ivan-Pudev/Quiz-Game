@@ -81,10 +81,9 @@
 
                 if (vm == null)
                 {
-                    TempData["ErrorMessage"] = string.Format(ErrorLoadQuestion);
-                    return NotFound();
+                    return RedirectToAction(nameof(Finish), new { attemptId });
                 }
-                return RedirectToAction(nameof(Finish), new { attemptId });
+                return View(vm);
             }
             catch (Exception ex)
             {
@@ -130,7 +129,7 @@
                 if (summary == null)
                 {
                     TempData["Error"] = string.Format(ErrorGenerateSummary);
-                    return RedirectToAction(nameof(Index));
+                    return View(nameof(Index));
                 }
 
                 return View(summary);
