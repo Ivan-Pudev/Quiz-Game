@@ -38,6 +38,7 @@
                 .Where(e => e.LeaderboardId == id)
                 .Include(e => e.User)
                 .OrderByDescending(e => e.Score)
+                .Where(e=>e.IsDeleted == false)
                 .ToListAsync();
         }
 
@@ -99,6 +100,7 @@
                 .Include(l => l.Leaderboard)
                 .Include(l => l.User)
                 .Include(l=>l.Leaderboard.Quiz)
+                .Where(l=>l.IsDeleted == false)
                 .AsSplitQuery()
                 .ToListAsync();
         }

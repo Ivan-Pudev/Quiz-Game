@@ -58,7 +58,7 @@
             </div>
         </div>
 
-        @if (Model.TotalPlayers == 0)
+        @if (Model.RankedEntries.Count == 0)
         {
             <partial name="_EmptyState" model='@("No scores recorded yet.")' />
         }

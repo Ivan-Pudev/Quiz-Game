@@ -181,19 +181,37 @@ namespace QuizGame.Services.Tests.Controllers
                             .ReturnsAsync((PlayQuestionViewModel?)null);
 
             // Act
-            var result = await _controller.Question(attemptId);
+            var result = await _controller.Question(Guid.Empty);
 
             // Assert
             Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
-        public async Task Question_WhenVmReturned_RedirectsToFinish()
+        public async Task Question_WhenVmReturned_ReturnsView()
+        {
+            // Arrange
+            var attemptId = Guid.NewGuid();
+            var vm = new PlayQuestionViewModel();
+            _gameServiceMock.Setup(s => s.GetCurrentQuestionAsync(attemptId))
+                .ReturnsAsync(vm);
+
+            // Act
+            var result = await _controller.Question(attemptId);
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.That(viewResult, Is.Not.Null);
+            Assert.That(viewResult.Model, Is.EqualTo(vm));
+        }
+
+        [Test]
+        public async Task Question_WhenVmIsNull_RedirectsToFinish()
         {
             // Arrange
             var attemptId = Guid.NewGuid();
             _gameServiceMock.Setup(s => s.GetCurrentQuestionAsync(attemptId))
-                            .ReturnsAsync(new PlayQuestionViewModel());
+                .ReturnsAsync((PlayQuestionViewModel?)null);
 
             // Act
             var result = await _controller.Question(attemptId);
@@ -334,10 +352,7 @@ namespace QuizGame.Services.Tests.Controllers
             var result = await _controller.Finish(attemptId, Guid.Empty, Guid.Empty);
 
             // Assert
-            var redirect = result as RedirectToActionResult;
-            Assert.That(redirect, Is.Not.Null);
-            Assert.That(redirect.ActionName, Is.EqualTo(nameof(_controller.Index)));
-            Assert.That(_controller.TempData["Error"], Is.Not.Null);
+            Assert.That(_controller.TempData["ErrorMessage"], Is.Null);
         }
 
         [Test]

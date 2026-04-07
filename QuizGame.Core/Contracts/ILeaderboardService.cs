@@ -13,7 +13,7 @@
 
         Task<Leaderboard?> GetLeaderboardByQuizIdAsync(Guid? id);
 
-        Task<IEnumerable<AdminLeaderboardViewModel>> GetLeaderboardsToManageAsync();
+        Task<AdminLeaderboardPageViewModel> GetLeaderboardsToManageAsync();
 
         Task<IEnumerable<AdminLeaderboardEntryViewModel>> GetLeaderboardsEntriesToManageAsync();
 

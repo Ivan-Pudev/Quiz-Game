@@ -54,9 +54,9 @@
 
 <!-- Table -->
 <div class="table-wrap">
-    @if (!Model.Where(E=>E.IsDeleted == true).Any())
+    @if (!Model.Where(e=>e.IsDeleted == true).Any())
     {
-        <partial name="_EmptyState" />
+        <partial name="_EmptyState" model='@("There are no deleted entries")' />
     }
     else
     {

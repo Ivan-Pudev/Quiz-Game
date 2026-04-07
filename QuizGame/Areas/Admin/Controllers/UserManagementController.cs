@@ -10,7 +10,7 @@
     public class UserManagementController : BaseAdminController
     {
         private readonly IUserService _userService;
-        private ILogger<UserManagementController> _logger;
+        private readonly ILogger<UserManagementController> _logger;
 
         public UserManagementController(IUserService userService,
             ILogger<UserManagementController> logger)
@@ -40,7 +40,7 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             try
             {
@@ -62,6 +62,7 @@
             {
                 return View(quizViewModel);
             }
+
             try
             {
                 await _userService.CreateUserAsync(quizViewModel);
@@ -186,7 +187,7 @@
 
                 TempData["SuccessMessage"] = string.Format(SuccessSoftDelete, nameof(User));
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Index));
 
             }
             catch (InvalidOperationException ioe)
@@ -200,7 +201,7 @@
                 _logger.LogError(ex, string.Format(ErrorSoftDelete, nameof(User)));
                 TempData["ErrorMessage"] = string.Format(ErrorSoftDelete, nameof(User));
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Index));
             }
         }
         [HttpGet]

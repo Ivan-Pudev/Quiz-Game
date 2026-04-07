@@ -47,13 +47,11 @@ function resetForm() {
     document.getElementById('userFieldWrap').style.display = '';
 }
 
-function promptForScore(form, username, currentScore) {
-    const newScore = prompt(`Enter new score for ${username}:`, currentScore);
-
-    // If user cancelled or didn't enter a number, stop the form submit
-    if (newScore === null || newScore === "" || isNaN(newScore)) return false;
-
-    // Set the hidden field value to what the user typed
-    form.querySelector('input[name="newScore"]').value = newScore;
+function promptForScore(form, userName, currentScore) {
+    const input = prompt(`Enter new score for ${userName} (current: ${currentScore})`);
+    if (input === null) return false;
+    const score = parseInt(input);
+    if (isNaN(score)) { alert("Invalid score."); return false; }
+    form.querySelector('[name="newScore"]').value = score;
     return true;
 }

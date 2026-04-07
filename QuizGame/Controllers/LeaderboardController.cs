@@ -8,7 +8,6 @@
     using QuizGame.ViewModels.Leaderboards;
     using static GCommon.OutputMessages.ErrorMessages;
     using static GCommon.OutputMessages.SuccessMessages;
-
     [Authorize]
     public class LeaderboardController : BaseController
     {
@@ -74,8 +73,8 @@
         public async Task<IActionResult> Details()
         {
             try
-            {
-                IEnumerable<AdminLeaderboardViewModel> leaderboardViewModels = await _leaderboardService.GetLeaderboardsToManageAsync();
+            { 
+                AdminLeaderboardPageViewModel leaderboardViewModels = await _leaderboardService.GetLeaderboardsToManageAsync();
                 return View(leaderboardViewModels);
             }
             catch (Exception ex)
@@ -111,7 +110,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateEntry(Guid? id, int newScore)
+        public async Task<IActionResult> UpdateEntry(Guid id, [FromRoute]int newScore)
         {
             if (id == Guid.Empty)
             {
@@ -121,8 +120,7 @@
 
             try
             {
-                await _leaderboardService.UpdateEntryAsync(id,newScore);
-
+                await _leaderboardService.UpdateEntryAsync(id, newScore);
                 return RedirectToAction(nameof(Index));
             }
             catch (InvalidOperationException ioe)
@@ -138,7 +136,6 @@
                 return RedirectToAction(nameof(Index));
             }
         }
-
         [HttpPost]
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -216,7 +213,7 @@
             {
                 await _leaderboardService.RestoreEntryAsync(id);
 
-                TempData["SuccessMessage"] = string.Format(SuccessUpdate, nameof(LeaderboardEntry));
+                TempData["SuccessMessage"] = string.Format(SuccessRestore, nameof(LeaderboardEntry));
                 return RedirectToAction(nameof(DeletedEntries));
             }
             catch (InvalidOperationException ioe)
@@ -247,7 +244,7 @@
                 await _leaderboardService.HardDeleteEntryAsync(id);
 
                 TempData["SuccessMessage"] = string.Format(SuccessHardDelete, nameof(LeaderboardEntry));
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(DeletedEntries));
             }
             catch (InvalidOperationException ioe)
             {
@@ -259,7 +256,7 @@
             {
                 _logger.LogError(ex, string.Format(ErrorHardDelete, nameof(LeaderboardEntry)));
                 TempData["ErrorMessage"] = string.Format(ErrorHardDelete, nameof(LeaderboardEntry));
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(DeletedEntries));
             }
         }
     }

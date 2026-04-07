@@ -41,14 +41,14 @@
                 .Include(q => q.Questions)
                     .ThenInclude(qq => qq.Categories)
                 .Include(q => q.Leaderboard)
+                .Where(q=>q.IsDeleted == false)
                 .AsSplitQuery()
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<Quiz>> GetAllDeletedQuizzesAsync
-            (Expression<Func<ApplicationUser, bool>>? filter = null)
+        public async Task<IEnumerable<Quiz>> GetAllDeletedQuizzesAsync()
         {
             return await DbContext
                 .Quizzes

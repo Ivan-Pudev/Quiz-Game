@@ -1,10 +1,12 @@
-﻿@model IEnumerable<AdminLeaderboardViewModel>
+﻿@model AdminLeaderboardPageViewModel
+
 @{
-    var total = Model.Count();
-    var totalEntries = Model.Sum(l => l.EntryCount);
-    var updatedToday = Model.Count(l => l.LastUpdated == DateOnly.FromDateTime(DateTime.UtcNow));
+    var total = Model.Leaderboards.Count();
+    var totalEntries = Model.Leaderboards.Sum(l => l.EntryCount);
+    var updatedToday = Model.Leaderboards.Count(l => l.LastUpdated == DateOnly.FromDateTime(DateTime.UtcNow));
     var avgEntries = total > 0 ? (double)totalEntries / total : 0;
 }
+
 <div class="stats-bar">
     <div class="stat-card">
         <div class="stat-label">Total Leaderboards</div>

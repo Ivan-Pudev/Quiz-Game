@@ -1,5 +1,6 @@
 ﻿namespace QuizGame.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using QuizGame.Core.Contracts;
     using QuizGame.Data.Models;
@@ -8,7 +9,7 @@
     using System.Collections.Generic;
     using static GCommon.OutputMessages.ErrorMessages;
     using static GCommon.OutputMessages.SuccessMessages;
-
+    [Authorize(Roles = "Admin")]
     public class QuizController : BaseController
     {
         private readonly IQuizService _quizService;
@@ -168,8 +169,6 @@
                 {
                     return NotFound();
                 }
-
-                quizViewModel = await _quizService.EditQuizGetDataFromForm(quiz);
 
                 List<Guid> selectedIds = quizViewModel.SelectedQuestions
                     .Where(q => q.IsSelected)
